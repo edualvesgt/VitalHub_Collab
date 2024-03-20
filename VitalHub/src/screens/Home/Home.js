@@ -118,7 +118,7 @@ export const Home = ({ navigation }) => {
                     {/* Renderiza o componente ButtonFilter para as consultas canceladas */}
                     <ButtonFilter onPress={() => { setSelected({ canceladas: true }) }} selected={selected.canceladas} buttonTitle={'Canceladas'} />
                 </RowContainer>
-                <ScrollForm>
+                
                     {/* Renderiza o componente FlatContainer que irá renderizar os itens da lista */}
                     <FlatContainer
                         data={data}
@@ -136,7 +136,7 @@ export const Home = ({ navigation }) => {
                             />
                         </StethoscopeView>
                     )}
-                </ScrollForm>
+                
             </Container>
 
             <CancelAppointment isOpen={isModalOpen} onClose={closeModal} navigation={navigation} />

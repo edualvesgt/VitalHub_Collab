@@ -3,11 +3,11 @@ import styled from "styled-components";
 export const CardBox = styled.TouchableOpacity`
 box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1); /* Adiciona box-shadow na parte inferior */
 background-color: #FFFFFF;
-width: 98%;
+width: 100%;
 height: 100px;
 padding: 15px;
 margin-top: 20px;
-
+/* border: black; */
 display: flex;
 flex-direction: row;
 justify-content:space-between;

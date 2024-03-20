@@ -80,7 +80,7 @@ margin-top: 10px;
 
 
 export const FlatContainer = styled.FlatList`
-width: 100%;
+width: 90%;
 `
 export const FlatListClinic = styled.FlatList`
 width: 100%;
