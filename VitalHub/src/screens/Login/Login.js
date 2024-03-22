@@ -6,13 +6,31 @@ import { Input } from "../../components/Input/StyleInput"
 import { GoogleLogo, Logo } from "../../components/Logo/StyleLogo"
 import { TextAccount } from "../../components/Text/Text"
 import { Title } from "../../components/Title/StyleTitle"
+import { useState } from "react"
+import api, { LoginResorce } from "../../services/services"
+
 
 export const Login = ({ navigation }) => {
 
-
     async function Login() {
-        navigation.replace("Main")
+        console.log("Comecou a funcao");
+
+        // Chamar api
+        try {
+            const response = await api.post('http://172.16.39.112:4466/api/Login', {
+                email: email,
+                senha: senha
+            })
+            console.log(response);
+        } catch (error) {
+            console.log(error);
+        }
+
+
     }
+    const [email, setEmail] = useState();
+    const [senha, setSenha] = useState()
+
 
     return (
         <Container>
@@ -20,6 +38,9 @@ export const Login = ({ navigation }) => {
             <Title>Entrar ou Criar Conta</Title>
             <Input
                 placeholder={"Usuario ou Email"}
+                value={email}
+                onChangeText={(txt) => setEmail(txt)}
+            // onChange ={event => event.native}
             />
             <Input
                 placeholder={"Senha"}
@@ -28,7 +49,7 @@ export const Login = ({ navigation }) => {
             <LinkMedium onPress={() => navigation.navigate('ForgotPassword')}>Esqueceu Sua Senha?</LinkMedium>
 
 
-            <Button onPress = {() => {Login()}}>
+            <Button onPress={() => { Login() }}>
                 <ButtonTitle> Entrar</ButtonTitle>
             </Button>
 
