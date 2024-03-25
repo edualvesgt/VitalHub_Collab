@@ -8,6 +8,7 @@ import { TextAccount } from "../../components/Text/Text"
 import { Title } from "../../components/Title/StyleTitle"
 import { useState } from "react"
 import api, { LoginResorce } from "../../services/services"
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 
 export const Login = ({ navigation }) => {
@@ -17,11 +18,13 @@ export const Login = ({ navigation }) => {
 
         // Chamar api
         try {
-            const response = await api.post('http://172.16.39.112:4466/api/Login', {
-                email: email,
-                senha: senha
+            const response = await api.post('/Login', {
+                email: 'paciente@paciente',
+                senha: 'paciente'
             })
+            await AsyncStorage.setItem("token", JSON.stringify(response.data))
             console.log(response);
+            navigation.replace("Main")
         } catch (error) {
             console.log(error);
         }

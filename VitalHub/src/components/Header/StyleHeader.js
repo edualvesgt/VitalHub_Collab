@@ -39,12 +39,12 @@ margin-left: 10px;
 
 export const TextDefault = styled.Text`
 color: #4E4B59;
-font-style: 16px;
+font-size: 16px;
 font-family: "Quicksand_500Medium";
 `
 export const NameUser = styled.Text`
 color: #FBFBFB;
-font-style: 18px;
+font-size: 18px;
 font-family: "MontserratAlternates_600SemiBold";
 `
 

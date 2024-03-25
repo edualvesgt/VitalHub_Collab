@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react"
 import { BoxInput } from "../../components/BoxInput/BoxInput"
 import { Button, ButtonTitle } from "../../components/Button/Button"
 import { Container, DoubleView, InputContainer } from "../../components/Container/StyleContainer"
@@ -6,8 +7,25 @@ import { ModalTitle } from "../../components/Modal/Modal"
 import { TextAccount } from "../../components/Text/Text"
 import { Title } from "../../components/Title/StyleTitle"
 import { ContainerForm, ScrollForm } from "./StyleProfile"
+import { userDecodeToken } from "../../utils/Auth"
 
 export const Profile = ({ navigate }) => {
+
+    async function profileLoad(){
+
+        const token = await userDecodeToken();
+        
+        console.log(token)
+        setName(token.name)
+    }
+
+    useEffect(() => {
+        profileLoad();
+    }, [])
+
+    const [name, setName] = useState("")
+    const [date, setDate] = useState("")
+
 
     return (
 
@@ -17,7 +35,7 @@ export const Profile = ({ navigate }) => {
             </HeaderContainer>
 
             <ModalTitle>
-                <Title>Richard Kosta</Title>
+                <Title>{name}</Title>
                 <TextAccount>richard.kosta@gmail.com</TextAccount>
             </ModalTitle>
 
