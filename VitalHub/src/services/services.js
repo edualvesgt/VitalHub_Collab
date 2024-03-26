@@ -4,7 +4,7 @@ import axios from "axios"
 const portaAPI = '4466'
 
 //Declarar Ip da maquina 
-const ip = "192.168.21.116"
+const ip = "172.16.39.112"
 
 //definir base de URL de acesso da api
 const baseUrlLocal = `http://${ip}:${portaAPI}/api`
@@ -13,6 +13,9 @@ const baseUrlLocal = `http://${ip}:${portaAPI}/api`
  const api = axios.create({
     baseURL : baseUrlLocal,
 })
+
+
+export const LoginResorce = "/Login"
 
 export default api;
 

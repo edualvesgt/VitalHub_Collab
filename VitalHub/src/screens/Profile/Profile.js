@@ -11,12 +11,14 @@ import { userDecodeToken } from "../../utils/Auth"
 
 export const Profile = ({ navigate }) => {
 
-    async function profileLoad(){
+    async function profileLoad() {
 
         const token = await userDecodeToken();
-        
+
         console.log(token)
         setName(token.name)
+        setEmail(token.email)
+        console.log(email);
     }
 
     useEffect(() => {
@@ -25,6 +27,7 @@ export const Profile = ({ navigate }) => {
 
     const [name, setName] = useState("")
     const [date, setDate] = useState("")
+    const [email, setEmail] = useState("")
 
 
     return (
@@ -36,7 +39,7 @@ export const Profile = ({ navigate }) => {
 
             <ModalTitle>
                 <Title>{name}</Title>
-                <TextAccount>richard.kosta@gmail.com</TextAccount>
+                <TextAccount>{email}</TextAccount>
             </ModalTitle>
 
             <ScrollForm>
