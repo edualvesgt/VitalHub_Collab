@@ -9,32 +9,39 @@ import { Title } from "../../components/Title/StyleTitle"
 import { useState } from "react"
 import api, { LoginResorce } from "../../services/services"
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { ActivityIndicator } from 'react-native';
 
 
 export const Login = ({ navigation }) => {
 
     async function Login() {
         console.log("Comecou a funcao");
+        setLoading(true); // Inicia a requisição
 
         // Chamar api
         try {
             const response = await api.post("/Login", {
                 email: 'renato@email.com',
-                senha: 'renato@email.com'
+                senha: 'renato@email.comj'
             })
+            setDisabled(true);
             await AsyncStorage.setItem("token", JSON.stringify(response.data))
-            console.log(response);
+            // console.log(response);
             navigation.replace("Main")
         } catch (error) {
             console.log(error);
+            setDisabled(false);
+        } finally {
+            setLoading(false)
         }
 
 
     }
+
     const [email, setEmail] = useState();
     const [senha, setSenha] = useState()
-
-
+    const [loading, setLoading] = useState(false);
+    const [disabled, setDisabled] = useState(false)
     return (
         <Container>
             <Logo source={require("../../assets/VitalHub_LogoAzul.png")} />
@@ -52,11 +59,11 @@ export const Login = ({ navigation }) => {
             <LinkMedium onPress={() => navigation.navigate('ForgotPassword')}>Esqueceu Sua Senha?</LinkMedium>
 
 
-            <Button onPress={() => { Login() }}>
-                <ButtonTitle> Entrar</ButtonTitle>
+            <Button onPress={() => { Login() }} disabled={disabled}>
+                <ButtonTitle> {loading ? <ActivityIndicator size="small" color="#ffffff" /> : "Entrar"}</ButtonTitle>
             </Button>
 
-            <ButtonGoogle>
+            <ButtonGoogle >
                 <GoogleLogo source={require('../../assets/GOOGLE.png')} />
                 <ButtonTitleGoogle> Login with Google</ButtonTitleGoogle>
             </ButtonGoogle>
