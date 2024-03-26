@@ -24,8 +24,6 @@ export const Profile = ({ navigate }) => {
     }, [])
 
     const [name, setName] = useState("")
-    const [date, setDate] = useState("")
-
 
     return (
 

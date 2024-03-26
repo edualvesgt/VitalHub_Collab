@@ -19,8 +19,8 @@ export const Login = ({ navigation }) => {
         // Chamar api
         try {
             const response = await api.post('/Login', {
-                email: 'paciente@paciente',
-                senha: 'paciente'
+                email: 'medico@medico',
+                senha: 'medico'
             })
             await AsyncStorage.setItem("token", JSON.stringify(response.data))
             console.log(response);
