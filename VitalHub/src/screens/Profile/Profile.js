@@ -6,10 +6,11 @@ import { HeaderContainer, HeaderContent, HeaderPhoto } from "../../components/He
 import { ModalTitle } from "../../components/Modal/Modal"
 import { TextAccount } from "../../components/Text/Text"
 import { Title } from "../../components/Title/StyleTitle"
-import { ContainerForm, ScrollForm } from "./StyleProfile"
+import { ButtonLogout, ContainerForm, ScrollForm } from "./StyleProfile"
 import { userDecodeToken } from "../../utils/Auth"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
-export const Profile = ({ navigate }) => {
+export const Profile = ({ navigation }) => {
 
     async function profileLoad() {
 
@@ -25,13 +26,21 @@ export const Profile = ({ navigate }) => {
         profileLoad();
     }, [])
 
+    async function profileLogout(token) {
+        try {
+            const token = await userDecodeToken();
+            await AsyncStorage.removeItem("token", navigation.replace("Login"))
+            // await AsyncStorage.getItem("token", console.log(token) )
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     const [name, setName] = useState("")
-<<<<<<< HEAD
-=======
     const [date, setDate] = useState("")
     const [email, setEmail] = useState("")
 
->>>>>>> 55b3a513796543f782e25e094373cb56897a5e14
+
 
     return (
 
@@ -80,6 +89,10 @@ export const Profile = ({ navigate }) => {
                     </Button>
 
                 </InputContainer>
+
+                <ButtonLogout onPress={() => { profileLogout() }}>
+                    <ButtonTitle>SAIR DO APP</ButtonTitle>
+                </ButtonLogout>
 
             </ScrollForm>
         </Container>

@@ -14,11 +14,7 @@
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "swagger",
-<<<<<<< HEAD
-      "applicationUrl": "http://172.16.39.115:4466",
-=======
-      "applicationUrl": "http://172.16.39.112:4466",
->>>>>>> 55b3a513796543f782e25e094373cb56897a5e14
+      "applicationUrl": "http://192.168.19.111:4466",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
@@ -27,7 +23,6 @@
       "commandName": "IISExpress",
       "launchBrowser": true,
       "launchUrl": "swagger",
-      "applicationUrl": "http://172.16.39.112:4466",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

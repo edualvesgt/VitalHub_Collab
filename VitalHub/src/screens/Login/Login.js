@@ -6,9 +6,10 @@ import { Input } from "../../components/Input/StyleInput"
 import { GoogleLogo, Logo } from "../../components/Logo/StyleLogo"
 import { TextAccount } from "../../components/Text/Text"
 import { Title } from "../../components/Title/StyleTitle"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import api, { LoginResorce } from "../../services/services"
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { userDecodeToken } from "../../utils/Auth"
 
 
 export const Login = ({ navigation }) => {
@@ -18,15 +19,10 @@ export const Login = ({ navigation }) => {
 
         // Chamar api
         try {
-<<<<<<< HEAD
             const response = await api.post('/Login', {
                 email: 'medico@medico',
                 senha: 'medico'
-=======
-            const response = await api.post("/Login", {
-                email: 'renato@email.com',
-                senha: 'renato@email.com'
->>>>>>> 55b3a513796543f782e25e094373cb56897a5e14
+
             })
             await AsyncStorage.setItem("token", JSON.stringify(response.data))
             console.log(response);
@@ -40,7 +36,15 @@ export const Login = ({ navigation }) => {
     const [email, setEmail] = useState();
     const [senha, setSenha] = useState()
 
+    async function test(){
+        const token = await userDecodeToken();
+        console.log(token);
+    }
 
+    useEffect(()=> {
+        test()
+    }, [])
+    
     return (
         <Container>
             <Logo source={require("../../assets/VitalHub_LogoAzul.png")} />
