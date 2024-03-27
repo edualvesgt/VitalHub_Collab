@@ -20,11 +20,12 @@ export const Login = ({ navigation }) => {
 
         // Chamar api
         try {
-            const response = await api.post("/Login", {
-                email: 'renato@email.com',
-                senha: 'renato@email.com'
-            })
             setDisabled(true);
+            const response = await api.post(LoginResorce, {
+                email: 'marcospietrocastro@dsladvogados.adv.br',
+                senha: 'marcospietrocastro@dsladvogados.adv.br'
+            })
+
             await AsyncStorage.setItem("token", JSON.stringify(response.data))
             // console.log(response);
             navigation.replace("Main")

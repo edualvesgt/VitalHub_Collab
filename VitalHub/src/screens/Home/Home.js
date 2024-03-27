@@ -10,7 +10,7 @@ import { Container, FlatContainer, RowContainer } from "../../components/Contain
 
 import { Header } from "../../components/Header/Header";
 
-import { ScrollForm, StethoscopeView } from "./StyleHome"
+import { StethoscopeView } from "./StyleHome"
 // Importa o componente Card que será usado para exibir os detalhes de cada consulta
 import Card from "../../components/Card/Card";
 import CancelAppointment from "../../components/CancelAppointment/CancelAppointment";
@@ -118,25 +118,26 @@ export const Home = ({ navigation }) => {
                     {/* Renderiza o componente ButtonFilter para as consultas canceladas */}
                     <ButtonFilter onPress={() => { setSelected({ canceladas: true }) }} selected={selected.canceladas} buttonTitle={'Canceladas'} />
                 </RowContainer>
-                
-                    {/* Renderiza o componente FlatContainer que irá renderizar os itens da lista */}
-                    <FlatContainer
-                        data={data}
-                        renderItem={({ item }) =>
-                            <Card situation={selected} time={item.time} image={item.image} status={item.status} navigation={navigation}
-                                onPressCard={() => openModal()} onPressShow={() => showForm()} />}
-                        keyExtractor={item => item.id} />
 
-                    {profile === "Paciente" && (
-                        <StethoscopeView onPress={() => showSchedule()}>
-                            <FontAwesome
-                                name="stethoscope"
-                                size={32}
-                                color={"white"}
-                            />
-                        </StethoscopeView>
-                    )}
-                
+                {/* Renderiza o componente FlatContainer que irá renderizar os itens da lista */}
+                <FlatContainer
+                    data={data}
+                    renderItem={({ item }) =>
+                        <Card situation={selected} time={item.time} image={item.image} status={item.status} navigation={navigation}
+                            onPressCard={() => openModal()} onPressShow={() => showForm()} />}
+                    keyExtractor={item => item.id} />
+
+                <StethoscopeView onPress={() => showSchedule()}>
+                    <FontAwesome
+                        name="stethoscope"
+                        size={32}
+                        color={"white"}
+                    />
+                </StethoscopeView>
+
+                {/* {profile === "Paciente" && (
+                    )} */}
+
             </Container>
 
             <CancelAppointment isOpen={isModalOpen} onClose={closeModal} navigation={navigation} />
