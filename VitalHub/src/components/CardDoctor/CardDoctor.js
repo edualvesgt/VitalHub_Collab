@@ -1,9 +1,14 @@
+import { useEffect } from "react";
 import {  CardBoxSelect, CardBoxSelected, ImageCard, TextCardBox } from "../Card/StyleCard"
 import { Container } from "../Container/StyleContainer"
 import { TextAbout, TextAccount } from "../Text/Text"
 
 const CardDoctor = ({  name, field, select, onPress }) => {
     const imageLink = "https://blog.maxtitanium.com.br/wp-content/uploads/2024/01/ramon-dino-fisiculturista-profissional-atleta-max-titanium-2.jpg"; // URL da imagem
+
+    useEffect(() => {
+        console.log(name)
+    }, [])
 
     if (select !== name) {
         return (
