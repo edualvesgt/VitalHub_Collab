@@ -127,7 +127,7 @@ export const Home = ({ navigation }) => {
                                 onPressCard={() => openModal()} onPressShow={() => showForm()} />}
                         keyExtractor={item => item.id} />
 
-                    {profile === "Paciente" && (
+                  
                         <StethoscopeView onPress={() => showSchedule()}>
                             <FontAwesome
                                 name="stethoscope"
@@ -135,7 +135,7 @@ export const Home = ({ navigation }) => {
                                 color={"white"}
                             />
                         </StethoscopeView>
-                    )}
+                    
                 
             </Container>
 

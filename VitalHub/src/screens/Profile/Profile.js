@@ -16,10 +16,8 @@ export const Profile = ({ navigation }) => {
 
         const token = await userDecodeToken();
 
-        console.log(token)
         setName(token.name)
         setEmail(token.email)
-        console.log(email);
     }
 
     useEffect(() => {
