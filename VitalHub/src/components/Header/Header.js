@@ -14,8 +14,6 @@ export function Header({ navigation }) {
         console.log(token)
         setName(token.name)
     }
-
-
     useEffect(() => {
         profileLoad();
     }, [])
