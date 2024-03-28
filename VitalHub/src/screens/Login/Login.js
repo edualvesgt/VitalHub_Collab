@@ -42,14 +42,14 @@ export const Login = ({ navigation }) => {
     const [email, setEmail] = useState();
     const [senha, setSenha] = useState()
 
-    async function test(){
-        const token = await userDecodeToken();
-        console.log(token);
-    }
+    // async function test(){
+    //     const token = await userDecodeToken();
+    //     console.log(token);
+    // }
 
-    useEffect(()=> {
-        test()
-    }, [])
+    // useEffect(()=> {
+    //     test()
+    // }, [])
     
     const [loading, setLoading] = useState(false);
     const [disabled, setDisabled] = useState(false)

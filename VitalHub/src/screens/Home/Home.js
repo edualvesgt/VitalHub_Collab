@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { FontAwesome } from '@expo/vector-icons'
 
@@ -16,6 +16,9 @@ import Card from "../../components/Card/Card";
 import CancelAppointment from "../../components/CancelAppointment/CancelAppointment";
 import ShowFormDoctor from "../../components/ShowFormDoctor/ShowFormDoctor";
 import ScheduleAppointment from "../../components/ScheduleAppointment/ScheduleAppointment";
+import api from "../../services/services";
+import { userDecodeToken } from "../../utils/Auth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // import ScheduleAppointment from "../../components/ScheduleAppointment/ScheduleAppointment";
 
@@ -31,29 +34,60 @@ export const Home = ({ navigation }) => {
         canceladas: false,
     });
 
-    const [profile, setProfile] = useState("Paciente")
+    const [consultas, setConsultas] = useState([])
+
+    async function getConsultas() {
+        const tokenDecoded = await userDecodeToken();
+        console.log(tokenDecoded.jti);
+
+        const token = await AsyncStorage.getItem('token')
+        console.log(token);
+        const config = { 
+            headers: {
+                Authorization : `Bearer ${token}`
+            }
+        }
+
+        await api.get('/Consultas')
+            .then(response => {
+                setConsultas(response.data)
+                console.log(response.data)
+            }).catch(error => {
+                console.log(error);
+            })
+            
+            
+           
+        // const token = userDecodeToken();
+        // console.log(token)
+    }
+
+    useEffect(() => {
+        getConsultas();
+    }, [])
     // Define os dados dos itens que serão exibidos
     // Cada item representa uma consulta com um ID, tempo, imagem e status
-    const dataItens = [
-        {
-            id: 'fsdfsfsdf',
-            time: '22:00',
-            image: image,
-            status: "r" // 'r' representa 'realizada'
-        },
-        {
-            id: 'sdfsdf',
-            time: '23:00',
-            image: image,
-            status: "a" // 'a' representa 'agendada'
-        },
-        {
-            id: 'asdas',
-            time: '16:00',
-            image: image,
-            status: "c" // 'c' representa 'cancelada'
-        }
-    ]
+
+    // const dataItens = [
+    //     {
+    //         id: 'fsdfsfsdf',
+    //         time: '22:00',
+    //         image: image,
+    //         status: "r" // 'r' representa 'realizada'
+    //     },
+    //     {
+    //         id: 'sdfsdf',
+    //         time: '23:00',
+    //         image: image,
+    //         status: "a" // 'a' representa 'agendada'
+    //     },
+    //     {
+    //         id: 'asdas',
+    //         time: '16:00',
+    //         image: image,
+    //         status: "c" // 'c' representa 'cancelada'
+    //     }
+    // ]
 
     // Função para verificar se um item deve ser exibido com base no filtro ativo
     const Check = (data) => {
@@ -70,7 +104,7 @@ export const Home = ({ navigation }) => {
     }
 
     // Filtra os itens com base no filtro ativo
-    const data = dataItens.filter(Check);
+    // const data = dataItens.filter(Check);
 
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -120,12 +154,12 @@ export const Home = ({ navigation }) => {
                 </RowContainer>
 
                 {/* Renderiza o componente FlatContainer que irá renderizar os itens da lista */}
-                <FlatContainer
+                {/* <FlatContainer
                     data={data}
                     renderItem={({ item }) =>
                         <Card situation={selected} time={item.time} image={item.image} status={item.status} navigation={navigation}
                             onPressCard={() => openModal()} onPressShow={() => showForm()} />}
-                    keyExtractor={item => item.id} />
+                    keyExtractor={item => item.id} /> */}
 
                 <StethoscopeView onPress={() => showSchedule()}>
                     <FontAwesome
