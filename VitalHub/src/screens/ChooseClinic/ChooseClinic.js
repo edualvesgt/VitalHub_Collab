@@ -4,7 +4,8 @@ import { ContainerClinic, FlatListClinic } from "../../components/Container/Styl
 import { Title } from "../../components/Title/StyleTitle"
 import { Button, ButtonTitle } from "../../components/Button/Button"
 import { LinkCancel } from "../../components/Links/StyleLink"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import api, { ListClinicResorce } from "../../services/services"
 
 export const ChooseClinic = ({navigation}) => {
 
@@ -41,21 +42,39 @@ export const ChooseClinic = ({navigation}) => {
             review: "5.0"
         }
     ]
+    const [listClinic , setListClinic] = useState([])
     const [select, setSelected] = useState('')
+
+    async function ListClinic() {
+        await api.get(ListClinicResorce)
+        .then(response => {
+            setListClinic(response.data)
+            console.log("Oiaa a lista das clinicas ");
+            console.log(response.data);
+        }).catch(error => {
+            console.log(error);
+        })
+    }
+
+    useEffect(() => {
+        ListClinic();
+    }, [])
     return (
         <ContainerClinic>
             <Title>Selecionar Clinica </Title>
 
 
             <FlatListClinic
-                data={rawData}
+                data={listClinic}
+                keyExtractor={(item) => item.id}
                 renderItem={({ item }) =>
                     <CardClinic
                         select={select}
-                        onPress={() => { setSelected(item.name) }}
-                        review={item.review}
-                        location={item.location}
-                        name={item.name}
+                        onPress={() => { setSelected(item.nome) }}
+                        // review={item.review}
+                        location={item.endereco.logradouro}
+                        number={item.endereco.numero}
+                        name={item.nomeFantasia}
                         time={item.time}
                     />} />
 
