@@ -1,0 +1,101 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\47349403801\\Desktop\\API-VitalHub_Atualizacao\\WebAPI\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{23BAD9E5-81FE-42EB-979F-0F9CF775B74C}|WebAPI\\WebAPI.csproj|c:\\users\\47349403801\\desktop\\api-vitalhub_atualizacao\\webapi\\webapi\\controllers\\consultascontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{23BAD9E5-81FE-42EB-979F-0F9CF775B74C}|WebAPI\\WebAPI.csproj|solutionrelative:webapi\\controllers\\consultascontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{23BAD9E5-81FE-42EB-979F-0F9CF775B74C}|WebAPI\\WebAPI.csproj|c:\\users\\47349403801\\desktop\\api-vitalhub_atualizacao\\webapi\\webapi\\repositories\\consultarepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{23BAD9E5-81FE-42EB-979F-0F9CF775B74C}|WebAPI\\WebAPI.csproj|solutionrelative:webapi\\repositories\\consultarepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{23BAD9E5-81FE-42EB-979F-0F9CF775B74C}|WebAPI\\WebAPI.csproj|c:\\users\\47349403801\\desktop\\api-vitalhub_atualizacao\\webapi\\webapi\\controllers\\logincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{23BAD9E5-81FE-42EB-979F-0F9CF775B74C}|WebAPI\\WebAPI.csproj|solutionrelative:webapi\\controllers\\logincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{23BAD9E5-81FE-42EB-979F-0F9CF775B74C}|WebAPI\\WebAPI.csproj|c:\\users\\47349403801\\desktop\\api-vitalhub_atualizacao\\webapi\\webapi\\viewmodels\\loginviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{23BAD9E5-81FE-42EB-979F-0F9CF775B74C}|WebAPI\\WebAPI.csproj|solutionrelative:webapi\\viewmodels\\loginviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{23BAD9E5-81FE-42EB-979F-0F9CF775B74C}|WebAPI\\WebAPI.csproj|c:\\users\\47349403801\\desktop\\api-vitalhub_atualizacao\\webapi\\webapi\\utils\\criptografia.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{23BAD9E5-81FE-42EB-979F-0F9CF775B74C}|WebAPI\\WebAPI.csproj|solutionrelative:webapi\\utils\\criptografia.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 4,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "LoginController.cs",
+              "DocumentMoniker": "C:\\Users\\47349403801\\Desktop\\API-VitalHub_Atualizacao\\WebAPI\\WebAPI\\Controllers\\LoginController.cs",
+              "RelativeDocumentMoniker": "WebAPI\\Controllers\\LoginController.cs",
+              "ToolTip": "C:\\Users\\47349403801\\Desktop\\API-VitalHub_Atualizacao\\WebAPI\\WebAPI\\Controllers\\LoginController.cs",
+              "RelativeToolTip": "WebAPI\\Controllers\\LoginController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAADsAAAAxAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-03-28T12:53:39.71Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "LoginViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\47349403801\\Desktop\\API-VitalHub_Atualizacao\\WebAPI\\WebAPI\\ViewModels\\LoginViewModel.cs",
+              "RelativeDocumentMoniker": "WebAPI\\ViewModels\\LoginViewModel.cs",
+              "ToolTip": "C:\\Users\\47349403801\\Desktop\\API-VitalHub_Atualizacao\\WebAPI\\WebAPI\\ViewModels\\LoginViewModel.cs",
+              "RelativeToolTip": "WebAPI\\ViewModels\\LoginViewModel.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-03-28T12:53:31.204Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Criptografia.cs",
+              "DocumentMoniker": "C:\\Users\\47349403801\\Desktop\\API-VitalHub_Atualizacao\\WebAPI\\WebAPI\\Utils\\Criptografia.cs",
+              "RelativeDocumentMoniker": "WebAPI\\Utils\\Criptografia.cs",
+              "ToolTip": "C:\\Users\\47349403801\\Desktop\\API-VitalHub_Atualizacao\\WebAPI\\WebAPI\\Utils\\Criptografia.cs",
+              "RelativeToolTip": "WebAPI\\Utils\\Criptografia.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-03-28T12:49:39.191Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ConsultaRepository.cs",
+              "DocumentMoniker": "C:\\Users\\47349403801\\Desktop\\API-VitalHub_Atualizacao\\WebAPI\\WebAPI\\Repositories\\ConsultaRepository.cs",
+              "RelativeDocumentMoniker": "WebAPI\\Repositories\\ConsultaRepository.cs",
+              "ToolTip": "C:\\Users\\47349403801\\Desktop\\API-VitalHub_Atualizacao\\WebAPI\\WebAPI\\Repositories\\ConsultaRepository.cs",
+              "RelativeToolTip": "WebAPI\\Repositories\\ConsultaRepository.cs",
+              "ViewState": "AQIAABMAAAAAAAAAAAAiwEQAAAAJAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-03-28T11:57:36.154Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ConsultasController.cs",
+              "DocumentMoniker": "C:\\Users\\47349403801\\Desktop\\API-VitalHub_Atualizacao\\WebAPI\\WebAPI\\Controllers\\ConsultasController.cs",
+              "RelativeDocumentMoniker": "WebAPI\\Controllers\\ConsultasController.cs",
+              "ToolTip": "C:\\Users\\47349403801\\Desktop\\API-VitalHub_Atualizacao\\WebAPI\\WebAPI\\Controllers\\ConsultasController.cs",
+              "RelativeToolTip": "WebAPI\\Controllers\\ConsultasController.cs",
+              "ViewState": "AQIAABEAAAAAAAAAAAAAwB8AAAAoAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-03-28T11:56:56.233Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
