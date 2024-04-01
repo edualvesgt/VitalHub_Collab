@@ -6,6 +6,8 @@ import { ButtonFilter } from "../../components/ButtonFilter/ButtonFilter";
 
 import Calendar from "../../components/Calendar/Calendar";
 
+import moment from "moment";
+
 import { Container, FlatContainer, RowContainer } from "../../components/Container/StyleContainer";
 
 import { Header } from "../../components/Header/Header";
@@ -26,7 +28,7 @@ export const Home = ({ navigation }) => {
 
     const image = require("../../assets/PhotoProfile.png");
 
-    // Define o estado inicial dos botões selecionados
+    // Define o estado inicial dos botões selecionadoss
     // Este estado será usado para controlar qual filtro está ativo
     const [selected, setSelected] = useState({
         agendadas: true,
@@ -35,36 +37,46 @@ export const Home = ({ navigation }) => {
     });
 
     const [consultas, setConsultas] = useState([])
+    const [pacienteInfo, setPacienteInfo] = useState([])
+
+    const currentDate = new Date();
+
+    // Convertendo a data para o formato ISO 8601
+    const currentDateTime = currentDate.toISOString();
+
+    const currentYear = currentDate.getFullYear()
 
     async function getConsultas() {
         const tokenDecoded = await userDecodeToken();
-        console.log(tokenDecoded.jti);
 
-        const token = await AsyncStorage.getItem('token')
-        console.log(token);
-        const config = { 
-            headers: {
-                Authorization : `Bearer ${token}`
-            }
-        }
 
-        await api.get('/Consultas')
+        await api.get(`/Pacientes/BuscarPorData?data=${currentDateTime}&id=${tokenDecoded.jti}`)
             .then(response => {
                 setConsultas(response.data)
-                console.log(response.data)
+
+                setPacienteInfo(consultas[0].paciente)
+                console.log(pacienteInfo.dataNascimento);
+                const age = pacienteInfo.dataNascimento.slice(0, 4)
+                console.log(age);
+
+                const ageAtual = currentYear - age
+
+                console.log(ageAtual);
+                
             }).catch(error => {
                 console.log(error);
             })
-            
-            
-           
-        // const token = userDecodeToken();
-        // console.log(token)
+
+
+        
+        
     }
+
 
     useEffect(() => {
         getConsultas();
     }, [])
+
     // Define os dados dos itens que serão exibidos
     // Cada item representa uma consulta com um ID, tempo, imagem e status
 
@@ -154,12 +166,12 @@ export const Home = ({ navigation }) => {
                 </RowContainer>
 
                 {/* Renderiza o componente FlatContainer que irá renderizar os itens da lista */}
-                {/* <FlatContainer
-                    data={data}
+                <FlatContainer
+                    data={consultas}
                     renderItem={({ item }) =>
-                        <Card situation={selected} time={item.time} image={item.image} status={item.status} navigation={navigation}
+                        <Card situation={item.situacao} time={item.time} image={item.image} status={item.status} navigation={navigation}
                             onPressCard={() => openModal()} onPressShow={() => showForm()} />}
-                    keyExtractor={item => item.id} /> */}
+                    keyExtractor={item => item.id} />
 
                 <StethoscopeView onPress={() => showSchedule()}>
                     <FontAwesome

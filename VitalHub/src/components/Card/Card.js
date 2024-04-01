@@ -5,7 +5,7 @@ import { StatusGray, StatusGreen } from "../Status/Status"
 import { TextAbout, TextAccount, TextBlue, TextRed } from "../Text/Text"
 import { CardBox, ImageCard, RowCardBox, TextCardBox } from "./StyleCard"
 
-const Card = ({ image, time, status, onPressCard, onPressShow, navigation, situation }) => {
+const Card = ({ image, time, status, onPressCard, onPressShow, navigation, situation, Age, Priority }) => {
     const [profile, setProfile] = useState("Paciente");
 
     const Check = () => {
@@ -65,7 +65,7 @@ const Card = ({ image, time, status, onPressCard, onPressShow, navigation, situa
             <Container>
                 <TextCardBox>
                     <TextAccount>Richard Kosta</TextAccount>
-                    <TextAbout>22 anos Rotina </TextAbout>
+                    <TextAbout>{Age}<TextAbout>{Priority} </TextAbout> </TextAbout>
                 </TextCardBox>
                 {Check()}
             </Container>
