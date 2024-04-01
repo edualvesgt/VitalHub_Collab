@@ -6,19 +6,39 @@ import { HeaderContainer, HeaderContent, HeaderPhoto } from "../../components/He
 import { ModalTitle } from "../../components/Modal/Modal"
 import { TextAccount } from "../../components/Text/Text"
 import { Title } from "../../components/Title/StyleTitle"
-import { ButtonLogout, ContainerForm, ScrollForm } from "./StyleProfile"
+import { ButtonLogout, ScrollForm } from "./StyleProfile"
 import { userDecodeToken } from "../../utils/Auth"
 import AsyncStorage from "@react-native-async-storage/async-storage"
-
+import api, { GetPacient } from "../../services/services"
 export const Profile = ({ navigation }) => {
 
     async function profileLoad() {
-
         const token = await userDecodeToken();
-
+        // console.log(token)
         setName(token.name)
         setEmail(token.email)
+
+        // Chamando os dados do perfil
+        await PatientData(token.token);
     }
+
+
+
+    async function PatientData(Token) {
+        await api.get(GetPacient, {
+            headers: {
+                'Authorization': `Bearer ${Token}`
+            }
+        })
+            .then(response => {
+                console.log(response.data);
+                setGetPatient(response.data);
+                // Atualiza o estado com os dados do paciente
+            }).catch(error => {
+                console.log(error);
+            })
+    }
+
 
     useEffect(() => {
         profileLoad();
@@ -37,9 +57,20 @@ export const Profile = ({ navigation }) => {
     const [name, setName] = useState("")
     const [date, setDate] = useState("")
     const [email, setEmail] = useState("")
+    const [getPatient, setGetPatient] = useState([])
 
 
-
+    // Função para formatar CPF com pontos
+    const formatarCPF = (cpf) => {
+        return cpf.substring(0, 3) + '.' + cpf.substring(3, 6) + '.' + cpf.substring(6, 9) + '-' + cpf.substring(9);
+    };
+    const formatarCEP = (cep) => {
+        if (cep) {
+            return cep.substring(0, 5) + '-' + cep.substring(5);
+        } else {
+            return 'CEP inválido';
+        }
+    };
     return (
 
         <Container>
@@ -56,23 +87,23 @@ export const Profile = ({ navigation }) => {
 
                 <BoxInput
                     textLabel={"Data de Nascimento"}
-                    placeholder={"01/01/2000"}
-                />
+                    // Use a função formatarData para exibir a data no formato desejado
+                    placeholder={new Date(getPatient.dataNascimento).toLocaleDateString()} />
                 <BoxInput
                     textLabel={"CPF"}
-                    placeholder={"000.000.000-00"}
+                    placeholder={formatarCPF(getPatient.cpf)}
                 />
 
                 <BoxInput
                     textLabel={"Endereco"}
-                    placeholder={"Rua Fulano de Tal"}
+                    placeholder={getPatient.endereco.logradouro}
                 />
 
                 <DoubleView>
                     <BoxInput
                         fieldWidth={40}
                         textLabel={"CEP"}
-                        placeholder={"00000-00"}
+                        placeholder={formatarCEP(getPatient.endereco.cep)}
                     />
                     <BoxInput
                         fieldWidth={40}

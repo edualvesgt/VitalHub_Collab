@@ -14,7 +14,7 @@ if (!global.btoa) {
 //Funcao de decodificar o token
 export const userDecodeToken = async () => {
     //Capturando o token
-    const token = await AsyncStorage.getItem('token');
+    const token = JSON.parse( await AsyncStorage.getItem('token') ).token;
 
     if (token === null) {
         return null;
@@ -26,6 +26,9 @@ export const userDecodeToken = async () => {
     return {
         role: decoded.role,
         name: decoded.name,
-        email: decoded.email
+        email: decoded.email,
+        jti : decoded.jti,
+        token : token,
+       
     }
 }

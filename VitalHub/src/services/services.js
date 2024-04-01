@@ -12,13 +12,14 @@ const baseUrlLocal = `http://${ip}:${portaAPI}/api`
 //config axios 
  const api = axios.create({
     baseURL : baseUrlLocal,
-    timeout: 3000
 })
 
 
 export const LoginResorce = "/Login"
 
 export const ListClinicResorce = "/Clinica/ListarTodas"
+
+export const GetPacient = "/Pacientes/PerfilLogado"
 
 export default api;
 
