@@ -5,11 +5,11 @@ import { StatusGray, StatusGreen } from "../Status/Status"
 import { TextAbout, TextAccount, TextBlue, TextRed } from "../Text/Text"
 import { CardBox, ImageCard, RowCardBox, TextCardBox } from "./StyleCard"
 
-const Card = ({ image, time, status, onPressCard, onPressShow, navigation, situation, Age, Priority }) => {
+const Card = ({ image, time, status, onPressCard, onPressShow, navigation, situation, Age, Priority, Name }) => {
     const [profile, setProfile] = useState("Paciente");
 
     const Check = () => {
-        if (status === "a") {
+        if (status === "agendadas") {
             return (
                 <RowCardBox>
                     <DoubleView style={{ justifyContent: 'space-between' }}>
@@ -18,7 +18,7 @@ const Card = ({ image, time, status, onPressCard, onPressShow, navigation, situa
                     </DoubleView>
                 </RowCardBox>
             );
-        } else if (status === "r") {
+        } else if (status === "realizadas") {
             return (
                 <RowCardBox>
                     <DoubleView style={{ justifyContent: 'space-between' }}>
@@ -27,7 +27,7 @@ const Card = ({ image, time, status, onPressCard, onPressShow, navigation, situa
                     </DoubleView>
                 </RowCardBox>
             );
-        } else if (status === "c") {
+        } else if (status === "canceladas") {
             return (
                 <RowCardBox>
                     <StatusGray time={time} />
@@ -64,8 +64,8 @@ const Card = ({ image, time, status, onPressCard, onPressShow, navigation, situa
             <ImageCard source={image} />
             <Container>
                 <TextCardBox>
-                    <TextAccount>Richard Kosta</TextAccount>
-                    <TextAbout>{Age}<TextAbout>{Priority} </TextAbout> </TextAbout>
+                    <TextAccount>{Name}</TextAccount>
+                    <TextAbout>{Age} anos <TextAbout>{Priority} </TextAbout> </TextAbout>
                 </TextCardBox>
                 {Check()}
             </Container>

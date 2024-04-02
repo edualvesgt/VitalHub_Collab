@@ -38,44 +38,65 @@ export const Home = ({ navigation }) => {
 
     const [consultas, setConsultas] = useState([])
     const [pacienteInfo, setPacienteInfo] = useState([])
+    const [dataConsulta, setDataConsulta] = useState('')
+    const [idade, setIdade] = useState("")
+    const [token, setToken] = useState([])
 
+    //dates
     const currentDate = new Date();
-
-    // Convertendo a data para o formato ISO 8601
+    const currentDateFormat = String(currentDate.getDate()).padStart(2, '0')
     const currentDateTime = currentDate.toISOString();
-
     const currentYear = currentDate.getFullYear()
+    const currentMonth = currentDate.getMonth() + 1;
 
     async function getConsultas() {
+
         const tokenDecoded = await userDecodeToken();
+        setToken(tokenDecoded)
 
+        const url = (tokenDecoded.role == 'Medico' ? 'Medicos' : 'Pacientes')
 
-        await api.get(`/Pacientes/BuscarPorData?data=${currentDateTime}&id=${tokenDecoded.jti}`)
+        await api.get(`/Pacientes/BuscarPorData?data=${dataConsulta}&id=${tokenDecoded.jti}`)
             .then(response => {
                 setConsultas(response.data)
 
-                setPacienteInfo(consultas[0].paciente)
-                console.log(pacienteInfo.dataNascimento);
-                const age = pacienteInfo.dataNascimento.slice(0, 4)
-                console.log(age);
+                console.log(consultas);
 
-                const ageAtual = currentYear - age
 
-                console.log(ageAtual);
-                
             }).catch(error => {
-                console.log(error);
+                console.log(" Deu erro");
             })
 
+        setPacienteInfo(consultas[0].paciente)
 
-        
-        
+        const monthUser = pacienteInfo.dataNascimento.slice(5, 7)
+        const dateUser = pacienteInfo.dataNascimento.slice(8, 10)
+
+        console.log(dateUser);
+
+        console.log(currentDateFormat);
+        const age = pacienteInfo.dataNascimento.slice(0, 4)
+
+        const idade = (currentYear - age) - 1
+
+        if (currentMonth >= monthUser) {
+            if (currentDateFormat >= dateUser) {
+                const novaIdade = idade + 1
+                return setIdade(novaIdade)
+            }
+            else { setIdade(idade) }
+        }
     }
 
 
     useEffect(() => {
-        getConsultas();
-    }, [])
+
+        if (dataConsulta != '') {
+
+            getConsultas();
+        }
+
+    }, [dataConsulta])
 
     // Define os dados dos itens que serão exibidos
     // Cada item representa uma consulta com um ID, tempo, imagem e status
@@ -155,7 +176,7 @@ export const Home = ({ navigation }) => {
         <>
             <Header navigation={navigation} />
             <Container>
-                <Calendar />
+                <Calendar setDataConsulta={setDataConsulta} />
                 <RowContainer>
                     {/* Renderiza o componente ButtonFilter para as consultas agendadas */}
                     <ButtonFilter onPress={() => { setSelected({ agendadas: true }) }} selected={selected.agendadas} buttonTitle={'Agendadas'} />
@@ -169,8 +190,14 @@ export const Home = ({ navigation }) => {
                 <FlatContainer
                     data={consultas}
                     renderItem={({ item }) =>
-                        <Card situation={item.situacao} time={item.time} image={item.image} status={item.status} navigation={navigation}
-                            onPressCard={() => openModal()} onPressShow={() => showForm()} />}
+                        <Card situation={item.situacao} time={item.time} image={item.image} Age={idade} Name={token.name}
+                            status={consultas[0].situacaoId.toUpperCase() == "3696C8B9-2ACE-4E17-BB62-0EFD3A0D88A1" ? "agendadas"
+                                : consultas[0].situacaoId.toUpperCase() == "32B379B4-450E-4208-BE2A-262870446238" ? "realizadas"
+                                : "canceladas"} navigation={navigation}
+                            Priority={consultas[0].prioridadeId.toUpperCase() == "41F7AF1C-FA6A-4E19-BB20-5F654F4284E6"
+                                ? "Rotina"
+                                : consultas[0].prioridadeId.toUpperCase() == "97E7F23F-2DB5-4590-978E-32C0D5729EDD" ? "Exame"
+                                    : "Urgência"} onPressCard={() => openModal()} onPressShow={() => showForm()} />}
                     keyExtractor={item => item.id} />
 
                 <StethoscopeView onPress={() => showSchedule()}>

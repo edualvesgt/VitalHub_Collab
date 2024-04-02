@@ -6,7 +6,7 @@ import { StyleSheet } from 'react-native';
 
 
 // Componente de calendário
-const Calendar = () => {
+const Calendar = ({setDataConsulta}) => {
 
     // Define o padrão para o calendário em Português do Brasil
     moment.updateLocale("pt-br", {
@@ -26,6 +26,7 @@ const Calendar = () => {
 
     return (
         <StyledCalendarStrip
+            onDateSelected={date => setDataConsulta(moment(date).format('YYYY-MM-DD'))}
             // Configuração da animação do calendário
             calendarAnimation={{ type: "sequence", duration: 30 }}
             // Estilo da animação de seleção do dia
