@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Modal } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Modal } from 'react-native';
 import { BoxInputForm, BoxInputPhoto } from "../../components/BoxInput/BoxInput"
 import { Button, ButtonSendPhoto, ButtonTitle } from "../../components/Button/Button"
-import { Container, ContainerForm, DoubleView, HR, InputContainer, TransparentContainer, ViewRow } from "../../components/Container/StyleContainer"
+import { Container, ContainerForm, HR, InputContainer, TransparentContainer, ViewRow } from "../../components/Container/StyleContainer"
 import { HeaderContainer, HeaderPhoto } from "../../components/HeaderPhoto/HeaderPhoto"
 import { LinkCancel } from "../../components/Links/StyleLink"
 import { TextAccount, TextRed } from "../../components/Text/Text"
@@ -10,11 +10,29 @@ import { Title } from "../../components/Title/StyleTitle"
 import { ScrollForm } from "../Profile/StyleProfile"
 import { MaterialIcons } from '@expo/vector-icons'
 import Cam from '../../components/Cam/Cam';
+import { userDecodeToken } from '../../utils/Auth';
 
 export const FormDoctor = ({ navigation }) => {
 
 
     const [openModal, setOpenModal] = useState(false);
+
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [role, setRole] = useState("")
+    async function profileLoad() {
+        const token = await userDecodeToken();
+        setName(token.name);
+        setEmail(token.email);
+        setRole(token.role)
+        // console.log(token);
+        // console.log(role);
+    }
+
+    useEffect(() => {
+        profileLoad()
+    }, [])
+
     return (
         <Container>
             <HeaderContainer>
@@ -23,72 +41,91 @@ export const FormDoctor = ({ navigation }) => {
 
             <ContainerForm>
 
-                <Title>Richard Kosta</Title>
-                <TextAccount>22 Anos    richard.kosta@gmail.com</TextAccount>
+                <Title>{name}</Title>
+                <TextAccount>22 Anos    {email}</TextAccount>
                 <ScrollForm>
+                    {role === 'medico' ? (
+                        <>
+                            <BoxInputForm
+                                fieldHeigth={120}
+                                textLabel={"Descricao"}
+                                placeholder={"Descricao"} />
 
-                    <BoxInputForm
-                        fieldHeigth={120}
-                        textLabel={"Descricao"}
-                        placeholder={"Descricao"} />
+                            <BoxInputForm
+                                textLabel={"Diagnostico"}
+                                placeholder={"Diagnostico"}
+                            />
+                            <BoxInputForm
+                                fieldHeigth={120}
+                                textLabel={"Prescricao Medica"}
+                                placeholder={"Prescricao Medica"}
+                            />
 
-                    <BoxInputForm
-                        textLabel={"Diagnostico"}
-                        placeholder={"Diagnostico"}
-                    />
-                    <BoxInputForm
-                        fieldHeigth={120}
-                        textLabel={"Prescricao Medica"}
-                        placeholder={"Prescricao Medica"}
-                    />
+                            <BoxInputForm
+                                fieldHeigth={120}
+                                placeholder={"Resultado do Exame "}
+                            />
 
-                    <InputContainer>
-                        <Button>
-                            <ButtonTitle>Salvar</ButtonTitle>
-                        </Button>
+                            <BoxInputPhoto
+                                fieldHeigth={120}
+                                placeholder={"Nenhuma Foto"}
+                                textLabel={"Exames Medicos"} />
 
-                        <Button>
-                            <ButtonTitle onPress={() => navigation.navigate('EditFormDoctor')}>Editar</ButtonTitle>
-                        </Button>
+                            <ViewRow>
+                                <ButtonSendPhoto onPress={() => { setOpenModal(true); }}>
+                                    <ButtonTitle>
+                                        <MaterialIcons name="add-a-photo" size={24} color={"white"} />
+                                    </ButtonTitle>
+                                    <ButtonTitle>ENTRAR</ButtonTitle>
+                                </ButtonSendPhoto>
 
-                        <LinkCancel onPress={() => navigation.replace('Home')}>Cancelar</LinkCancel>
+                                <TransparentContainer>
+                                    <TextRed>Cancelar</TextRed>
+                                </TransparentContainer>
+                            </ViewRow>
+                            <HR />
 
-                    </InputContainer>
+                            <InputContainer>
+                                <Button>
+                                    <ButtonTitle>Salvar</ButtonTitle>
+                                </Button>
 
-                    <BoxInputPhoto
-                        fieldHeigth={120}
-                        placeholder={"Nenhuma Foto"}
-                        textLabel={"Exames Medicos"} />
+                                <Button>
+                                    <ButtonTitle onPress={() => navigation.navigate('EditFormDoctor')}>Editar</ButtonTitle>
+                                </Button>
 
-                    <ViewRow>
-                        <ButtonSendPhoto onPress={() => {setOpenModal(true); console.log("OnOpen:::",{openModal});}}>
-                            <ButtonTitle>
-                                <MaterialIcons name="add-a-photo" size={24} color={"white"} />
-                            </ButtonTitle>
-                            <ButtonTitle>ENTRAR</ButtonTitle>
-                        </ButtonSendPhoto>
+                                <LinkCancel onPress={() => navigation.replace('Home')}>Cancelar</LinkCancel>
 
-                        <TransparentContainer>
-                            <TextRed>Cancelar</TextRed>
-                        </TransparentContainer>
-                    </ViewRow>
-                    <HR />
+                            </InputContainer>
+                        </>
+                    ) : (
+                        <>
+                            <BoxInputForm
+                                fieldHeigth={120}
+                                textLabel={"Descricao"}
+                                placeholder={"Descricao"} />
 
-                    <BoxInputForm
-                        fieldHeigth={120}
-                        placeholder={"Resultado do Exame "}
-                    />
+                            <BoxInputForm
+                                textLabel={"Diagnostico"}
+                                placeholder={"Diagnostico"}
+                            />
+                            <BoxInputForm
+                                fieldHeigth={120}
+                                textLabel={"Prescricao Medica"}
+                                placeholder={"Prescricao Medica"}
+                            />
+                        </>
+                    )}
+
 
                     <LinkCancel style={{ textAlign: 'center' }} onPress={() => navigation.replace('Main')}>Voltar</LinkCancel>
                 </ScrollForm>
             </ContainerForm>
 
             <Modal animationType="slide" transparent={true} visible={openModal} >
-                <Cam onPress={() => {setOpenModal(false); console.log("OnClose:::",{openModal});}} />
+                <Cam onPress={() => { setOpenModal(false); }} />
             </Modal>
 
-
         </Container>
-
     )
 }

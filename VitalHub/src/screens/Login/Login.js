@@ -15,7 +15,7 @@ import { ActivityIndicator } from 'react-native';
 export const Login = ({ navigation }) => {
 
     async function Login() {
-        console.log("Comecou a funcao");
+        // console.log("Comecou a funcao");
         setLoading(true); // Inicia a requisição
 
         // Chamar api
@@ -23,8 +23,8 @@ export const Login = ({ navigation }) => {
             setDisabled(true);
 
             const response = await api.post(LoginResorce, {
-                email: 'marcospietrocastro@dsladvogados.adv.br',
-                senha: 'marcospietrocastro@dsladvogados.adv.br'
+                email: 'eduardo.silva@gmail.com',
+                senha: 'eduardo.silva@gmail.com'
             })
 
 
@@ -46,7 +46,7 @@ export const Login = ({ navigation }) => {
 
     async function test() {
         const token = await userDecodeToken();
-        console.log(token);
+        // console.log(token);
     }
 
     useEffect(() => {
