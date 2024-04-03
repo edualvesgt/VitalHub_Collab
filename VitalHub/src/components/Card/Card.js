@@ -9,7 +9,7 @@ const Card = ({ image, time, status, onPressCard, onPressShow, navigation, situa
     const [profile, setProfile] = useState("Paciente");
 
     const Check = () => {
-        if (status === "agendadas") {
+        if (status === "Pendentes") {
             return (
                 <RowCardBox>
                     <DoubleView style={{ justifyContent: 'space-between' }}>
@@ -18,7 +18,7 @@ const Card = ({ image, time, status, onPressCard, onPressShow, navigation, situa
                     </DoubleView>
                 </RowCardBox>
             );
-        } else if (status === "realizadas") {
+        } else if (status === "Realizados") {
             return (
                 <RowCardBox>
                     <DoubleView style={{ justifyContent: 'space-between' }}>
@@ -27,7 +27,7 @@ const Card = ({ image, time, status, onPressCard, onPressShow, navigation, situa
                     </DoubleView>
                 </RowCardBox>
             );
-        } else if (status === "canceladas") {
+        } else if (status === "Cancelados") {
             return (
                 <RowCardBox>
                     <StatusGray time={time} />
@@ -38,29 +38,10 @@ const Card = ({ image, time, status, onPressCard, onPressShow, navigation, situa
         }
     }
 
-    // Adjusted onPress logic
-    // const handleCardPress = () => {
-    //     if (status === "r") {
-    //         if (profile === "Paciente") {
-    //             navigation.replace("FormDoctor");
-    //         } else {
-    //             onPressShow();
-    //         }
-    //     }else if (status === "c") {
-    //         onPressShow = null 
-    //     }
-    // };
 
     return (
         <CardBox onPress={() => {
-            // if (profile == "Paciente" && situation.realizadas == true) {
-            //     navigation.replace("FormDoctor");
-            // }
-            // // Verifica se a situação é cancelada e retorna null para esse caso
-            // else if (situation.agendadas == true || situation.realizadas == true ) {
-            //     onPressShow()
-            // }
-        }}>
+        }} status={status}>
             <ImageCard source={image} />
             <Container>
                 <TextCardBox>

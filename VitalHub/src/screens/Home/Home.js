@@ -22,68 +22,54 @@ import api from "../../services/services";
 import { userDecodeToken } from "../../utils/Auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// import ScheduleAppointment from "../../components/ScheduleAppointment/ScheduleAppointment";
-
 export const Home = ({ navigation }) => {
 
     const image = require("../../assets/PhotoProfile.png");
 
-    // Define o estado inicial dos botões selecionadoss
-    // Este estado será usado para controlar qual filtro está ativo
-    const [selected, setSelected] = useState({
-        agendadas: true,
-        realizadas: false,
-        canceladas: false,
-    });
-
+    const [selected, setSelected] = useState("pendentes");
+    const [responseConsulta, setResponseConsulta] = useState([])
     const [consultas, setConsultas] = useState([])
-    const [pacienteInfo, setPacienteInfo] = useState([])
     const [dataConsulta, setDataConsulta] = useState('')
-    const [idade, setIdade] = useState("")
     const [token, setToken] = useState([])
 
+    
+    
+
     async function getConsultas() {
-        const tokenDecoded = await userDecodeToken();
-        setToken(tokenDecoded)
+        console.log(dataConsulta);
+        try {
+            const tokenDecoded = await userDecodeToken();
+            setToken(tokenDecoded)
 
-        //const url = (tokenDecoded.role == 'Medico' ? 'Medicos' : 'Pacientes')
+            //const url = (tokenDecoded.role == 'Medico' ? 'Medicos' : 'Pacientes')
 
-        await api.get(`/Pacientes/BuscarPorData?data=${dataConsulta}&id=${tokenDecoded.jti}`)
-            .then(response => {
-                setConsultas(response.data)
-                console.log(response.data);
+            const res = await api.get(`/Pacientes/BuscarPorData?data=${dataConsulta}&id=${tokenDecoded.jti}`)
+            setResponseConsulta(res.data)
+            console.log(res.data);
+        } catch (error) {
+            console.log(error)
+        }
 
-            }).catch(error => {
-                console.log(" Deu erro" + error);
-            })
+        const novaConsulta = responseConsulta.map(item => ({
+            medicoNome: item.medicoClinica.medico.idNavigation.nome,
+            medicoCrm: item.medicoClinica.medico.crm,
+            consultaSituacao: item.situacao.situacao,
+            id: item.id
+        }))
+
+        setConsultas(novaConsulta)
+        console.log(consultas);
+       
     }
 
     useEffect(() => {
 
         if (dataConsulta != '') {
-
+            console.log("Ja chamei");
             getConsultas();
         }
 
     }, [dataConsulta])
-
-    // Função para verificar se um item deve ser exibido com base no filtro ativo
-    const Check = (data) => {
-        if (data.status === "agendadas" && selected.agendadas == true) {
-            return true;
-        }
-        if (data.status === "realizadas" && selected.realizadas == true) {
-            return true;
-        }
-        if (data.status === "canceladas" && selected.canceladas == true) {
-            return true;
-        }
-        return false;
-    }
-
-    // Filtra os itens com base no filtro ativo
-    const data = consultas.filter(Check);
-
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -114,40 +100,42 @@ export const Home = ({ navigation }) => {
         setModalSchedule(false)
     }
 
-    // Renderiza o componente Header, Container, Calendar, RowContainer, ScrollForm e FlatContainer
-    // O componente ButtonFilter é usado para controlar os filtros
-    // O componente Card é usado para exibir os detalhes de cada consulta
     return (
         <>
             <Header navigation={navigation} />
             <Container>
+
                 <Calendar setDataConsulta={setDataConsulta} />
+
                 <RowContainer>
-                    {/* Renderiza o componente ButtonFilter para as consultas agendadas */}
-                    <ButtonFilter onPress={() => { setSelected({ agendadas : true}) }} selected={selected.agendadas} buttonTitle={'Agendadas'} />
-                    {/* Renderiza o componente ButtonFilter para as consultas realizadas */}
-                    <ButtonFilter onPress={() => { setSelected({ realizadas: true }) }} selected={selected.realizadas} buttonTitle={'Realizadas'} />
-                    {/* Renderiza o componente ButtonFilter para as consultas canceladas */}
-                    <ButtonFilter onPress={() => { setSelected({ canceladas: true }) }} selected={selected.canceladas} buttonTitle={'Canceladas'} />
+                    <ButtonFilter clickButton={selected == "pendentes"} selected={selected} onPress={() => setSelected("pendentes")} buttonTitle={'Agendadas'} />
+
+                    <ButtonFilter clickButton={selected == "realizadas"} selected={selected} onPress={() => setSelected("realizadas")} buttonTitle={'Realizadas'} />
+
+                    <ButtonFilter clickButton={selected == "canceladas"} selected={selected} onPress={() => setSelected("canceladas")} buttonTitle={'Canceladas'} />
                 </RowContainer>
 
-                {/* Renderiza o componente FlatContainer que irá renderizar os itens da lista */}
                 <FlatContainer
                     data={consultas}
+                    keyExtractor={item => item.id}
                     renderItem={({ item }) =>
-                        item.situacao.situacao == selected && (
-                            <ButtonFilter  buttonTitle={'Agendadas'} />
+                    (
+                        item.consultaSituacao == "Pendentes" ? (
 
-                            // <Card situation={item.situacao} time={item.time} image={item.image} Name={consultas[0].medicoClinica.medico.idNavigation.nome} Age={consultas[0].medicoClinica.medico.crm}
-                            //     status={consultas[0].situacaoId.toUpperCase() == "3696C8B9-2ACE-4E17-BB62-0EFD3A0D88A1" ? "agendadas"
-                            //         : consultas[0].situacaoId.toUpperCase() == "32B379B4-450E-4208-BE2A-262870446238" ? "realizadas"
-                            //             : "canceladas"} navigation={navigation}
-                            //     Priority={consultas[0].prioridadeId.toUpperCase() == "41F7AF1C-FA6A-4E19-BB20-5F654F4284E6"
-                            //         ? "Rotina"
-                            //         : consultas[0].prioridadeId.toUpperCase() == "97E7F23F-2DB5-4590-978E-32C0D5729EDD" ? "Exame"
-                            //             : "Urgência"} onPressCard={() => openModal()} onPressShow={() => showForm()} />
-                        )}
-                    keyExtractor={item => item.id} />
+                            <Card
+                                situation={item.situacao}
+                                time={item.time}
+                                image={item.image}
+                                status={item.consultaSituacao}
+                                Name={item.medicoNome}
+                                Age={item.medicoCrm}
+                                navigation={navigation}
+                                onPressCard={() => openModal()} onPressShow={() => showForm()} />
+                        ) : null
+
+
+                    )}
+                />
 
                 <StethoscopeView onPress={() => showSchedule()}>
                     <FontAwesome
