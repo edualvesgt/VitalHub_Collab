@@ -47,12 +47,37 @@ namespace WebAPI.Controllers
             return Ok(pacienteRepository.BuscarRealizadas(idUsuario));
         }
 
+        //[HttpGet("PerfilLogado")]
+        //public IActionResult BuscarLogado()
+        //{
+        //    Guid idUsuario = Guid.Parse(HttpContext.User.Claims.First(c => c.Type == JwtRegisteredClaimNames.Jti).Value);
+
+        //    return Ok(pacienteRepository.BuscarPorId(idUsuario));
+        //}
+
+
+        //METODO REALIZADO POR MIM !!!!!!!!!!!!!!!!
+
         [HttpGet("PerfilLogado")]
         public IActionResult BuscarLogado()
         {
-            Guid idUsuario = Guid.Parse(HttpContext.User.Claims.First(c => c.Type == JwtRegisteredClaimNames.Jti).Value);
+            try
+            {
+                Guid idUsuario = Guid.Parse(HttpContext.User.Claims.First(c => c.Type == JwtRegisteredClaimNames.Jti).Value);
+                var paciente = pacienteRepository.BuscarPorId(idUsuario);
 
-            return Ok(pacienteRepository.BuscarPorId(idUsuario));
+                if (paciente == null)
+                {
+                    return NotFound("Paciente não encontrado.");
+                }
+
+                return Ok(paciente);
+            }
+            catch (Exception e)
+            {
+                // Aqui você pode logar a exceção ou fazer outras ações de tratamento de erro
+                return BadRequest(e.Message);
+            }
         }
 
         //[Authorize]
@@ -93,7 +118,7 @@ namespace WebAPI.Controllers
         [HttpGet("BuscarPorData")]
         public IActionResult BuscarPorData(DateTime data, Guid id)
         {
-            return Ok(pacienteRepository.BuscarPorData(data,id));
+            return Ok(pacienteRepository.BuscarPorData(data, id));
         }
     }
 }
