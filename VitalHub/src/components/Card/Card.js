@@ -53,13 +53,13 @@ const Card = ({ image, time, status, onPressCard, onPressShow, navigation, situa
 
     return (
         <CardBox onPress={() => {
-            if (profile == "Paciente" && situation.realizadas == true) {
-                navigation.replace("FormDoctor");
-            }
-            // Verifica se a situação é cancelada e retorna null para esse caso
-            else if (situation.agendadas == true || situation.realizadas == true ) {
-                onPressShow()
-            }
+            // if (profile == "Paciente" && situation.realizadas == true) {
+            //     navigation.replace("FormDoctor");
+            // }
+            // // Verifica se a situação é cancelada e retorna null para esse caso
+            // else if (situation.agendadas == true || situation.realizadas == true ) {
+            //     onPressShow()
+            // }
         }}>
             <ImageCard source={image} />
             <Container>

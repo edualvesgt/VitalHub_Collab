@@ -42,52 +42,21 @@ export const Home = ({ navigation }) => {
     const [idade, setIdade] = useState("")
     const [token, setToken] = useState([])
 
-    //dates
-    const currentDate = new Date();
-    const currentDateFormat = String(currentDate.getDate()).padStart(2, '0')
-    const currentDateTime = currentDate.toISOString();
-    const currentYear = currentDate.getFullYear()
-    const currentMonth = currentDate.getMonth() + 1;
-
     async function getConsultas() {
-
         const tokenDecoded = await userDecodeToken();
         setToken(tokenDecoded)
 
-        const url = (tokenDecoded.role == 'Medico' ? 'Medicos' : 'Pacientes')
+        //const url = (tokenDecoded.role == 'Medico' ? 'Medicos' : 'Pacientes')
 
         await api.get(`/Pacientes/BuscarPorData?data=${dataConsulta}&id=${tokenDecoded.jti}`)
             .then(response => {
                 setConsultas(response.data)
-
-                console.log(consultas);
-
+                console.log(response.data);
 
             }).catch(error => {
-                console.log(" Deu erro");
+                console.log(" Deu erro" + error);
             })
-
-        setPacienteInfo(consultas[0].paciente)
-
-        const monthUser = pacienteInfo.dataNascimento.slice(5, 7)
-        const dateUser = pacienteInfo.dataNascimento.slice(8, 10)
-
-        console.log(dateUser);
-
-        console.log(currentDateFormat);
-        const age = pacienteInfo.dataNascimento.slice(0, 4)
-
-        const idade = (currentYear - age) - 1
-
-        if (currentMonth >= monthUser) {
-            if (currentDateFormat >= dateUser) {
-                const novaIdade = idade + 1
-                return setIdade(novaIdade)
-            }
-            else { setIdade(idade) }
-        }
     }
-
 
     useEffect(() => {
 
@@ -98,46 +67,22 @@ export const Home = ({ navigation }) => {
 
     }, [dataConsulta])
 
-    // Define os dados dos itens que serão exibidos
-    // Cada item representa uma consulta com um ID, tempo, imagem e status
-
-    // const dataItens = [
-    //     {
-    //         id: 'fsdfsfsdf',
-    //         time: '22:00',
-    //         image: image,
-    //         status: "r" // 'r' representa 'realizada'
-    //     },
-    //     {
-    //         id: 'sdfsdf',
-    //         time: '23:00',
-    //         image: image,
-    //         status: "a" // 'a' representa 'agendada'
-    //     },
-    //     {
-    //         id: 'asdas',
-    //         time: '16:00',
-    //         image: image,
-    //         status: "c" // 'c' representa 'cancelada'
-    //     }
-    // ]
-
     // Função para verificar se um item deve ser exibido com base no filtro ativo
     const Check = (data) => {
-        if (data.status === "a" && selected.agendadas == true) {
+        if (data.status === "agendadas" && selected.agendadas == true) {
             return true;
         }
-        if (data.status === "r" && selected.realizadas == true) {
+        if (data.status === "realizadas" && selected.realizadas == true) {
             return true;
         }
-        if (data.status === "c" && selected.canceladas == true) {
+        if (data.status === "canceladas" && selected.canceladas == true) {
             return true;
         }
         return false;
     }
 
     // Filtra os itens com base no filtro ativo
-    // const data = dataItens.filter(Check);
+    const data = consultas.filter(Check);
 
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -161,10 +106,10 @@ export const Home = ({ navigation }) => {
     }
     const [isModalSchedule, setModalSchedule] = useState(false);
 
-
     const showSchedule = () => {
         setModalSchedule(true)
     }
+
     const closeSchedule = () => {
         setModalSchedule(false)
     }
@@ -179,7 +124,7 @@ export const Home = ({ navigation }) => {
                 <Calendar setDataConsulta={setDataConsulta} />
                 <RowContainer>
                     {/* Renderiza o componente ButtonFilter para as consultas agendadas */}
-                    <ButtonFilter onPress={() => { setSelected({ agendadas: true }) }} selected={selected.agendadas} buttonTitle={'Agendadas'} />
+                    <ButtonFilter onPress={() => { setSelected({ agendadas : true}) }} selected={selected.agendadas} buttonTitle={'Agendadas'} />
                     {/* Renderiza o componente ButtonFilter para as consultas realizadas */}
                     <ButtonFilter onPress={() => { setSelected({ realizadas: true }) }} selected={selected.realizadas} buttonTitle={'Realizadas'} />
                     {/* Renderiza o componente ButtonFilter para as consultas canceladas */}
@@ -190,14 +135,18 @@ export const Home = ({ navigation }) => {
                 <FlatContainer
                     data={consultas}
                     renderItem={({ item }) =>
-                        <Card situation={item.situacao} time={item.time} image={item.image} Age={idade} Name={token.name}
-                            status={consultas[0].situacaoId.toUpperCase() == "3696C8B9-2ACE-4E17-BB62-0EFD3A0D88A1" ? "agendadas"
-                                : consultas[0].situacaoId.toUpperCase() == "32B379B4-450E-4208-BE2A-262870446238" ? "realizadas"
-                                : "canceladas"} navigation={navigation}
-                            Priority={consultas[0].prioridadeId.toUpperCase() == "41F7AF1C-FA6A-4E19-BB20-5F654F4284E6"
-                                ? "Rotina"
-                                : consultas[0].prioridadeId.toUpperCase() == "97E7F23F-2DB5-4590-978E-32C0D5729EDD" ? "Exame"
-                                    : "Urgência"} onPressCard={() => openModal()} onPressShow={() => showForm()} />}
+                        item.situacao.situacao == selected && (
+                            <ButtonFilter  buttonTitle={'Agendadas'} />
+
+                            // <Card situation={item.situacao} time={item.time} image={item.image} Name={consultas[0].medicoClinica.medico.idNavigation.nome} Age={consultas[0].medicoClinica.medico.crm}
+                            //     status={consultas[0].situacaoId.toUpperCase() == "3696C8B9-2ACE-4E17-BB62-0EFD3A0D88A1" ? "agendadas"
+                            //         : consultas[0].situacaoId.toUpperCase() == "32B379B4-450E-4208-BE2A-262870446238" ? "realizadas"
+                            //             : "canceladas"} navigation={navigation}
+                            //     Priority={consultas[0].prioridadeId.toUpperCase() == "41F7AF1C-FA6A-4E19-BB20-5F654F4284E6"
+                            //         ? "Rotina"
+                            //         : consultas[0].prioridadeId.toUpperCase() == "97E7F23F-2DB5-4590-978E-32C0D5729EDD" ? "Exame"
+                            //             : "Urgência"} onPressCard={() => openModal()} onPressShow={() => showForm()} />
+                        )}
                     keyExtractor={item => item.id} />
 
                 <StethoscopeView onPress={() => showSchedule()}>
@@ -214,7 +163,7 @@ export const Home = ({ navigation }) => {
             </Container>
 
             <CancelAppointment isOpen={isModalOpen} onClose={closeModal} navigation={navigation} />
-            <ScheduleAppointment isOpen={isModalSchedule} onClose={closeSchedule} navigation={navigation} />
+            <ScheduleAppointment isOpen={isModalSchedule} onClose={closeSchedule} navigation={navigation} roleUsuario={token.role} />
             <ShowFormDoctor isOpen={isShow} onClose={closeForm} navigation={navigation} situacion={selected} titleName={"Nome da Pessoa"} about={"Informacoes"} />
         </>
     )
