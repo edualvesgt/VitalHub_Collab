@@ -21,5 +21,7 @@ export const ListClinicResorce = "/Clinica/ListarTodas"
 
 export const GetPacient = "/Pacientes/PerfilLogado"
 
+export const Appointment = "/Consultas"
+
 export default api;
 

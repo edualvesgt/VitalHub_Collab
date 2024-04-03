@@ -5,12 +5,13 @@ import { Button, ButtonSendPhoto, ButtonTitle } from "../../components/Button/Bu
 import { Container, ContainerForm, HR, InputContainer, TransparentContainer, ViewRow } from "../../components/Container/StyleContainer"
 import { HeaderContainer, HeaderPhoto } from "../../components/HeaderPhoto/HeaderPhoto"
 import { LinkCancel } from "../../components/Links/StyleLink"
-import { TextAccount, TextRed } from "../../components/Text/Text"
+import { TextAbout, TextAccount, TextRed } from "../../components/Text/Text"
 import { Title } from "../../components/Title/StyleTitle"
 import { ScrollForm } from "../Profile/StyleProfile"
 import { MaterialIcons } from '@expo/vector-icons'
 import Cam from '../../components/Cam/Cam';
 import { userDecodeToken } from '../../utils/Auth';
+import api, { Appointment } from '../../services/services';
 
 export const FormDoctor = ({ navigation }) => {
 
@@ -20,6 +21,8 @@ export const FormDoctor = ({ navigation }) => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [role, setRole] = useState("")
+    const [listAppointment, setListAppointment] = useState([])
+
     async function profileLoad() {
         const token = await userDecodeToken();
         setName(token.name);
@@ -27,8 +30,24 @@ export const FormDoctor = ({ navigation }) => {
         setRole(token.role)
         // console.log(token);
         // console.log(role);
+
+        await GetAppointment(token.token)
     }
 
+    async function GetAppointment(token) {
+
+        await api.get(Appointment, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }).then(response => {
+            console.log(response.data);
+            setListAppointment(response.data)
+        }).catch(error => {
+            console.log(error);
+        })
+
+    }
     useEffect(() => {
         profileLoad()
     }, [])
@@ -42,18 +61,20 @@ export const FormDoctor = ({ navigation }) => {
             <ContainerForm>
 
                 <Title>{name}</Title>
-                <TextAccount>22 Anos    {email}</TextAccount>
+                <TextAccount>Idade vir da Home <TextAbout>{email}</TextAbout> </TextAccount>
+
                 <ScrollForm>
                     {role === 'medico' ? (
                         <>
                             <BoxInputForm
                                 fieldHeigth={120}
                                 textLabel={"Descricao"}
-                                placeholder={"Descricao"} />
+                            // placeholder={listAppointment[0].descricao} 
+                            />
 
                             <BoxInputForm
                                 textLabel={"Diagnostico"}
-                                placeholder={"Diagnostico"}
+                            // placeholder={listAppointment[0].diagnostico}
                             />
                             <BoxInputForm
                                 fieldHeigth={120}
@@ -103,11 +124,12 @@ export const FormDoctor = ({ navigation }) => {
                             <BoxInputForm
                                 fieldHeigth={120}
                                 textLabel={"Descricao"}
-                                placeholder={"Descricao"} />
+                                placeholder={listAppointment.length > 0 ? listAppointment[0].descricao : ""}
+                            />
 
                             <BoxInputForm
                                 textLabel={"Diagnostico"}
-                                placeholder={"Diagnostico"}
+                                placeholder={listAppointment.length > 0 ? listAppointment[0].descricao : ""}
                             />
                             <BoxInputForm
                                 fieldHeigth={120}
