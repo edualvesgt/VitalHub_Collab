@@ -26,49 +26,67 @@ export const Home = ({ navigation }) => {
 
     const image = require("../../assets/PhotoProfile.png");
 
-    const [selected, setSelected] = useState("pendentes");
+    const [selected, setSelected] = useState("agendadas");
     const [responseConsulta, setResponseConsulta] = useState([])
-    const [consultas, setConsultas] = useState([])
+    const [consultas, setConsultas] = useState(null)
     const [dataConsulta, setDataConsulta] = useState('')
-    const [token, setToken] = useState([])
+    const [token, setToken] = useState([]);
 
-    
-    
+    async function profileLoad() {
+        const tokenDecoded = await userDecodeToken();
+
+        if (tokenDecoded) {
+            setToken(tokenDecoded)
+            console.log(token.role);
+            setDataConsulta(moment().format('YYYY-MM-DD'))
+        }
+    }
 
     async function getConsultas() {
         console.log(dataConsulta);
+
         try {
-            const tokenDecoded = await userDecodeToken();
-            setToken(tokenDecoded)
-
             //const url = (tokenDecoded.role == 'Medico' ? 'Medicos' : 'Pacientes')
+            console.log(`/Pacientes/BuscarPorData?data=${dataConsulta}&id=${token.jti}`)
 
-            const res = await api.get(`/Pacientes/BuscarPorData?data=${dataConsulta}&id=${tokenDecoded.jti}`)
-            setResponseConsulta(res.data)
-            console.log(res.data);
+            await api.get(`/Pacientes/BuscarPorData?data=${dataConsulta}&id=${token.jti}`)
+                .then(response => {
+
+
+                    const novaConsulta = response.data.map(item => ({
+                        medicoNome: item.medicoClinica.medico.idNavigation.nome,
+                        medicoCrm: item.medicoClinica.medico.crm,
+                        consultaSituacao: item.situacao.situacao,
+                        id: item.id
+                    }))
+
+                    setResponseConsulta(novaConsulta)
+
+
+                }).catch(error => {
+                    console.log(error)
+                })
+
+
+            // console.log(res.data.descricao);
+
         } catch (error) {
             console.log(error)
         }
 
-        const novaConsulta = responseConsulta.map(item => ({
-            medicoNome: item.medicoClinica.medico.idNavigation.nome,
-            medicoCrm: item.medicoClinica.medico.crm,
-            consultaSituacao: item.situacao.situacao,
-            id: item.id
-        }))
+        // setConsultas(novaConsulta)
 
-        setConsultas(novaConsulta)
-        console.log(consultas);
-       
+
     }
 
     useEffect(() => {
+        profileLoad();
+    }, [])
 
+    useEffect(() => {
         if (dataConsulta != '') {
-            console.log("Ja chamei");
             getConsultas();
         }
-
     }, [dataConsulta])
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -82,14 +100,17 @@ export const Home = ({ navigation }) => {
     };;
 
     const [isShow, setIsShow] = useState(false);
+    const [cancel, setCancel] = useState(false);
 
-    const showForm = () => {
+    const showForm = (consulta) => {
         setIsShow(true)
 
     }
+
     const closeForm = () => {
         setIsShow(false)
     }
+
     const [isModalSchedule, setModalSchedule] = useState(false);
 
     const showSchedule = () => {
@@ -108,7 +129,7 @@ export const Home = ({ navigation }) => {
                 <Calendar setDataConsulta={setDataConsulta} />
 
                 <RowContainer>
-                    <ButtonFilter clickButton={selected == "pendentes"} selected={selected} onPress={() => setSelected("pendentes")} buttonTitle={'Agendadas'} />
+                    <ButtonFilter clickButton={selected == "agendadas"} selected={selected} onPress={() => setSelected("agendadas")} buttonTitle={'Agendadas'} />
 
                     <ButtonFilter clickButton={selected == "realizadas"} selected={selected} onPress={() => setSelected("realizadas")} buttonTitle={'Realizadas'} />
 
@@ -116,21 +137,23 @@ export const Home = ({ navigation }) => {
                 </RowContainer>
 
                 <FlatContainer
-                    data={consultas}
+                    data={responseConsulta}
                     keyExtractor={item => item.id}
                     renderItem={({ item }) =>
                     (
-                        item.consultaSituacao == "Pendentes" ? (
+                        item.consultaSituacao == selected ? (
 
                             <Card
-                                situation={item.situacao}
+                                role={token.role}
                                 time={item.time}
-                                image={item.image}
+                                image={image}
                                 status={item.consultaSituacao}
                                 Name={item.medicoNome}
                                 Age={item.medicoCrm}
                                 navigation={navigation}
-                                onPressCard={() => openModal()} onPressShow={() => showForm()} />
+                                onPressCard={() => openModal()}
+                                onPressShow={() => showForm() }
+                            />
                         ) : null
 
 
@@ -150,9 +173,25 @@ export const Home = ({ navigation }) => {
 
             </Container>
 
-            <CancelAppointment isOpen={isModalOpen} onClose={closeModal} navigation={navigation} />
-            <ScheduleAppointment isOpen={isModalSchedule} onClose={closeSchedule} navigation={navigation} roleUsuario={token.role} />
-            <ShowFormDoctor isOpen={isShow} onClose={closeForm} navigation={navigation} situacion={selected} titleName={"Nome da Pessoa"} about={"Informacoes"} />
+            <CancelAppointment
+                isOpen={isModalOpen}
+                onClose={closeModal}
+                navigation={navigation}
+            />
+
+            <ScheduleAppointment
+                isOpen={isModalSchedule}
+                onClose={closeSchedule}
+                navigation={navigation}
+                roleUsuario={token.role}
+            />
+
+            <ShowFormDoctor
+                isOpen={isShow}
+                onClose={cancel}
+                navigation={navigation}
+                status={selected}
+            />
         </>
     )
 }

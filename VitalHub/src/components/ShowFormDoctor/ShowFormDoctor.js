@@ -5,7 +5,7 @@ import { TextAbout } from "../Text/Text";
 import { Title } from "../Title/StyleTitle";
 import { PhotoShow, ShowModalContainer, ShowModalContent } from "./StyleShowFormDoctor";
 
-const ShowFormDoctor = ({ isOpen, onClose, navigation, situacion, titleName, about }) => {
+const ShowFormDoctor = ({ isOpen, onClose, navigation, status, role, consulta }) => {
 
     const image = require("../../assets/PhotoGirl.png");
 
@@ -15,18 +15,15 @@ const ShowFormDoctor = ({ isOpen, onClose, navigation, situacion, titleName, abo
 
     const [profile, setProfile] = useState("Medico");
 
-    
-
-
     return (
         <ShowModalContainer>
             <ShowModalContent>
                 <PhotoShow source={image} />
-                <Title>{titleName}</Title>
-                <TextAbout>{about}</TextAbout>
+                <Title></Title>
+                <TextAbout></TextAbout>
 
-                {situacion.agendadas === true ? (
-                    <Button onPress={() => navigation.replace('LocalClinic')}>
+                {status == "agendadas" ? (
+                    <Button onPress={() => navigation.replace('LocalClinic', )}>
                         <ButtonTitle>Ver Local Consulta</ButtonTitle>
                     </Button>
                 ) : (

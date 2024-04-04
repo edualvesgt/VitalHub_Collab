@@ -5,11 +5,22 @@ import { StatusGray, StatusGreen } from "../Status/Status"
 import { TextAbout, TextAccount, TextBlue, TextRed } from "../Text/Text"
 import { CardBox, ImageCard, RowCardBox, TextCardBox } from "./StyleCard"
 
-const Card = ({ image, time, status, onPressCard, onPressShow, navigation, situation, Age, Priority, Name }) => {
+const Card = ({
+    image,
+    time,
+    status,
+    onPressCard,
+    onPressShow,
+    navigation,
+    situation,
+    Age,
+    Priority,
+    Name,
+    role }) => {
     const [profile, setProfile] = useState("Paciente");
 
     const Check = () => {
-        if (status === "Pendentes") {
+        if (status === "agendadas") {
             return (
                 <RowCardBox>
                     <DoubleView style={{ justifyContent: 'space-between' }}>
@@ -18,7 +29,7 @@ const Card = ({ image, time, status, onPressCard, onPressShow, navigation, situa
                     </DoubleView>
                 </RowCardBox>
             );
-        } else if (status === "Realizados") {
+        } else if (status === "realizadas") {
             return (
                 <RowCardBox>
                     <DoubleView style={{ justifyContent: 'space-between' }}>
@@ -27,7 +38,7 @@ const Card = ({ image, time, status, onPressCard, onPressShow, navigation, situa
                     </DoubleView>
                 </RowCardBox>
             );
-        } else if (status === "Cancelados") {
+        } else if (status === "canceladas") {
             return (
                 <RowCardBox>
                     <StatusGray time={time} />
@@ -40,13 +51,20 @@ const Card = ({ image, time, status, onPressCard, onPressShow, navigation, situa
 
 
     return (
-        <CardBox onPress={() => {
-        }} status={status}>
+        <CardBox role={role} status={status} onPress={() => {
+            if (role == "Paciente" && status == "realizadas") {
+                navigation.replace("FormDoctor");
+            }
+            // Verifica se a situação é cancelada e retorna null para esse caso
+            else if (status == "agendadas") {
+                onPressShow()
+            }
+        }} >
             <ImageCard source={image} />
             <Container>
                 <TextCardBox>
                     <TextAccount>{Name}</TextAccount>
-                    <TextAbout>{Age} anos <TextAbout>{Priority} </TextAbout> </TextAbout>
+                    <TextAbout role={role} > {role == "Paciente" ? `CRM ${Age}` : `${Age} Anos`}  <TextAbout>{Priority} </TextAbout> </TextAbout>
                 </TextCardBox>
                 {Check()}
             </Container>

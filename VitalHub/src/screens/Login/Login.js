@@ -22,8 +22,8 @@ export const Login = ({ navigation }) => {
         try {
             setDisabled(true);
             const response = await api.post('/Login', {
-                email: 'eduardo.silva@gmail.com',
-                senha: 'eduardo.silva@gmail.com'
+                email: 'paciente@paciente',
+                senha: 'paciente@paciente'
 
             })
             await AsyncStorage.setItem("token", JSON.stringify(response.data))
