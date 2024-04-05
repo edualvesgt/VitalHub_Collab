@@ -31,13 +31,18 @@ export const Home = ({ navigation }) => {
     const [consultas, setConsultas] = useState(null)
     const [dataConsulta, setDataConsulta] = useState('')
     const [token, setToken] = useState([]);
+    const [isMedic, setIsMedic] = useState(true)
 
     async function profileLoad() {
         const tokenDecoded = await userDecodeToken();
 
         if (tokenDecoded) {
             setToken(tokenDecoded)
-            console.log(token.role);
+
+            console.log(tokenDecoded);
+            
+            // setIsMedic(tokenDecoded === "Medico" )
+
             setDataConsulta(moment().format('YYYY-MM-DD'))
         }
     }
@@ -61,7 +66,7 @@ export const Home = ({ navigation }) => {
                     }))
 
                     setResponseConsulta(novaConsulta)
-
+                    console.log(responseConsulta);
 
                 }).catch(error => {
                     console.log(error)
@@ -97,7 +102,6 @@ export const Home = ({ navigation }) => {
 
     const showForm = (consulta) => {
         setIsShow(true)
-
     }
 
     const closeForm = () => {
@@ -137,7 +141,7 @@ export const Home = ({ navigation }) => {
                         item.consultaSituacao == selected ? (
 
                             <Card
-                                role={token.role}
+                                role={isMedic}
                                 time={item.time}
                                 image={image}
                                 status={item.consultaSituacao}

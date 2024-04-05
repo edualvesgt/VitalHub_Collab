@@ -64,7 +64,11 @@ const Card = ({
             <Container>
                 <TextCardBox>
                     <TextAccount>{Name}</TextAccount>
+<<<<<<< HEAD
                     <TextAbout> {role == "Paciente" ? `CRM ${Age}` : `${Age} Anos`}  <TextAbout>{Priority} </TextAbout> </TextAbout>
+=======
+                    <TextAbout > {role ? `${Age} Anos ` : `CRM ${Age}`}  <TextAbout>{Priority} </TextAbout> </TextAbout>
+>>>>>>> bfc1e84da9ecd2b4685fe2e78c57eae6ffc8a91f
                 </TextCardBox>
                 {Check()}
             </Container>

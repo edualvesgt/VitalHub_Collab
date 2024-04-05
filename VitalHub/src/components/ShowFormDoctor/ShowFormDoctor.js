@@ -4,6 +4,7 @@ import { LinkCancel } from "../Links/StyleLink";
 import { TextAbout } from "../Text/Text";
 import { Title } from "../Title/StyleTitle";
 import { PhotoShow, ShowModalContainer, ShowModalContent } from "./StyleShowFormDoctor";
+import { Alert } from "react-native";
 
 const ShowFormDoctor = ({ isOpen, onClose, navigation, status, role, consulta }) => {
 
@@ -27,7 +28,7 @@ const ShowFormDoctor = ({ isOpen, onClose, navigation, status, role, consulta })
                         <ButtonTitle>Ver Local Consulta</ButtonTitle>
                     </Button>
                 ) : (
-                    <Button>
+                    <Button onPress={()=> Alert.alert('Prontuário', 'Estou a inserir um prontuário')}>
                         <ButtonTitle>Inserir Prontuario</ButtonTitle>
                     </Button>
                 )}
