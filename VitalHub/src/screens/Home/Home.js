@@ -66,17 +66,10 @@ export const Home = ({ navigation }) => {
                 }).catch(error => {
                     console.log(error)
                 })
-
-
             // console.log(res.data.descricao);
-
         } catch (error) {
             console.log(error)
         }
-
-        // setConsultas(novaConsulta)
-
-
     }
 
     useEffect(() => {
@@ -152,7 +145,7 @@ export const Home = ({ navigation }) => {
                                 Age={item.medicoCrm}
                                 navigation={navigation}
                                 onPressCard={() => openModal()}
-                                onPressShow={() => showForm() }
+                                onPressShow={() => showForm()}
                             />
                         ) : null
 
@@ -188,7 +181,7 @@ export const Home = ({ navigation }) => {
 
             <ShowFormDoctor
                 isOpen={isShow}
-                onClose={cancel}
+                onClose={closeForm}
                 navigation={navigation}
                 status={selected}
             />

@@ -64,7 +64,7 @@ const Card = ({
             <Container>
                 <TextCardBox>
                     <TextAccount>{Name}</TextAccount>
-                    <TextAbout role={role} > {role == "Paciente" ? `CRM ${Age}` : `${Age} Anos`}  <TextAbout>{Priority} </TextAbout> </TextAbout>
+                    <TextAbout> {role == "Paciente" ? `CRM ${Age}` : `${Age} Anos`}  <TextAbout>{Priority} </TextAbout> </TextAbout>
                 </TextCardBox>
                 {Check()}
             </Container>
