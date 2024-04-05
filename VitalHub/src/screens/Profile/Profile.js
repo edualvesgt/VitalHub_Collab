@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { BoxInput } from "../../components/BoxInput/BoxInput"
+import { BoxInput, BoxInputForm } from "../../components/BoxInput/BoxInput"
 import { Button, ButtonTitle } from "../../components/Button/Button"
 import { Container, DoubleView, InputContainer } from "../../components/Container/StyleContainer"
 import { HeaderContainer, HeaderContent, HeaderPhoto } from "../../components/HeaderPhoto/HeaderPhoto"
@@ -51,6 +51,7 @@ export const Profile = ({ navigation }) => {
     const [date, setDate] = useState("");
     const [email, setEmail] = useState("");
     const [getPatient, setGetPatient] = useState(null);
+    const [isEditing, setIsEditing] = useState(false);
 
     const formatarCEP = (cep) => {
         return cep.substring(0, 5) + '-' + cep.substring(5);
@@ -71,47 +72,93 @@ export const Profile = ({ navigation }) => {
                 <Title>{name}</Title>
                 <TextAccount>{email}</TextAccount>
             </ModalTitle>
-
             <ScrollForm>
                 {getPatient && (
                     <>
-                        <BoxInput
-                            textLabel={"Data de Nascimento"}
-                            placeholder={getPatient.dataNascimento ? new Date(getPatient.dataNascimento).toLocaleDateString() : ""}
-                        />
-                        <BoxInput
-                            textLabel={"CPF"}
-                            placeholder={formatarCPF(getPatient.cpf) || ""}
-                        />
-                        <BoxInput
-                            textLabel={"Endereco"}
-                            placeholder={getPatient.endereco.logradouro || ""}
-                        />
-                        <DoubleView>
-                            <BoxInput
-                                fieldWidth={40}
-                                textLabel={"CEP"}
-                                placeholder={formatarCEP(getPatient.endereco.cep) || ""}
-                            />
-                            <BoxInput
-                                fieldWidth={40}
-                                textLabel={"Cidade"}
-                                placeholder={getPatient.endereco.cidade || ""}
-                            />
-                        </DoubleView>
+                        {isEditing ? (
+                            <>
+                                <BoxInputForm
+                                    textLabel={"Data de Nascimento"}
+                                    placeholder={getPatient.dataNascimento ? new Date(getPatient.dataNascimento).toLocaleDateString() : ""}
+                                    editable= {true}
+                                />
+                                <BoxInputForm
+                                    textLabel={"CPF"}
+                                    placeholder={formatarCPF(getPatient.cpf) || ""}
+                                    editable= {true}
+                                />
+                                <BoxInputForm
+                                    textLabel={"Endereco"}
+                                    placeholder={getPatient.endereco.logradouro || ""}
+                                    editable= {true}
+                                />
+                                <DoubleView>
+                                    <BoxInputForm
+                                        fieldWidth={40}
+                                        textLabel={"CEP"}
+                                        placeholder={formatarCEP(getPatient.endereco.cep) || ""}
+                                        editable= {true}
+                                    />
+                                    <BoxInputForm
+                                        fieldWidth={40}
+                                        textLabel={"Cidade"}
+                                        placeholder={getPatient.endereco.cidade || ""}
+                                        editable= {true}
+                                    />
+                                </DoubleView>
+                            </>
+                        ) : (
+                            <>
+                                <BoxInput
+                                    textLabel={"Data de Nascimento"}
+                                    placeholder={getPatient.dataNascimento ? new Date(getPatient.dataNascimento).toLocaleDateString() : ""}
+                                />
+                                <BoxInput
+                                    textLabel={"CPF"}
+                                    placeholder={formatarCPF(getPatient.cpf) || ""}
+                                />
+                                <BoxInput
+                                    textLabel={"Endereco"}
+                                    placeholder={getPatient.endereco.logradouro || ""}
+                                />
+                                <DoubleView>
+                                    <BoxInput
+                                        fieldWidth={40}
+                                        textLabel={"CEP"}
+                                        placeholder={formatarCEP(getPatient.endereco.cep) || ""}
+                                    />
+                                    <BoxInput
+                                        fieldWidth={40}
+                                        textLabel={"Cidade"}
+                                        placeholder={getPatient.endereco.cidade || ""}
+                                    />
+                                </DoubleView>
+                            </>
+                        )}
                     </>
                 )}
 
                 <InputContainer>
-                    <Button>
-                        <ButtonTitle>Salvar</ButtonTitle>
-                    </Button>
+                    {isEditing ? (
+                        <>
+                            <Button>
+                                <ButtonTitle>Salvar</ButtonTitle>
+                            </Button>
+                            <Button onPress={() => setIsEditing(false)}>
+                                <ButtonTitle>Cancelar</ButtonTitle>
+                            </Button>
+                        </>
+                    ) : (
+                        <Button onPress={() => setIsEditing(true)}>
+                            <ButtonTitle>Editar</ButtonTitle>
+                        </Button>
+                    )}
+                    <ButtonLogout onPress={() => { profileLogout() }}>
+                        <ButtonTitle>SAIR DO APP</ButtonTitle>
+                    </ButtonLogout>
                 </InputContainer>
-
-                <ButtonLogout onPress={() => { profileLogout() }}>
-                    <ButtonTitle>SAIR DO APP</ButtonTitle>
-                </ButtonLogout>
             </ScrollForm>
+
         </Container>
     );
 }
