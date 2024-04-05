@@ -214,3 +214,6 @@ export const Home = ({ navigation }) => {
         </>
     )
 }
+
+
+

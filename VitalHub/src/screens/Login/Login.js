@@ -15,7 +15,7 @@ import { ActivityIndicator } from 'react-native';
 export const Login = ({ navigation }) => {
 
     async function Login() {
-        console.log("Comecou a funcao");
+        // console.log("Comecou a funcao");
         setLoading(true); // Inicia a requisição
 
         // Chamar api

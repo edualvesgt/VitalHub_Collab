@@ -14,7 +14,7 @@ if (!global.btoa) {
 //Funcao de decodificar o token
 export const userDecodeToken = async () => {
     //Capturando o token
-    const token = await AsyncStorage.getItem('token');
+    const token = JSON.parse( await AsyncStorage.getItem('token') ).token;
 
     if (token === null) {
         return null;

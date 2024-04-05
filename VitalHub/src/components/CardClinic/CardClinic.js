@@ -4,7 +4,7 @@ import { AllStatusBox, CardBoxClinic, CardBoxClinicSelected, TextCardBox } from 
 import { View } from 'react-native'
 import { StatusCalendar } from '../Status/Status'
 
-const CardClinic = ({ time, name, location, review, select , onPress}) => {
+const CardClinic = ({ time, name, location, review, select , onPress , number}) => {
 
     if (select !== name) {
         return (
@@ -12,7 +12,7 @@ const CardClinic = ({ time, name, location, review, select , onPress}) => {
 
                 <TextCardBox>
                     <TextAccount>{name}</TextAccount>
-                    <TextAbout>{location} </TextAbout>
+                    <TextAbout>{location} <TextAbout>{number}</TextAbout></TextAbout>
                 </TextCardBox>
 
                 <AllStatusBox>
