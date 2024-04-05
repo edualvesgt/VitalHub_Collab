@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 export const Button = styled.TouchableOpacity`
 width: 90%;
@@ -83,27 +83,30 @@ justify-content: center;
 align-items:center;
 `
 
-export const BlueButton = styled.TouchableHighlight`
+export const BlueButton = styled.TouchableOpacity`
 width: 110px;
 height: 40px;
-
-background-color: #607EC5;
+${props => props.clickButton ? css`
+        background-color: #496bba;
+        `
+        : css`
+            background-color: transparent;
+            border: 2px solid #607EC5;
+            
+        `};
 border-radius: 5px;
-
 display:flex;
 justify-content: center;
 align-items:center;
 
 `
 
-export const WhiteButtonTitle = styled.Text`
-color:#607EC5;
-font-size: 12px;
-font-family: "MontserratAlternates_600SemiBold";
-`
-
 export const BlueButtonTitle = styled.Text`
-color:#ffffff;
+${props => props.clickButton ? css`
+        color: #fbfbfb;
+    `: css`
+        color: #607EC5;
+    `}
 font-size: 12px;
 font-family: "MontserratAlternates_600SemiBold";
 `

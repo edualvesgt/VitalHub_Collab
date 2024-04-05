@@ -1,14 +1,12 @@
-import { BlueButton, BlueButtonTitle, WhiteButton, WhiteButtonTitle } from "../Button/Button"
+import { BlueButton, BlueButtonTitle } from "../Button/Button"
 
 
-export const ButtonFilter = ({selected = false, buttonTitle, onPress=null}) => {
-    return(
+export const ButtonFilter = ({ clickButton, selected, buttonTitle, onPress = null }) => {
+    return (
         <>
-            {selected ? 
-            <BlueButton onPress={onPress}><BlueButtonTitle>{buttonTitle}</BlueButtonTitle></BlueButton>
-            :
-            <WhiteButton onPress={onPress}><WhiteButtonTitle>{buttonTitle}</WhiteButtonTitle></WhiteButton>
-            }
+
+            <BlueButton clickButton={clickButton} selected={selected} onPress={onPress}><BlueButtonTitle clickButton={clickButton}>{buttonTitle}</BlueButtonTitle></BlueButton>
+
         </>
     )
 }

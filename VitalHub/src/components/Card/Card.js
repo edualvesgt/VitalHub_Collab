@@ -5,11 +5,22 @@ import { StatusGray, StatusGreen } from "../Status/Status"
 import { TextAbout, TextAccount, TextBlue, TextRed } from "../Text/Text"
 import { CardBox, ImageCard, RowCardBox, TextCardBox } from "./StyleCard"
 
-const Card = ({ image, time, status, onPressCard, onPressShow, navigation, situation }) => {
+const Card = ({
+    image,
+    time,
+    status,
+    onPressCard,
+    onPressShow,
+    navigation,
+    specialty,
+    Age,
+    Priority,
+    Name,
+    role }) => {
     const [profile, setProfile] = useState("Paciente");
 
     const Check = () => {
-        if (status === "a") {
+        if (status === "agendadas") {
             return (
                 <RowCardBox>
                     <DoubleView style={{ justifyContent: 'space-between' }}>
@@ -18,7 +29,7 @@ const Card = ({ image, time, status, onPressCard, onPressShow, navigation, situa
                     </DoubleView>
                 </RowCardBox>
             );
-        } else if (status === "r") {
+        } else if (status === "realizadas") {
             return (
                 <RowCardBox>
                     <DoubleView style={{ justifyContent: 'space-between' }}>
@@ -27,7 +38,7 @@ const Card = ({ image, time, status, onPressCard, onPressShow, navigation, situa
                     </DoubleView>
                 </RowCardBox>
             );
-        } else if (status === "c") {
+        } else if (status === "canceladas") {
             return (
                 <RowCardBox>
                     <StatusGray time={time} />
@@ -38,34 +49,22 @@ const Card = ({ image, time, status, onPressCard, onPressShow, navigation, situa
         }
     }
 
-    // Adjusted onPress logic
-    // const handleCardPress = () => {
-    //     if (status === "r") {
-    //         if (profile === "Paciente") {
-    //             navigation.replace("FormDoctor");
-    //         } else {
-    //             onPressShow();
-    //         }
-    //     }else if (status === "c") {
-    //         onPressShow = null 
-    //     }
-    // };
 
     return (
-        <CardBox onPress={() => {
-            if (profile == "Paciente" && situation.realizadas == true) {
+        <CardBox role={role} status={status} onPress={() => {
+            if (role == "Paciente" && status == "realizadas") {
                 navigation.replace("FormDoctor");
             }
             // Verifica se a situação é cancelada e retorna null para esse caso
-            else if (situation.agendadas == true || situation.realizadas == true ) {
+            else if (status == "agendadas") {
                 onPressShow()
             }
-        }}>
+        }} >
             <ImageCard source={image} />
             <Container>
                 <TextCardBox>
-                    <TextAccount>Richard Kosta</TextAccount>
-                    <TextAbout>22 anos Rotina </TextAbout>
+                    <TextAccount>{Name}</TextAccount>
+                    <TextAbout > {role ? `${Age} Anos ` : `CRM ${Age}`}  <TextAbout>{Priority} </TextAbout> </TextAbout>
                 </TextCardBox>
                 {Check()}
             </Container>
