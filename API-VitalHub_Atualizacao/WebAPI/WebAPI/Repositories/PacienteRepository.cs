@@ -48,10 +48,15 @@ namespace WebAPI.Repositories
 
         public List<Consulta> BuscarPorData(DateTime dataConsulta, Guid idPaciente)
         {
-           return ctx.Consultas
+            return ctx.Consultas
                 .Include(x => x.Situacao)
-                .Where(x => x.PacienteId == idPaciente && EF.Functions.DateDiffDay(x.DataConsulta , dataConsulta) == 0) //Metodo Realizado Em Aula 
-                //.Where(x  => x.PacienteId == idPaciente && x.DataConsulta == dataConsulta)
+                .Include(x => x.Prioridade)
+                .Include(x => x.Paciente!.IdNavigation)
+                .Include(x => x.MedicoClinica!.Medico!.Especialidade.Medicos)
+                .Include(x => x.MedicoClinica!.Medico!.IdNavigation)
+    
+                 //.Where(x  => x.PacienteId == idPaciente && x.DataConsulta == dataConsulta)
+                .Where(x => x.PacienteId == idPaciente && EF.Functions.DateDiffDay(x.DataConsulta, dataConsulta) == 0)
                 .ToList();
         }
 
@@ -60,6 +65,7 @@ namespace WebAPI.Repositories
             return ctx.Pacientes
                 .Include(x => x.IdNavigation)
                 .Include(x => x.Endereco)
+                .Include(x => x.Consulta)
                 .FirstOrDefault(x => x.Id == Id)!;
         }
 

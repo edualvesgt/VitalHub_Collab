@@ -6,11 +6,7 @@ SELECT * FROM dbo.Enderecos;
 INSERT INTO
 	dbo.Enderecos
 VALUES
-<<<<<<< HEAD
 	(NEWID(), '09510200', 'Rua Niterói', 180,-23.615052, -46.570625, 'São Caetano do Sul' );
-=======
-	(NEWID(), '09510200', 'Rua Niterói', 180, -23.5505, -46.6333);
->>>>>>> 12fe95ead256a4ecade5bedf564adce7f36680ce
 
 
 
@@ -100,22 +96,4 @@ SELECT * FROM dbo.Clinicas;
 INSERT INTO
 	dbo.Clinicas
 VALUES
-<<<<<<< HEAD
 	(NEWID(), 'Clínica Médica Vida & Saúde', '12345678000190', 'Clínica Médica Vida & Saúde',  'clinica.vidasaude@gmail.com', '54E782C8-BB9B-4BBB-998C-A5544F4B4604')
-=======
-	(NEWID(), 'Clínica Médica Vida & Saúde', '12345678000190', 'Clínica Médica Vida & Saúde',  'clinica.vidasaude@gmail.com', '083D1642-A7B4-4C08-85C3-095586B585E1')
-
-
-insert into Consultas values (NEWID(), '3696C8B9-2ACE-4E17-BB62-0EFD3A0D88A1', 'F9F1B786-64D6-4DA2-A249-481D09678611', 
-'70BB9BC6-ECB6-4DF2-9334-152104A5EC4E', '849548E4-6821-4DD9-8164-DA7D5A8A36D9', '41F7AF1C-FA6A-4E19-BB20-5F654F4284E6', 2024-03-29,'', '')
-
-UPDATE Consultas SET DataConsulta = 2024-03-29 WHERE ID = '7ECDEAE4-E602-4647-A3AA-A3B2AA639E8B'
-
-insert into Receitas values (NEWID(), '', '')
-
-select * from Situacoes
-select * from NiveisPrioridade
-select * from Consultas
-select * from Receitas
-select * from Exames
->>>>>>> 12fe95ead256a4ecade5bedf564adce7f36680ce
