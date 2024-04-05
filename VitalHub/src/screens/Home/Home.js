@@ -32,6 +32,7 @@ export const Home = ({ navigation }) => {
     const [dataConsulta, setDataConsulta] = useState('')
     const [token, setToken] = useState([]);
     const [isMedic, setIsMedic] = useState(true)
+    const [consultaSelecionada, setConsultaSelecionada] = useState(null)
 
     async function profileLoad() {
         const tokenDecoded = await userDecodeToken();
@@ -40,7 +41,7 @@ export const Home = ({ navigation }) => {
             setToken(tokenDecoded)
 
             console.log(tokenDecoded);
-            
+
             // setIsMedic(tokenDecoded === "Medico" )
 
             setDataConsulta(moment().format('YYYY-MM-DD'))
@@ -56,22 +57,20 @@ export const Home = ({ navigation }) => {
 
             await api.get(`/Pacientes/BuscarPorData?data=${dataConsulta}&id=${token.jti}`)
                 .then(response => {
-
-
                     const novaConsulta = response.data.map(item => ({
                         medicoNome: item.medicoClinica.medico.idNavigation.nome,
                         medicoCrm: item.medicoClinica.medico.crm,
                         consultaSituacao: item.situacao.situacao,
-                        id: item.id
+                        id: item.id,
+                        especialidade: item.medicoClinica.medico.especialidade.especialidade1
+                        
                     }))
-
                     setResponseConsulta(novaConsulta)
-                    console.log(responseConsulta);
-
+                    
+                    
                 }).catch(error => {
                     console.log(error)
                 })
-            // console.log(res.data.descricao);
         } catch (error) {
             console.log(error)
         }
@@ -101,6 +100,8 @@ export const Home = ({ navigation }) => {
     const [cancel, setCancel] = useState(false);
 
     const showForm = (consulta) => {
+        setConsultaSelecionada( consulta )
+
         setIsShow(true)
     }
 
@@ -126,11 +127,26 @@ export const Home = ({ navigation }) => {
                 <Calendar setDataConsulta={setDataConsulta} />
 
                 <RowContainer>
-                    <ButtonFilter clickButton={selected == "agendadas"} selected={selected} onPress={() => setSelected("agendadas")} buttonTitle={'Agendadas'} />
+                    <ButtonFilter
+                        clickButton={selected == "agendadas"}
+                        selected={selected}
+                        onPress={() => setSelected("agendadas")}
+                        buttonTitle={'Agendadas'}
+                    />
 
-                    <ButtonFilter clickButton={selected == "realizadas"} selected={selected} onPress={() => setSelected("realizadas")} buttonTitle={'Realizadas'} />
+                    <ButtonFilter
+                        clickButton={selected == "realizadas"}
+                        selected={selected}
+                        onPress={() => setSelected("realizadas")}
+                        buttonTitle={'Realizadas'}
+                    />
 
-                    <ButtonFilter clickButton={selected == "canceladas"} selected={selected} onPress={() => setSelected("canceladas")} buttonTitle={'Canceladas'} />
+                    <ButtonFilter
+                        clickButton={selected == "canceladas"}
+                        selected={selected}
+                        onPress={() => setSelected("canceladas")}
+                        buttonTitle={'Canceladas'}
+                    />
                 </RowContainer>
 
                 <FlatContainer
@@ -147,9 +163,10 @@ export const Home = ({ navigation }) => {
                                 status={item.consultaSituacao}
                                 Name={item.medicoNome}
                                 Age={item.medicoCrm}
+                                specialty={item.especialidade}
                                 navigation={navigation}
                                 onPressCard={() => openModal()}
-                                onPressShow={() => showForm()}
+                                onPressShow={() => showForm( item )}
                             />
                         ) : null
 
@@ -183,12 +200,17 @@ export const Home = ({ navigation }) => {
                 roleUsuario={token.role}
             />
 
-            <ShowFormDoctor
+            < ShowFormDoctor
+                nome={null}
+                consulta={consultaSelecionada}
+                jsonInfo={responseConsulta}
                 isOpen={isShow}
                 onClose={closeForm}
                 navigation={navigation}
                 status={selected}
             />
+
+
         </>
     )
 }
