@@ -53,20 +53,19 @@ export const Home = ({ navigation }) => {
 
         try {
             //const url = (tokenDecoded.role == 'Medico' ? 'Medicos' : 'Pacientes')
-            console.log(`/Pacientes/BuscarPorData?data=${dataConsulta}&id=${token.jti}`)
-
             await api.get(`/Pacientes/BuscarPorData?data=${dataConsulta}&id=${token.jti}`)
                 .then(response => {
                     const novaConsulta = response.data.map(item => ({
                         medicoNome: item.medicoClinica.medico.idNavigation.nome,
                         medicoCrm: item.medicoClinica.medico.crm,
                         consultaSituacao: item.situacao.situacao,
+                        clinicaId: item.medicoClinica.clinicaId,
                         id: item.id,
                         especialidade: item.medicoClinica.medico.especialidade.especialidade1
                         
                     }))
                     setResponseConsulta(novaConsulta)
-                    
+                    // console.log(response.data);
                     
                 }).catch(error => {
                     console.log(error)
@@ -155,7 +154,6 @@ export const Home = ({ navigation }) => {
                     renderItem={({ item }) =>
                     (
                         item.consultaSituacao == selected ? (
-
                             <Card
                                 role={isMedic}
                                 time={item.time}
@@ -163,6 +161,7 @@ export const Home = ({ navigation }) => {
                                 status={item.consultaSituacao}
                                 Name={item.medicoNome}
                                 Age={item.medicoCrm}
+                                clinicaId={item.clinicaId}
                                 specialty={item.especialidade}
                                 navigation={navigation}
                                 onPressCard={() => openModal()}
@@ -205,6 +204,7 @@ export const Home = ({ navigation }) => {
                 consulta={consultaSelecionada}
                 jsonInfo={responseConsulta}
                 isOpen={isShow}
+                role={token.role}
                 onClose={closeForm}
                 navigation={navigation}
                 status={selected}

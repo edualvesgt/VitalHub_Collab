@@ -13,6 +13,7 @@ const Card = ({
     onPressShow,
     navigation,
     specialty,
+    Consulta,
     Age,
     Priority,
     Name,
@@ -51,7 +52,7 @@ const Card = ({
 
 
     return (
-        <CardBox role={role} status={status} onPress={() => {
+        <CardBox Consulta={Consulta} role={role} status={status} onPress={() => {
             if (role == "Paciente" && status == "realizadas") {
                 navigation.replace("FormDoctor");
             }
@@ -64,7 +65,7 @@ const Card = ({
             <Container>
                 <TextCardBox>
                     <TextAccount>{Name}</TextAccount>
-                    <TextAbout > {role ? `${Age} Anos ` : `CRM ${Age}`}  <TextAbout>{Priority} </TextAbout> </TextAbout>
+                    <TextAbout > {role ? `CRM ${Age} ` : `${Age} Anos`}  <TextAbout>{Priority} </TextAbout> </TextAbout>
                 </TextCardBox>
                 {Check()}
             </Container>

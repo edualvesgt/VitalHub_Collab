@@ -5,13 +5,13 @@ import { requestForegroundPermissionsAsync, getCurrentPositionAsync } from 'expo
 import MapViewDirections from 'react-native-maps-directions';
 import { mapskey } from '../../utils/keyApiMaps';
 
-export default function Map() {
+export default function Map({latitudeFinal, longitudeFinal}) {
     // Referência para o mapa
     const mapReference = useRef(null);
     // Estado para armazenar a posição inicial do usuário
     const [initialPosition, setInitialPosition] = useState(null);
     // Estado para armazenar a posição final (destino)
-    const [finalPosition, setFinalPosition] = useState({ latitude: -23.515797, longitude: -46.590664 });
+    const [finalPosition, setFinalPosition] = useState({ latitude: parseFloat(latitudeFinal),longitude: parseFloat(longitudeFinal)});
 
     // Função para capturar a localização atual do usuário
     async function CapturarLocalizacao() {
