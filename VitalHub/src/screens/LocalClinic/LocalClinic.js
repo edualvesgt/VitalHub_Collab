@@ -6,42 +6,67 @@ import { Title } from "../../components/Title/StyleTitle"
 
 
 import Map from "../../components/Map/Map"
+import { useEffect, useState } from "react"
+import api from "../../services/services"
+import { ActivityIndicator } from "react-native"
 
-export const LocalClinic = ({ navigation }) => {
+export const LocalClinic = ({ navigation, route }) => {
+    const [clinica, setClinica] = useState(null)
+    useEffect(() => {
+        BuscarClinica();
+    }, [route.params])
+
+    async function BuscarClinica() {
+        console.log(route.params.clinica);
+        await api.get(`/Clinica/BuscarPorId?id=${route.params.clinica}`)
+            .then(response => {
+                console.log(response.data);
+                setClinica(response.data)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    }
+
+
+
     return (
-        <>
-            <Map/>
 
-            <Container>
+        (
+            clinica != null ? (
+                <>
+                    <Map latitudeFinal={clinica.endereco.latitude} longitudeFinal={clinica.endereco.longitude}/>
 
-
-                <Title style={{ marginTop: 30 }}>Clinica Natureba</Title>
-                <TextAppointment>Sao Paulo , SP</TextAppointment>
-
-                <BoxInput
-                    textLabel={"Endereco"}
-                    placeholder={"Rua Padre Vicente"}
-                />
-                <DoubleView>
-
-                    <BoxInput
-
-                        fieldWidth={40}
-                        placeholder={"578"}
-                        textLabel={"Numero"}
-                    />
-                    <BoxInput
-                        fieldWidth={40}
-                        placeholder={"Moema"}
-                        textLabel={"Bairro"} />
-
-                </DoubleView>
-
-                <LinkCancel style={{ marginTop: 50}} onPress = {() => navigation.replace ("Home")}>Voltar</LinkCancel>
-            </Container>
-        </>
+                    <Container>
 
 
+                        <Title style={{ marginTop: 30 }}>{clinica.nomeFantasia} </Title>
+                        <TextAppointment>{clinica.endereco.cidade}</TextAppointment>
+
+                        <BoxInput
+                            textLabel={"Endereco"}
+                            placeholder={`${clinica.endereco.logradouro}`}
+                        />
+                        <DoubleView>
+
+                            <BoxInput
+
+                                fieldWidth={40}
+                                placeholder={`${clinica.endereco.numero}`}
+                                textLabel={"Numero"}
+                            />
+                            <BoxInput
+                                fieldWidth={40}
+                                placeholder={`${clinica.endereco.cidade}`}
+                                textLabel={"Cidade"} />
+
+                        </DoubleView>
+
+                        <LinkCancel style={{ marginTop: 50 }} onPress={() => navigation.replace("Home")}>Voltar</LinkCancel>
+                    </Container>
+                </>
+            ) : (<ActivityIndicator />)
+        )
     )
 }
 

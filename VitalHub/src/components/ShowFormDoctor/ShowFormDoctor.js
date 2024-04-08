@@ -12,10 +12,7 @@ const ShowFormDoctor = ({
     navigation,
     status,
     role,
-    consulta,
-    nome,
-    info,
-    jsonInfo }) => {
+    consulta,}) => {
 
     const image = require("../../assets/PhotoGirl.png");
 
@@ -28,7 +25,7 @@ const ShowFormDoctor = ({
     }, [isOpen])
 
     const [profile, setProfile] = useState("Medico");
-    const infoConsult = jsonInfo
+
     return (
         <ShowModalContainer>
             <ShowModalContent>
@@ -37,12 +34,12 @@ const ShowFormDoctor = ({
                 <TextAbout>CRM {consulta.medicoCrm} <TextAbout> {consulta.especialidade}</TextAbout> </TextAbout>
 
                 {status == "agendadas" ? (
-                    <Button onPress={() => navigation.replace('LocalClinic',)}>
+                    <Button onPress={() => navigation.replace('LocalClinic', {clinica: consulta.clinicaId})}>
                         <ButtonTitle>Ver Local Consulta</ButtonTitle>
                     </Button>
                 ) : (
-                    <Button onPress={() => Alert.alert('Prontuário', 'Estou a inserir um prontuário')}>
-                        <ButtonTitle>Inserir Prontuario</ButtonTitle>
+                    <Button onPress={() => navigation.replace('FormDoctor')}>
+                        <ButtonTitle>{role == "Medico" ? "Inserir Prontuário" : "Ver Prontuário"}</ButtonTitle>
                     </Button>
                 )}
 
