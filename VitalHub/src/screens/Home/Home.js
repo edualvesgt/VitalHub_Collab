@@ -203,6 +203,7 @@ export const Home = ({ navigation }) => {
                 isOpen={isModalOpen}
                 onClose={closeModal}
                 navigation={navigation}
+                consulta={consultaSelecionada}
             />
 
             <ScheduleAppointment

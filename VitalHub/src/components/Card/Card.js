@@ -1,9 +1,11 @@
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Container, DoubleView } from "../Container/StyleContainer"
 import { StatusGray, StatusGreen } from "../Status/Status"
 import { TextAbout, TextAccount, TextBlue, TextRed } from "../Text/Text"
 import { CardBox, ImageCard, RowCardBox, TextCardBox } from "./StyleCard"
+
+
 
 const Card = ({
     image,
@@ -20,6 +22,33 @@ const Card = ({
     Name,
     role }) => {
     const [profile, setProfile] = useState("Paciente");
+
+    function formatarIdade() {
+        const date = new Date();
+        const anoAtual = date.getFullYear();
+        const diaAtual = date.getDate();
+        const mesAtual = date.getMonth() + 1;
+
+        const userAno = Age.slice(0, 4)
+        const userDia = Age.slice(8, 10)
+        const userMes = Age.slice(5, 7)
+
+        const userIdade = anoAtual - userAno
+        if (mesAtual < userMes) {
+            return userIdade - 1;
+        }
+        else {
+            if (diaAtual < userDia) {
+                return userIdade - 1;
+            }
+        }
+
+        return userDia;
+    }
+
+    useEffect(() => {
+        formatarIdade()
+    })
 
     const Check = () => {
         if (status === "agendadas") {
@@ -66,7 +95,7 @@ const Card = ({
             <Container>
                 <TextCardBox>
                     <TextAccount>{Name}</TextAccount>
-                    <TextAbout > {role ? `CRM ${Age} ` : `${Age} Anos`}  <TextAbout>{Priority} </TextAbout> </TextAbout>
+                    <TextAbout > {role ? `CRM ${Age} ` : `${formatarIdade()} Anos`}  <TextAbout>{Priority} </TextAbout> </TextAbout>
                 </TextCardBox>
                 {Check()}
             </Container>
