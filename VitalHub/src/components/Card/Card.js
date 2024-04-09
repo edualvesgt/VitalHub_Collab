@@ -13,6 +13,7 @@ const Card = ({
     onPressShow,
     navigation,
     specialty,
+    email,
     Consulta,
     Age,
     Priority,

@@ -28,7 +28,6 @@ export const Home = ({ navigation }) => {
 
     const [selected, setSelected] = useState("agendadas");
     const [responseConsulta, setResponseConsulta] = useState([])
-    const [consultas, setConsultas] = useState(null)
     const [dataConsulta, setDataConsulta] = useState('')
     const [token, setToken] = useState([]);
     const [isMedic, setIsMedic] = useState(token.role == 'Medico')
@@ -49,6 +48,7 @@ export const Home = ({ navigation }) => {
             await api.get(`/${url}/BuscarPorData?data=${dataConsulta}&id=${token.jti}`)
                 .then(response => {
                     const novaConsulta = response.data.map(item => ({
+                        consultaId: item.id,
                         medicoNome: item.medicoClinica.medico.idNavigation.nome,
                         medicoCrm: item.medicoClinica.medico.crm,
                         consultaSituacao: item.situacao.situacao,
@@ -56,7 +56,8 @@ export const Home = ({ navigation }) => {
                         id: item.id,
                         especialidade: item.medicoClinica.medico.especialidade.especialidade1,
                         pacienteNome: item.paciente.idNavigation.nome,
-                        pacienteIdade: item.paciente.dataNascimento                        
+                        pacienteIdade: item.paciente.dataNascimento,
+                        pacienteEmail: item.paciente.idNavigation.email
                     }))
                     setResponseConsulta(novaConsulta)
                     console.log(response.data);
@@ -150,6 +151,7 @@ export const Home = ({ navigation }) => {
                             <Card
                                 role={isMedic}
                                 time={item.time}
+                                email={item.pacienteEmail}
                                 image={image}
                                 status={item.consultaSituacao}
                                 Name={item.medicoNome}
@@ -160,11 +162,12 @@ export const Home = ({ navigation }) => {
                                 onPressCard={() => openModal()}
                                 onPressShow={() => showForm(item)}
                             />
-                        ) : item.consultaSituacao == selected ? 
+                        ) : item.consultaSituacao == selected && token.role == "Medico" ?
                             (
                                 <Card
                                     role={isMedic}
                                     time={item.time}
+                                    email={item.pacienteEmail}
                                     image={image}
                                     status={item.consultaSituacao}
                                     Name={item.pacienteNome}
@@ -181,18 +184,20 @@ export const Home = ({ navigation }) => {
                     )}
                 />
 
-                <StethoscopeView onPress={() => showSchedule()}>
-                    <FontAwesome
-                        name="stethoscope"
-                        size={32}
-                        color={"white"}
-                    />
-                </StethoscopeView>
 
-                {/* {profile === "Paciente" && (
-                    )} */}
+                {
+                    token.role == "Paciente" ? (< StethoscopeView onPress={() => showSchedule()}>
+                        <FontAwesome
+                            name="stethoscope"
+                            size={32}
+                            color={"white"}
+                        />
+                    </StethoscopeView>
+                    ) : null
+                }
 
-            </Container>
+
+            </Container >
 
             <CancelAppointment
                 isOpen={isModalOpen}
