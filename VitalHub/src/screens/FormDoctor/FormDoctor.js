@@ -13,48 +13,43 @@ import Cam from '../../components/Cam/Cam';
 import { userDecodeToken } from '../../utils/Auth';
 import api from '../../services/services';
 
-export const FormDoctor = ({ navigation,idConsulta }) => {
+export const FormDoctor = ({ navigation, route }) => {
 
-    const IdConsulta = idConsulta
+
     const [openModal, setOpenModal] = useState(false);
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [role, setRole] = useState("")
-    const [listAppointment, setListAppointment] = useState([])
-
-
-    useEffect(() => {
-        profileLoad()
-    }, [])
-
+    const [listAppointment, setListAppointment] = useState(null)
+    const [dados, setDados] = useState([])
 
     async function profileLoad() {
         const token = await userDecodeToken();
         setName(token.name);
         setEmail(token.email);
         setRole(token.role)
-        console.log("AQUIIII");
-        console.log(token);
-        // console.log(role);
-
-        await GetAppointment(token.jti)
+        setListAppointment(route.params.consultaId)
     }
 
-    async function GetAppointment(token) {
+    useEffect(() => {
+        console.log("Rodou");
+        profileLoad()
+    }, [])
+
+    useEffect(() => {
+        if (listAppointment != null) {
+            GetAppointment();
+        }
+    }, [listAppointment]);
+
+
+    async function GetAppointment() {
         console.log("Inicio da Funcao ");
-        console.log(token);
-
-        await api.get(`/Pacientes/BuscarPorID?id=${token}`)
+        console.log(listAppointment);
+        await api.get(`/Consultas/BuscarPorId?id=${listAppointment}`)
             .then(response => {
-
-                setListAppointment(response.data.consulta)
-
-                // Supondo que listAppointment é o array de consultas
-                const mostRecentAppointment = listAppointment.find(appointment => appointment.id === IdConsulta);
-
-                
-
-
+                console.log(response.data);
+                 setDados(response.data);
             })
             .catch(error => {
                 console.log(error);
@@ -81,17 +76,17 @@ export const FormDoctor = ({ navigation,idConsulta }) => {
                                 <BoxInputForm
                                     fieldHeigth={120}
                                     textLabel={"Descricao"}
-                                    placeholder={listAppointment[0].descricao}
+                                    placeholder={dados.descricao}
                                 />
 
                                 <BoxInputForm
                                     textLabel={"Diagnostico"}
-                                    placeholder={listAppointment[0].diagnostico}
+                                    placeholder={dados.diagnostico}
                                 />
                                 <BoxInputForm
                                     fieldHeigth={120}
                                     textLabel={"Prescricao Medica"}
-                                    placeholder={"Prescricao Medica"}
+                                    placeholder={dados.receita.medicamento}
                                 />
 
                                 <BoxInputForm
@@ -136,17 +131,17 @@ export const FormDoctor = ({ navigation,idConsulta }) => {
                                 <BoxInputForm
                                     fieldHeigth={120}
                                     textLabel={"Descricao"}
-                                    placeholder={"listAppointment.consulta.descricao"}
+                                    placeholder={dados.descricao}
                                 />
 
                                 <BoxInputForm
                                     textLabel={"Diagnostico"}
-                                    placeholder={""}
+                                    placeholder={dados.diagnostico}
                                 />
                                 <BoxInputForm
                                     fieldHeigth={120}
                                     textLabel={"Prescricao Medica"}
-                                    placeholder={"Prescricao Medica"}
+                                    placeholder={dados.receita.medicamento}
                                 />
                             </>
                         )}

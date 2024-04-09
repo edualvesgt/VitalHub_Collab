@@ -13,10 +13,14 @@ import api, { GetPacient } from "../../services/services"
 
 export const Profile = ({ navigation }) => {
     async function profileLoad() {
-        const token = await userDecodeToken();
-        setName(token.name);
-        setEmail(token.email);
-        await PatientData(token.token);
+
+        const TokenDecoded = await userDecodeToken()
+        setName(TokenDecoded.name);
+        setEmail(TokenDecoded.email);
+s
+        console.log(getPatient);
+        
+
     }
 
     async function PatientData(Token) {
@@ -38,9 +42,13 @@ export const Profile = ({ navigation }) => {
         profileLoad();
     }, [])
 
+    useEffect(() => {
+        const token =  AsyncStorage.getItem('token');
+        PatientData(token);
+    }, [])
     async function profileLogout(token) {
         try {
-            const token = await userDecodeToken();
+
             await AsyncStorage.removeItem("token", navigation.replace("Login"));
         } catch (error) {
             console.log(error);
@@ -73,68 +81,65 @@ export const Profile = ({ navigation }) => {
                 <TextAccount>{email}</TextAccount>
             </ModalTitle>
             <ScrollForm>
-                {getPatient && (
+
+                {isEditing ? (
                     <>
-                        {isEditing ? (
-                            <>
-                                <BoxInputForm
-                                    textLabel={"Data de Nascimento"}
-                                    placeholder={getPatient.dataNascimento ? new Date(getPatient.dataNascimento).toLocaleDateString() : ""}
-                                    editable={true}
-                                />
-                                <BoxInputForm
-                                    textLabel={"CPF"}
-                                    placeholder={formatarCPF(getPatient.cpf) || ""}
-                                    editable={true}
-                                />
-                                <BoxInputForm
-                                    textLabel={"Endereco"}
-                                    placeholder={getPatient.endereco.logradouro || ""}
-                                    editable={true}
-                                />
-                                <DoubleView>
-                                    <BoxInputForm
-                                        fieldWidth={40}
-                                        textLabel={"CEP"}
-                                        placeholder={formatarCEP(getPatient.endereco.cep) || ""}
-                                        editable={true}
-                                    />
-                                    <BoxInputForm
-                                        fieldWidth={40}
-                                        textLabel={"Cidade"}
-                                        placeholder={getPatient.endereco.cidade || ""}
-                                        editable={true}
-                                    />
-                                </DoubleView>
-                            </>
-                        ) : (
-                            <>
-                                <BoxInput
-                                    textLabel={"Data de Nascimento"}
-                                    placeholder={getPatient.dataNascimento ? new Date(getPatient.dataNascimento).toLocaleDateString() : ""}
-                                />
-                                <BoxInput
-                                    textLabel={"CPF"}
-                                    placeholder={formatarCPF(getPatient.cpf) || ""}
-                                />
-                                <BoxInput
-                                    textLabel={"Endereco"}
-                                    placeholder={getPatient.endereco.logradouro || ""}
-                                />
-                                <DoubleView>
-                                    <BoxInput
-                                        fieldWidth={40}
-                                        textLabel={"CEP"}
-                                        placeholder={formatarCEP(getPatient.endereco.cep) || ""}
-                                    />
-                                    <BoxInput
-                                        fieldWidth={40}
-                                        textLabel={"Cidade"}
-                                        placeholder={getPatient.endereco.cidade || ""}
-                                    />
-                                </DoubleView>
-                            </>
-                        )}
+                        <BoxInputForm
+                            textLabel={"Data de Nascimento"}
+                            // placeholder={getPatient.dataNascimento ? new Date(getPatient.dataNascimento).toLocaleDateString() : ""}
+                            editable={true}
+                        />
+                        <BoxInputForm
+                            textLabel={"CPF"}
+                            // placeholder={formatarCPF(getPatient.cpf) || ""}
+                            editable={true}
+                        />
+                        <BoxInputForm
+                            textLabel={"Endereco"}
+                            // placeholder={getPatient.endereco.logradouro || ""}
+                            editable={true}
+                        />
+                        <DoubleView>
+                            <BoxInputForm
+                                fieldWidth={40}
+                                textLabel={"CEP"}
+                                // placeholder={formatarCEP(getPatient.endereco.cep) || ""}
+                                editable={true}
+                            />
+                            <BoxInputForm
+                                fieldWidth={40}
+                                textLabel={"Cidade"}
+                                // placeholder={getPatient.endereco.cidade || "
+                                editable={true}
+                            />
+                        </DoubleView>
+                    </>
+                ) : (
+                    <>
+                        <BoxInput
+                            textLabel={"Data de Nascimento"}
+                        // placeholder={getPatient.dataNascimento ? new Date(getPatient.dataNascimento).toLocaleDateString() : ""}
+                        />
+                        <BoxInput
+                            textLabel={"CPF"}
+                        // placeholder={formatarCPF(getPatient.cpf) || ""}
+                        />
+                        <BoxInput
+                            textLabel={"Endereco"}
+                        // placeholder={getPatient.endereco.logradouro || ""}
+                        />
+                        <DoubleView>
+                            <BoxInput
+                                fieldWidth={40}
+                                textLabel={"CEP"}
+                            // placeholder={formatarCEP(getPatient.endereco.cep) || ""}
+                            />
+                            <BoxInput
+                                fieldWidth={40}
+                                textLabel={"Cidade"}
+                            // placeholder={getPatient.endereco.cidade || ""}
+                            />
+                        </DoubleView>
                     </>
                 )}
 
