@@ -4,7 +4,6 @@ import { LinkCancel } from "../Links/StyleLink";
 import { TextAbout } from "../Text/Text";
 import { Title } from "../Title/StyleTitle";
 import { PhotoShow, ShowModalContainer, ShowModalContent } from "./StyleShowFormDoctor";
-import { Alert } from "react-native";
 
 const ShowFormDoctor = ({
     isOpen,

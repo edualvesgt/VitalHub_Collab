@@ -80,30 +80,30 @@ export const Profile = ({ navigation }) => {
                                 <BoxInputForm
                                     textLabel={"Data de Nascimento"}
                                     placeholder={getPatient.dataNascimento ? new Date(getPatient.dataNascimento).toLocaleDateString() : ""}
-                                    editable= {true}
+                                    editable={true}
                                 />
                                 <BoxInputForm
                                     textLabel={"CPF"}
                                     placeholder={formatarCPF(getPatient.cpf) || ""}
-                                    editable= {true}
+                                    editable={true}
                                 />
                                 <BoxInputForm
                                     textLabel={"Endereco"}
                                     placeholder={getPatient.endereco.logradouro || ""}
-                                    editable= {true}
+                                    editable={true}
                                 />
                                 <DoubleView>
                                     <BoxInputForm
                                         fieldWidth={40}
                                         textLabel={"CEP"}
                                         placeholder={formatarCEP(getPatient.endereco.cep) || ""}
-                                        editable= {true}
+                                        editable={true}
                                     />
                                     <BoxInputForm
                                         fieldWidth={40}
                                         textLabel={"Cidade"}
                                         placeholder={getPatient.endereco.cidade || ""}
-                                        editable= {true}
+                                        editable={true}
                                     />
                                 </DoubleView>
                             </>

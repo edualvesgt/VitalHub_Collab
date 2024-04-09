@@ -11,16 +11,17 @@ import { ScrollForm } from "../Profile/StyleProfile"
 import { MaterialIcons } from '@expo/vector-icons'
 import Cam from '../../components/Cam/Cam';
 import { userDecodeToken } from '../../utils/Auth';
-import api, { Appointment } from '../../services/services';
-``
-export const FormDoctor = ({ navigation }) => {
+import api from '../../services/services';
 
+export const FormDoctor = ({ navigation,idConsulta }) => {
 
+    const IdConsulta = idConsulta
     const [openModal, setOpenModal] = useState(false);
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [role, setRole] = useState("")
     const [listAppointment, setListAppointment] = useState([])
+
 
     useEffect(() => {
         profileLoad()
@@ -43,17 +44,21 @@ export const FormDoctor = ({ navigation }) => {
         console.log("Inicio da Funcao ");
         console.log(token);
 
-        await api.get(`/Pacientes/BuscarPorID?id=${token}`, {
-            
-        }).then(response => {
-            const data  = response.data.map(item => ({
-                descricao : item.clinica.descricao
-            }))
-            setListAppointment(data)
-            console.log(data.descricaos);
-        }).catch(error => {
-            console.log(error);
-        })
+        await api.get(`/Pacientes/BuscarPorID?id=${token}`)
+            .then(response => {
+
+                setListAppointment(response.data.consulta)
+
+                // Supondo que listAppointment é o array de consultas
+                const mostRecentAppointment = listAppointment.find(appointment => appointment.id === IdConsulta);
+
+                
+
+
+            })
+            .catch(error => {
+                console.log(error);
+            })
 
     }
 
@@ -136,7 +141,7 @@ export const FormDoctor = ({ navigation }) => {
 
                                 <BoxInputForm
                                     textLabel={"Diagnostico"}
-                                    placeholder={setListAppointment.descricao}
+                                    placeholder={""}
                                 />
                                 <BoxInputForm
                                     fieldHeigth={120}
