@@ -11,7 +11,7 @@ const ShowFormDoctor = ({
     navigation,
     status,
     role,
-    consulta,}) => {
+    consulta, }) => {
 
     const image = require("../../assets/PhotoGirl.png");
 
@@ -26,25 +26,47 @@ const ShowFormDoctor = ({
     const [profile, setProfile] = useState("Medico");
 
     return (
-        <ShowModalContainer>
-            <ShowModalContent>
-                <PhotoShow source={image} />
-                <Title>Dr. {consulta.medicoNome}</Title>
-                <TextAbout>CRM {consulta.medicoCrm} <TextAbout> {consulta.especialidade}</TextAbout> </TextAbout>
+        role == "Medico" ? (
+            <ShowModalContainer>
+                <ShowModalContent>
+                    <PhotoShow source={image} />
+                    <Title>{consulta.pacienteNome}</Title>
+                    <TextAbout>{consulta.pacienteIdade} Anos<TextAbout> {consulta.pacienteEmail}</TextAbout> </TextAbout>
 
-                {status == "agendadas" ? (
-                    <Button onPress={() => navigation.replace('LocalClinic', {clinica: consulta.clinicaId})}>
-                        <ButtonTitle>Ver Local Consulta</ButtonTitle>
-                    </Button>
-                ) : (
-                    <Button onPress={() => navigation.replace('FormDoctor')}>
-                        <ButtonTitle>{role == "Medico" ? "Inserir Prontuário" : "Ver Prontuário"}</ButtonTitle>
-                    </Button>
-                )}
+                    {status == "agendadas" ? (
+                        <Button onPress={() => { navigation.replace('FormDoctor', { clinica: consulta.clinicaId }) }}>
+                            <ButtonTitle>{"Inserir Prontuário"}</ButtonTitle>
+                        </Button>
+                    ) : (
+                        <Button onPress={() => navigation.replace('FormDoctor', {consultaId: consulta.consultaId})}>
+                            <ButtonTitle>Ver Prontuário</ButtonTitle>
+                        </Button>
+                    )}
 
-                <LinkCancel onPress={onClose} >Cancelar</LinkCancel>
-            </ShowModalContent>
-        </ShowModalContainer>
+                    <LinkCancel onPress={onClose} >Cancelar</LinkCancel>
+                </ShowModalContent>
+            </ShowModalContainer>
+        ) : (
+            <ShowModalContainer>
+                <ShowModalContent>
+                    <PhotoShow source={image} />
+                    <Title>Dr. {consulta.medicoNome}</Title>
+                    <TextAbout>CRM {consulta.medicoCrm} <TextAbout> {consulta.especialidade}</TextAbout> </TextAbout>
+
+                    {status == "agendadas" ? (
+                        <Button onPress={() => { navigation.replace('LocalClinic', { clinica: consulta.clinicaId }) }}>
+                            <ButtonTitle>Ver Local Consulta</ButtonTitle>
+                        </Button>
+                    ) : (
+                        <Button onPress={() => navigation.replace('FormDoctor', {consultaId: consulta.consultaId})}>
+                            <ButtonTitle>Ver Prontuário</ButtonTitle>
+                        </Button>
+                    )}
+
+                    <LinkCancel onPress={onClose} >Cancelar</LinkCancel>
+                </ShowModalContent>
+            </ShowModalContainer>
+        )
     );
 };
 
