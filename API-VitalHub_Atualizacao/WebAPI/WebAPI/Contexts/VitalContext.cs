@@ -43,9 +43,8 @@ public partial class VitalContext : DbContext
     public virtual DbSet<Usuario> Usuarios { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-
-        => optionsBuilder.UseSqlServer("Data Source=NOTE04-S21; initial catalog=VitalHub_V2; User Id = sa; Pwd = Senai@134; TrustServerCertificate=true;");
-
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Data Source=NOTE04-S21; initial catalog=VitalHub_V2; user Id=sa; pwd=Senai@134; TrustServerCertificate=true;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -118,6 +117,9 @@ public partial class VitalContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("CEP");
+            entity.Property(e => e.Cidade)
+                .HasMaxLength(50)
+                .IsUnicode(false);
             entity.Property(e => e.Latitude).HasColumnType("decimal(8, 6)");
             entity.Property(e => e.Logradouro)
                 .HasMaxLength(50)
@@ -143,9 +145,6 @@ public partial class VitalContext : DbContext
                 .HasColumnName("ID");
             entity.Property(e => e.ConsultaId).HasColumnName("ConsultaID");
             entity.Property(e => e.Descricao).HasColumnType("text");
-            entity.Property(e => e.Titulo)
-                .HasMaxLength(100)
-                .IsUnicode(false);
 
             entity.HasOne(d => d.Consulta).WithMany(p => p.Exames)
                 .HasForeignKey(d => d.ConsultaId)
@@ -242,7 +241,6 @@ public partial class VitalContext : DbContext
             entity.Property(e => e.Medicamento)
                 .HasMaxLength(100)
                 .IsUnicode(false);
-            entity.Property(e => e.Observacoes).HasColumnType("text");
         });
 
         modelBuilder.Entity<SituacaoConsulta>(entity =>

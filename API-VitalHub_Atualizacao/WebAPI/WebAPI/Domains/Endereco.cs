@@ -11,13 +11,13 @@ public partial class Endereco
 
     public string? Logradouro { get; set; }
 
-    public string? Cidade { get; set; }
-
     public int? Numero { get; set; }
 
     public decimal? Longitude { get; set; }
 
     public decimal? Latitude { get; set; }
+
+    public string? Cidade { get; set; }
 
     public virtual ICollection<Clinica> Clinicas { get; set; } = new List<Clinica>();
 

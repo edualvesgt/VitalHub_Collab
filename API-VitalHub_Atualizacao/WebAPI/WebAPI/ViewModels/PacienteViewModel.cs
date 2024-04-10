@@ -22,6 +22,8 @@ namespace WebAPI.ViewModels
 
         public string? Senha { get; set; }
 
+        public string? Cidade { get; set; }
+
         public Guid IdTipoUsuario { get; set; }
 
         public string? Foto { get; set; }
