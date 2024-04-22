@@ -13,9 +13,9 @@ import Cam from '../../components/Cam/Cam';
 import { userDecodeToken } from '../../utils/Auth';
 import api from '../../services/services';
 
-export const FormDoctor = ({ navigation,idConsulta }) => {
+export const FormDoctor = ({ navigation, route}) => {
 
-    const IdConsulta = idConsulta
+    
     const [openModal, setOpenModal] = useState(false);
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -25,7 +25,10 @@ export const FormDoctor = ({ navigation,idConsulta }) => {
 
     useEffect(() => {
         profileLoad()
-    }, [])
+        console.log("Route");
+        console.log(route.params.consultaDescricao);
+        console.log(route.params.consultaReceita);
+    }, [route.params])
 
 
     async function profileLoad() {
@@ -36,31 +39,8 @@ export const FormDoctor = ({ navigation,idConsulta }) => {
         console.log("AQUIIII");
         console.log(token);
         // console.log(role);
-
-        await GetAppointment(token.jti)
     }
 
-    async function GetAppointment(token) {
-        console.log("Inicio da Funcao ");
-        console.log(token);
-
-        await api.get(`/Pacientes/BuscarPorID?id=${token}`)
-            .then(response => {
-
-                setListAppointment(response.data.consulta)
-
-                // Supondo que listAppointment é o array de consultas
-                const mostRecentAppointment = listAppointment.find(appointment => appointment.id === IdConsulta);
-
-                
-
-
-            })
-            .catch(error => {
-                console.log(error);
-            })
-
-    }
 
 
     return (
@@ -81,12 +61,12 @@ export const FormDoctor = ({ navigation,idConsulta }) => {
                                 <BoxInputForm
                                     fieldHeigth={120}
                                     textLabel={"Descricao"}
-                                    placeholder={listAppointment[0].descricao}
+                                    placeholder={"Descricao"}
                                 />
 
                                 <BoxInputForm
                                     textLabel={"Diagnostico"}
-                                    placeholder={listAppointment[0].diagnostico}
+                                    placeholder={"Diagnostico"}
                                 />
                                 <BoxInputForm
                                     fieldHeigth={120}
@@ -136,17 +116,17 @@ export const FormDoctor = ({ navigation,idConsulta }) => {
                                 <BoxInputForm
                                     fieldHeigth={120}
                                     textLabel={"Descricao"}
-                                    placeholder={"listAppointment.consulta.descricao"}
+                                    placeholder={route.params.consultaDescricao}
                                 />
 
                                 <BoxInputForm
                                     textLabel={"Diagnostico"}
-                                    placeholder={""}
+                                    placeholder={route.params.consultaDiagnostico}
                                 />
                                 <BoxInputForm
                                     fieldHeigth={120}
                                     textLabel={"Prescricao Medica"}
-                                    placeholder={"Prescricao Medica"}
+                                    placeholder={route.params.consultaReceita}
                                 />
                             </>
                         )}

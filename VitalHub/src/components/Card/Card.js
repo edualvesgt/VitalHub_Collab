@@ -46,16 +46,22 @@ const Card = ({
         return userDia;
     }
 
-    useEffect(() => {
-        formatarIdade()
-    })
+    function timeConsulta(time) {
+       return time.slice(14,19)
+    }
+
+
+
+    // useEffect(() => {
+    //     formatarIdade()
+    // })
 
     const Check = () => {
         if (status === "agendadas") {
             return (
                 <RowCardBox>
                     <DoubleView style={{ justifyContent: 'space-between' }}>
-                        <StatusGreen time={time} />
+                        <StatusGreen time={timeConsulta(time)} />
                         <TextRed onPress={onPressCard}>Cancelar</TextRed>
                     </DoubleView>
                 </RowCardBox>
@@ -64,7 +70,7 @@ const Card = ({
             return (
                 <RowCardBox>
                     <DoubleView style={{ justifyContent: 'space-between' }}>
-                        <StatusGray time={time} />
+                        <StatusGray time={timeConsulta(time)} />
                         <TextBlue onPress={onPressShow}>Ver Prontuario</TextBlue>
                     </DoubleView>
                 </RowCardBox>
@@ -72,7 +78,7 @@ const Card = ({
         } else if (status === "canceladas") {
             return (
                 <RowCardBox>
-                    <StatusGray time={time} />
+                    <StatusGray time={timeConsulta(time)} />
                 </RowCardBox>
             );
         } else {
@@ -95,7 +101,8 @@ const Card = ({
             <Container>
                 <TextCardBox>
                     <TextAccount>{Name}</TextAccount>
-                    <TextAbout > {role ? `CRM ${Age} ` : `${formatarIdade()} Anos`}  <TextAbout>{Priority} </TextAbout> </TextAbout>
+                    <TextAbout > {role ? `CRM ${Age} ` : `${formatarIdade()} Anos`}  <TextAbout>{Priority == "0" ? "Rotina"
+                        : Priority == "1" ? "Exame" : "Urgência"} </TextAbout> </TextAbout>
                 </TextCardBox>
                 {Check()}
             </Container>

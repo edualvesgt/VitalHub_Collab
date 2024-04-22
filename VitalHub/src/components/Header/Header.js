@@ -6,12 +6,10 @@ import { userDecodeToken } from "../../utils/Auth";
 import { useEffect, useState } from "react";
 
 
-export function Header({ navigation }) {
+export function Header({ navigation, foto }) {
     async function profileLoad() {
 
         const token = await userDecodeToken();
-
-        console.log(token)
         setName(token.name)
     }
     
@@ -26,7 +24,7 @@ export function Header({ navigation }) {
 
         <HeaderContainer>
             <HeaderBox onPress={() => navigation.navigate("Profile")}>
-                <DoctorPhoto source={require("../../assets/PhotoProfile.png")} />
+                <DoctorPhoto source={foto} />
                 <DataUser>
                     <TextDefault>Bem Vindo </TextDefault>
                     <NameUser>{name}</NameUser>

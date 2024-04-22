@@ -16,7 +16,7 @@ const CancelAppointment = ({ isOpen, onClose, navigation, consulta }) => {
     }
 
     async function atualizarSituacao(){
-        await api.put(`/Consultas/Status`, {id: consulta.consultaId, situacaoId: "4CA3C137-4E63-4A7D-947E-2C9338BBEF69"} )
+        await api.put(`/Consultas/Status`, {id: consulta.consultaId, situacaoId: "canceladas"} )
         .then(responde => {
             console.log("Atualizado");
         })
