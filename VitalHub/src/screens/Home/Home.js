@@ -56,7 +56,7 @@ export const Home = ({ navigation }) => {
                         consultaSituacao: item.situacao.situacao,
                         clinicaId: item.medicoClinica.clinicaId,
                         id: item.id,
-                        // especialidade: item.medicoClinica.medico.especialidade.especialidade1,
+                        especialidade: item.medicoClinica.medico.especialidade.especialidade1,
                         pacienteNome: item.paciente.idNavigation.nome,
                         pacienteIdade: item.paciente.dataNascimento,
                         pacienteEmail: item.paciente.idNavigation.email,
@@ -65,7 +65,7 @@ export const Home = ({ navigation }) => {
                         consultaData: item.dataConsulta,
                         consultaDescricao: item.descricao,
                         consultaDiagnostico: item.diagnostico,
-                        // consultaReceita: item.receita.medicamento
+                        consultaReceita: item.receita.medicamento
                     
                     }))
                     setResponseConsulta(novaConsulta)
