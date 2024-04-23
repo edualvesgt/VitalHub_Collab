@@ -6,23 +6,35 @@ import { HeaderContainer, HeaderContent, HeaderPhoto } from "../../components/He
 import { ModalTitle } from "../../components/Modal/Modal"
 import { TextAccount } from "../../components/Text/Text"
 import { Title } from "../../components/Title/StyleTitle"
-import { ButtonLogout, ScrollForm } from "./StyleProfile"
+import { ButtonCamera, ButtonLogout, ScrollForm } from "./StyleProfile"
 import { userDecodeToken } from "../../utils/Auth"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import api, { GetPacient } from "../../services/services"
+import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { Text, TouchableOpacity } from "react-native"
+import Cam from "../../components/Cam/Cam"
 
 export const Profile = ({ navigation }) => {
+    const [token, setToken] = useState("")
+    const [showCam, setShowCam] = useState(false)
     async function profileLoad() {
-        const token = await userDecodeToken();
-        setName(token.name);
-        setEmail(token.email);
-        await PatientData(token.token);
+
+        const TokenDecoded = await userDecodeToken()
+        setName(TokenDecoded.name);
+        setEmail(TokenDecoded.email);
+
+        const token = await AsyncStorage.getItem('token');
+        if (token) {
+
+            setToken(token)
+        }
     }
 
-    async function PatientData(Token) {
+    async function PatientData() {
+
         await api.get(GetPacient, {
             headers: {
-                'Authorization': `Bearer ${Token}`
+                'Authorization': `Bearer ${token}`
             }
         })
             .then(response => {
@@ -35,12 +47,17 @@ export const Profile = ({ navigation }) => {
     }
 
     useEffect(() => {
-        profileLoad();
+        profileLoad()
     }, [])
+
+    useEffect(() => {
+        PatientData()
+    }, [token])
+
 
     async function profileLogout(token) {
         try {
-            const token = await userDecodeToken();
+
             await AsyncStorage.removeItem("token", navigation.replace("Login"));
         } catch (error) {
             console.log(error);
@@ -66,75 +83,77 @@ export const Profile = ({ navigation }) => {
         <Container>
             <HeaderContainer>
                 <HeaderPhoto source={require("../../assets/PhotoProfile.png")} />
+                <ButtonCamera onPress={() => {setShowCam(true)}} >
+                    <MaterialCommunityIcons name="camera-plus" size={20} color={"#fbfbfb"} />
+                </ButtonCamera>
             </HeaderContainer>
+
+            <Cam visible={showCam} getMediaLibrary={true}/>
 
             <ModalTitle>
                 <Title>{name}</Title>
                 <TextAccount>{email}</TextAccount>
             </ModalTitle>
             <ScrollForm>
-                {getPatient && (
+
+                {isEditing ? (
                     <>
-                        {isEditing ? (
-                            <>
-                                <BoxInputForm
-                                    textLabel={"Data de Nascimento"}
-                                    placeholder={getPatient.dataNascimento ? new Date(getPatient.dataNascimento).toLocaleDateString() : ""}
-                                    editable={true}
-                                />
-                                <BoxInputForm
-                                    textLabel={"CPF"}
-                                    placeholder={formatarCPF(getPatient.cpf) || ""}
-                                    editable={true}
-                                />
-                                <BoxInputForm
-                                    textLabel={"Endereco"}
-                                    placeholder={getPatient.endereco.logradouro || ""}
-                                    editable={true}
-                                />
-                                <DoubleView>
-                                    <BoxInputForm
-                                        fieldWidth={40}
-                                        textLabel={"CEP"}
-                                        placeholder={formatarCEP(getPatient.endereco.cep) || ""}
-                                        editable={true}
-                                    />
-                                    <BoxInputForm
-                                        fieldWidth={40}
-                                        textLabel={"Cidade"}
-                                        placeholder={getPatient.endereco.cidade || ""}
-                                        editable={true}
-                                    />
-                                </DoubleView>
-                            </>
-                        ) : (
-                            <>
-                                <BoxInput
-                                    textLabel={"Data de Nascimento"}
-                                    placeholder={getPatient.dataNascimento ? new Date(getPatient.dataNascimento).toLocaleDateString() : ""}
-                                />
-                                <BoxInput
-                                    textLabel={"CPF"}
-                                    placeholder={formatarCPF(getPatient.cpf) || ""}
-                                />
-                                <BoxInput
-                                    textLabel={"Endereco"}
-                                    placeholder={getPatient.endereco.logradouro || ""}
-                                />
-                                <DoubleView>
-                                    <BoxInput
-                                        fieldWidth={40}
-                                        textLabel={"CEP"}
-                                        placeholder={formatarCEP(getPatient.endereco.cep) || ""}
-                                    />
-                                    <BoxInput
-                                        fieldWidth={40}
-                                        textLabel={"Cidade"}
-                                        placeholder={getPatient.endereco.cidade || ""}
-                                    />
-                                </DoubleView>
-                            </>
-                        )}
+                        <BoxInputForm
+                            textLabel={"Data de Nascimento"}
+                            // placeholder={getPatient.dataNascimento ? new Date(getPatient.dataNascimento).toLocaleDateString() : ""}
+                            editable={true}
+                        />
+                        <BoxInputForm
+                            textLabel={"CPF"}
+                            // placeholder={formatarCPF(getPatient.cpf) || ""}
+                            editable={true}
+                        />
+                        <BoxInputForm
+                            textLabel={"Endereco"}
+                            // placeholder={getPatient.endereco.logradouro || ""}
+                            editable={true}
+                        />
+                        <DoubleView>
+                            <BoxInputForm
+                                fieldWidth={40}
+                                textLabel={"CEP"}
+                                // placeholder={formatarCEP(getPatient.endereco.cep) || ""}
+                                editable={true}
+                            />
+                            <BoxInputForm
+                                fieldWidth={40}
+                                textLabel={"Cidade"}
+                                // placeholder={getPatient.endereco.cidade || "
+                                editable={true}
+                            />
+                        </DoubleView>
+                    </>
+                ) : (
+                    <>
+                        <BoxInput
+                            textLabel={"Data de Nascimento"}
+                        // placeholder={getPatient.dataNascimento ? new Date(getPatient.dataNascimento).toLocaleDateString() : ""}
+                        />
+                        <BoxInput
+                            textLabel={"CPF"}
+                        // placeholder={formatarCPF(getPatient.cpf) || ""}
+                        />
+                        <BoxInput
+                            textLabel={"Endereco"}
+                        // placeholder={getPatient.endereco.logradouro || ""}
+                        />
+                        <DoubleView>
+                            <BoxInput
+                                fieldWidth={40}
+                                textLabel={"CEP"}
+                            // placeholder={formatarCEP(getPatient.endereco.cep) || ""}
+                            />
+                            <BoxInput
+                                fieldWidth={40}
+                                textLabel={"Cidade"}
+                            // placeholder={getPatient.endereco.cidade || ""}
+                            />
+                        </DoubleView>
                     </>
                 )}
 

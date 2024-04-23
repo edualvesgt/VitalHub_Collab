@@ -5,16 +5,19 @@ import { Camera, CameraType } from 'expo-camera';
 import { Container, ContainerButtonCam, } from '../Container/StyleContainer';
 import { Button, ButtonFlip, ButtonPhoto } from '../Button/Button';
 import { FontAwesome, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
-import { Alert, Image, Modal, View } from 'react-native';
+import { Alert, Image, Modal, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
 
-export default function Cam({ }) {
+export default function Cam({ visible, getMediaLibrary = false, ...rest }) {
+    const [showCam, setShowCam] = useState(false)
     const camRef = useRef(null);
     const [typeCam, setTypeCam] = useState(Camera.Constants.Type.front);
     // Estado para armazenar a foto capturada
     const [photo, setPhoto] = useState(null)
     const [capturePhoto, setCapturePhoto] = useState(null)
     const [openModal, setOpenModal] = useState(false)
+    const [latesPhoto, setLatestPhoto] = useState(null)
 
 
     useEffect(() => {
@@ -24,6 +27,18 @@ export default function Cam({ }) {
         })();
     }, []);
 
+    useEffect(() => {
+        setCapturePhoto(null)
+
+        if (getMediaLibrary) {
+            GetLastPhoto();
+        }
+    }, [visible])
+
+    async function GetLastPhoto() {
+        const assets = await MediaLibrary.getAssetsAsync({ sortBy: [[MediaLibrary.SortBy.creationTime, false]], first: 1 })
+        console.log(assets);
+    }
 
     // Função assíncrona para capturar a foto
     async function CapturePhoto() {
@@ -55,13 +70,13 @@ export default function Cam({ }) {
         }
     }
 
-
-
     return (
         <Modal
             animationType="slide"
             transparent={false}
-            visible={true}
+            visible={visible}
+            statusBarTranslucent={true}
+            getMediaLibrary={true}
         >
 
 
@@ -79,6 +94,9 @@ export default function Cam({ }) {
 
                     <ButtonFlip onPress={() => setTypeCam(typeCam == CameraType.front ? CameraType.back : CameraType.front)}>
                         <MaterialCommunityIcons name='camera-flip' color={'#FFF'} size={40} />
+                    </ButtonFlip>
+                    <ButtonFlip onPress={() => setShowCam(false)}>
+                        <AntDesign name="leftcircleo" size={30} color="white" />
                     </ButtonFlip>
                 </ContainerButtonCam>
             </Camera>
@@ -98,6 +116,9 @@ export default function Cam({ }) {
                         <ButtonPhoto onPress={() => { SavePhoto(); setOpenModal(false) }}>
                             <FontAwesome name='save' size={50} color={'#121212'} />
                         </ButtonPhoto>
+
+
+
                     </View>
                 </Container>
             </Modal>

@@ -5,12 +5,25 @@ import { Input } from "../../components/Input/StyleInput"
 import { Logo } from "../../components/Logo/StyleLogo"
 import { TextForgot } from "../../components/Text/Text"
 import { Title } from "../../components/Title/StyleTitle"
+import { useState } from "react"
+import api from "../../services/services"
 
-export const ForgotPassword = ({navigation}) => {
+export const ForgotPassword = ({ navigation }) => {
+
+    const [email, setEmail] = useState('dudualvesgt27@gmail.com')
+
+    async function SendEmail() {
+        await api.post(`/RecuperarSenha?email=${email}`)
+            .then(() => {
+                navigation.navigate('VerifyEmail' , {emailRecovery : email})
+            }).catch(error => {
+                console.log(error);
+            })
+    }
     return (
         <Container>
             <ButtonBack onPress={() => navigation.navigate('Login')}>
-            <Image source={require("../../assets/ButtonBack.png")}  />
+                <Image source={require("../../assets/ButtonBack.png")} />
             </ButtonBack>
             <Logo source={require("../../assets/VitalHub_LogoAzul.png")} />
 
@@ -18,10 +31,12 @@ export const ForgotPassword = ({navigation}) => {
 
             <TextForgot>Digite abaixo seu email cadastrado que enviaremos um link para recuperação de senha</TextForgot>
             <Input
+                value={email}
+                onChangeText={(txt) => setEmail(txt)}
                 placeholder={"Usuario ou Email"}
             />
 
-            <Button onPress={() => navigation.navigate('VerifyEmail')}>
+            <Button onPress={() => SendEmail()}>
                 <ButtonTitle> Continuar</ButtonTitle>
             </Button>
         </Container>

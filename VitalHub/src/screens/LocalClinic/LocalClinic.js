@@ -20,7 +20,6 @@ export const LocalClinic = ({ navigation, route }) => {
         console.log(route.params.clinica);
         await api.get(`/Clinica/BuscarPorId?id=${route.params.clinica}`)
             .then(response => {
-                console.log(response.data);
                 setClinica(response.data)
             })
             .catch(error => {

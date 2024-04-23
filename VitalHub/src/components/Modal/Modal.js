@@ -4,6 +4,8 @@ export const ModalTitle = styled.View`
 width: 75%;
 height:140px;
 border-radius: 5px;
+position: relative;
+z-index: 1;
 
 margin-top: 240px;
 

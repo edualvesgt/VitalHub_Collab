@@ -69,7 +69,6 @@ export const Home = ({ navigation }) => {
                     
                     }))
                     setResponseConsulta(novaConsulta)
-                    console.log(novaConsulta);
                 }).catch(error => {
                     console.log(error)
                 })

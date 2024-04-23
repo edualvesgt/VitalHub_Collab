@@ -13,9 +13,9 @@ import Cam from '../../components/Cam/Cam';
 import { userDecodeToken } from '../../utils/Auth';
 import api from '../../services/services';
 
-export const FormDoctor = ({ navigation, route}) => {
+export const FormDoctor = ({ navigation, route }) => {
 
-    
+
     const [openModal, setOpenModal] = useState(false);
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -26,8 +26,6 @@ export const FormDoctor = ({ navigation, route}) => {
     useEffect(() => {
         profileLoad()
         console.log("Route");
-        console.log(route.params.consultaDescricao);
-        console.log(route.params.consultaReceita);
     }, [route.params])
 
 
@@ -36,9 +34,6 @@ export const FormDoctor = ({ navigation, route}) => {
         setName(token.name);
         setEmail(token.email);
         setRole(token.role)
-        console.log("AQUIIII");
-        console.log(token);
-        // console.log(role);
     }
 
 
@@ -61,17 +56,17 @@ export const FormDoctor = ({ navigation, route}) => {
                                 <BoxInputForm
                                     fieldHeigth={120}
                                     textLabel={"Descricao"}
-                                    placeholder={"Descricao"}
+                                    placeholder={""}
                                 />
 
                                 <BoxInputForm
                                     textLabel={"Diagnostico"}
-                                    placeholder={"Diagnostico"}
+                                    placeholder={""}
                                 />
                                 <BoxInputForm
                                     fieldHeigth={120}
                                     textLabel={"Prescricao Medica"}
-                                    placeholder={"Prescricao Medica"}
+                                    placeholder={""}
                                 />
 
                                 <BoxInputForm
