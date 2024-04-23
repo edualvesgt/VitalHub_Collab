@@ -17,7 +17,6 @@ export const Profile = ({ navigation }) => {
         const TokenDecoded = await userDecodeToken()
         setName(TokenDecoded.name);
         setEmail(TokenDecoded.email);
-s
         console.log(getPatient);
         
 
