@@ -15,18 +15,33 @@ import { Text, TouchableOpacity } from "react-native"
 import Cam from "../../components/Cam/Cam"
 
 export const Profile = ({ navigation }) => {
-    const [token, setToken] = useState("")
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [idUser, setIdUSer] = useState("")
+
+    const [tokenKey, setTokenKey] = useState("")
     const [showCam, setShowCam] = useState(false)
+    const [date, setDate] = useState("");
+    const [getPatient, setGetPatient] = useState(null);
+    const [isEditing, setIsEditing] = useState(false);
+    const [uriPhoto, setUriPhoto] = useState(null)
+
+
     async function profileLoad() {
 
         const TokenDecoded = await userDecodeToken()
         setName(TokenDecoded.name);
         setEmail(TokenDecoded.email);
+        setIdUSer(TokenDecoded.jti);
 
+    }
+
+    async function getToken() {
         const token = await AsyncStorage.getItem('token');
-        if (token) {
+        
 
-            setToken(token)
+        if (token != null) {
+            setTokenKey(token.token)
         }
     }
 
@@ -34,11 +49,12 @@ export const Profile = ({ navigation }) => {
 
         await api.get(GetPacient, {
             headers: {
-                'Authorization': `Bearer ${token}`
+                'accept ': `*/*`,
+                'Authorization': `Bearer ${tokenKey}`
             }
         })
             .then(response => {
-                console.log(response.data);
+                
                 setGetPatient(response.data);
             })
             .catch(error => {
@@ -46,15 +62,27 @@ export const Profile = ({ navigation }) => {
             });
     }
 
-    useEffect(() => {
-        profileLoad()
-    }, [])
+    async function AlterarFotoPerfil() {
+        const formData = new FormData();
+        formData.append("Arquivo", {
+            uri : uriPhoto,
+            name: `image.${uriPhoto.split(".")[1]}`,
+            type: `image/${uriPhoto.split(".")[1]}`
+        })
+        console.log(idUser);
+        await api.put(`/Usuario/AlterarFotoPerfil?id=${idUser}`, formData, {
+            headers:{
+                "Content-Type": "multipart/form-data"
+            }
+        }).then(response => {
+            console.log(response);
+        }).catch(erro => {
+            console.log("Alterar foto");
+            console.log(erro);
+        })
+    }
 
-    useEffect(() => {
-        PatientData()
-    }, [token])
-
-
+   
     async function profileLogout(token) {
         try {
 
@@ -63,12 +91,6 @@ export const Profile = ({ navigation }) => {
             console.log(error);
         }
     }
-
-    const [name, setName] = useState("");
-    const [date, setDate] = useState("");
-    const [email, setEmail] = useState("");
-    const [getPatient, setGetPatient] = useState(null);
-    const [isEditing, setIsEditing] = useState(false);
 
     const formatarCEP = (cep) => {
         return cep.substring(0, 5) + '-' + cep.substring(5);
@@ -79,16 +101,34 @@ export const Profile = ({ navigation }) => {
         return cpf.substring(0, 3) + '.' + cpf.substring(3, 6) + '.' + cpf.substring(6, 9) + '-' + cpf.substring(9);
     };
 
+    useEffect(() => {
+        profileLoad();
+        getToken();
+    }, [])
+
+    useEffect(() => {
+        
+        PatientData()
+    }, [tokenKey])
+
+    useEffect(() => {
+        console.log(uriPhoto);
+        if(uriPhoto){
+            AlterarFotoPerfil();
+        }
+    }, [uriPhoto])
+
+
     return (
         <Container>
             <HeaderContainer>
-                <HeaderPhoto source={require("../../assets/PhotoProfile.png")} />
-                <ButtonCamera onPress={() => {setShowCam(true)}} >
+                <HeaderPhoto source={{uri: uriPhoto}} />
+                <ButtonCamera onPress={() => setShowCam(true)} >
                     <MaterialCommunityIcons name="camera-plus" size={20} color={"#fbfbfb"} />
                 </ButtonCamera>
             </HeaderContainer>
 
-            <Cam visible={showCam} getMediaLibrary={true}/>
+            <Cam visible={showCam} getMediaLibrary={true} setUriPhoto={setUriPhoto} setShowCam={setShowCam} />
 
             <ModalTitle>
                 <Title>{name}</Title>
