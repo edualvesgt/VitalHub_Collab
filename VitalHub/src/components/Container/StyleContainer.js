@@ -128,3 +128,8 @@ export const ContainerPhoto = styled.View`
 margin: 10px;
 flex-direction: 'row';
 `
+
+export const ContainerItens = styled.View`
+width: 100%;
+align-items: center;
+`

@@ -5,6 +5,10 @@ width: 100%;
 height:90%;
 
 `
+
+export const ScrollCreate = styled.ScrollView`
+width: 100%;
+`
 export const ContainerForm = styled.SafeAreaView`
 width:100%;
 

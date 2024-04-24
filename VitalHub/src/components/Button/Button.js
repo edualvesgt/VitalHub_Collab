@@ -26,6 +26,7 @@ font-size: 14px;
 font-family: "MontserratAlternates_500Medium";
 color: #FFFFFF;
 text-align: center;
+align-self: center;
 text-transform: uppercase;
 
 `
