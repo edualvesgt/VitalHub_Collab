@@ -20,7 +20,10 @@ export const FormDoctor = ({ navigation, route }) => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [role, setRole] = useState("")
+    const [uriPhotoForm, setUriPhotoForm] = useState(null)
     const [listAppointment, setListAppointment] = useState([])
+    const [showCam, setShowCam] = useState(false)
+    const [descricaoExame, setDescricaoExame] = useState("")
 
 
     useEffect(() => {
@@ -36,10 +39,25 @@ export const FormDoctor = ({ navigation, route }) => {
         setRole(token.role)
     }
 
+    async function InserirExame() {
+       const formData = new FormData();
+       formData.append("Arquivo", {
+        uri: uriPhotoForm,
+        name: `image.${uriPhotoForm.split('.').pop()}`,
+        type : `image/${uriPhotoForm.split('.').pop()}`
+       });
 
+       await api.post(`/Exame/Cadastrar`, formData, {
+        headers: {
+            "Content-Type" : "multipart/form-data"
+        }
+       }).then(response => {
+
+       })
+    }
 
     return (
-        (role != null ? (
+        (role != null ? ( 
             <Container>
                 <HeaderContainer>
                     <HeaderPhoto source={require("../../assets/PhotoProfile.png")} />
@@ -51,7 +69,7 @@ export const FormDoctor = ({ navigation, route }) => {
                     <TextAccount>Idade vir da Home <TextAbout>{email}</TextAbout> </TextAccount>
 
                     <ScrollForm>
-                        {role === 'medico' ? (
+                        {role === 'Paciente' ? (
                             <>
                                 <BoxInputForm
                                     fieldHeigth={120}
@@ -80,7 +98,7 @@ export const FormDoctor = ({ navigation, route }) => {
                                     textLabel={"Exames Medicos"} />
 
                                 <ViewRow>
-                                    <ButtonSendPhoto onPress={() => { setOpenModal(true); }}>
+                                    <ButtonSendPhoto onPress={() => { setShowCam(true); }}>
                                         <ButtonTitle>
                                             <MaterialIcons name="add-a-photo" size={24} color={"white"} />
                                         </ButtonTitle>
@@ -131,8 +149,8 @@ export const FormDoctor = ({ navigation, route }) => {
                     </ScrollForm>
                 </ContainerForm>
 
-                <Modal animationType="slide" transparent={true} visible={openModal} >
-                    <Cam onPress={() => { setOpenModal(false); }} />
+                <Modal animationType="slide" transparent={true} visible={showCam} >
+                    <Cam getMediaLibrary={true} visible={showCam} setUriPhotoForm={setUriPhotoForm}/>
                 </Modal>
 
             </Container>

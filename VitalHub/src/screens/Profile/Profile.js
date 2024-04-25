@@ -42,6 +42,8 @@ export const Profile = ({ navigation }) => {
         setName(TokenDecoded.name);
         setEmail(TokenDecoded.email);
         setIdUSer(TokenDecoded.jti);
+        console.log(getPatient);
+        
 
     }
 

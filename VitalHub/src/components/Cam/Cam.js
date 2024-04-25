@@ -12,7 +12,7 @@ import { LastPhoto } from './StyleCam';
 //para acessar a galeria do celular
 import * as ImagePicker from 'expo-image-picker' 
 
-export default function Cam({ visible, getMediaLibrary = false,setUriPhoto, setShowCam, ...rest }) {
+export default function Cam({ visible, getMediaLibrary = false,setUriPhoto, setUriPhotoForm, setShowCam, ...rest }) {
     const camRef = useRef(null);
     const [typeCam, setTypeCam] = useState(Camera.Constants.Type.front);
     // Estado para armazenar a foto capturada
@@ -52,6 +52,7 @@ export default function Cam({ visible, getMediaLibrary = false,setUriPhoto, setS
             await setCapturePhoto(photo.uri)
             setPhoto(photo.uri)
             setUriPhoto(photo.uri)
+            setUriPhotoForm(photo.uri)
             console.log(photo);
             setOpenModal(true)
 
