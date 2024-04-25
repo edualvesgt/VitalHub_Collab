@@ -10,15 +10,18 @@ import { Title } from "../../components/Title/StyleTitle";
 import api from "../../services/services";
 import { ScrollCreate } from "../Profile/StyleProfile";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { userDecodeToken } from "../../utils/Auth";
+import { Notification } from "../../components/Notification/Notification";
+
 
 export const CreateAccount = ({ navigation }) => {
-    const [email, setEmail] = useState("teste5@teste.com");
-    const [password, setPassword] = useState("teste5@teste.com");
-    const [confirm, setConfirm] = useState("teste5@teste.com");
+    const [email, setEmail] = useState("teste8@teste.com");
+    const [password, setPassword] = useState("teste8@teste.com");
+    const [confirm, setConfirm] = useState("teste8@teste.com");
+    const [name, setName] = useState("teste");
     const [loading, setLoading] = useState(false); // Estado para controlar o carregamento
 
     async function Create() {
+
         const formData = new FormData();
         formData.append('Rg', null);
         formData.append('Cpf', null);
@@ -26,7 +29,7 @@ export const CreateAccount = ({ navigation }) => {
         formData.append('Cep', null);
         formData.append('Logradouro', null);
         formData.append('Numero', "");
-        formData.append('Nome', null);
+        formData.append('Nome', name);
         formData.append('Email', email);
         formData.append('Senha', password);
         formData.append('Cidade', null);
@@ -44,7 +47,9 @@ export const CreateAccount = ({ navigation }) => {
                 });
                 console.log(response.data);
                 if (response.status === 200) {
+                    Notification("Usuario Cadastrado", "Sucesso")
                     await Login(); // Chama o login após o cadastro
+                    Notification("Usuario Cadastrado")
                 }
             }
         } catch (error) {
@@ -74,6 +79,7 @@ export const CreateAccount = ({ navigation }) => {
         }
     }
 
+
     return (
         <Container>
             <ScrollCreate>
@@ -83,19 +89,26 @@ export const CreateAccount = ({ navigation }) => {
                     <TextCreate>Insira seu endereço de e-mail e senha para realizar seu cadastro.</TextCreate>
 
                     <Input
+                        value={name}
+                        onChangeText={(txt) => { setName(txt) }}
+                        placeholder={"Informe seu Nome"}
+                    />
+                    <Input
                         value={email}
                         onChangeText={(txt) => { setEmail(txt) }}
-                        placeholder={"Usuario ou Email"}
+                        placeholder={"Informe seu Email"}
                     />
 
                     <Input
                         value={password}
+                        secureTextEntry={true}
                         onChangeText={(txt) => { setPassword(txt) }}
-                        placeholder={"Senha"}
+                        placeholder={"Digite Sua senha"}
                     />
 
                     <Input
                         value={confirm}
+                        secureTextEntry={true}
                         onChangeText={(txt) => { setConfirm(txt) }}
                         placeholder={"Confirmar Senha"}
                     />
