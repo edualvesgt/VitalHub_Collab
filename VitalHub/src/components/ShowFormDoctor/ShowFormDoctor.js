@@ -20,6 +20,7 @@ const ShowFormDoctor = ({
     }
 
     useEffect(() => {
+        console.log("Abaixo consulta");
         console.log(consulta)
     }, [isOpen])
 
@@ -39,7 +40,7 @@ const ShowFormDoctor = ({
                         </Button>
                     ) : (
                         <Button onPress={() => navigation.replace('FormDoctor', {consultaId: consulta.consultaId})}>
-                            <ButtonTitle>Ver Prontuário</ButtonTitle>
+                            <ButtonTitle>Cadastrar prontuario</ButtonTitle>
                         </Button>
                     )}
 
@@ -58,7 +59,7 @@ const ShowFormDoctor = ({
                             <ButtonTitle>Ver Local Consulta</ButtonTitle>
                         </Button>
                     ) : (
-                        <Button onPress={() => navigation.replace('FormDoctor', {consultaId: consulta.consultaId})}>
+                        <Button onPress={() => navigation.replace('FormDoctor', {consultaDescricao: consulta.consultaDescricao, consultaDiagnostico: consulta.consultaDiagnostico, consultaReceita: consulta.consultaReceita })}>
                             <ButtonTitle>Ver Prontuário</ButtonTitle>
                         </Button>
                     )}

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useId, useState } from "react"
 import { BoxInput, BoxInputForm } from "../../components/BoxInput/BoxInput"
 import { Button, ButtonTitle } from "../../components/Button/Button"
 import { Container, DoubleView, InputContainer } from "../../components/Container/StyleContainer"
@@ -6,45 +6,114 @@ import { HeaderContainer, HeaderContent, HeaderPhoto } from "../../components/He
 import { ModalTitle } from "../../components/Modal/Modal"
 import { TextAccount } from "../../components/Text/Text"
 import { Title } from "../../components/Title/StyleTitle"
-import { ButtonLogout, ScrollForm } from "./StyleProfile"
+import { ButtonCamera, ButtonLogout, ScrollForm } from "./StyleProfile"
 import { userDecodeToken } from "../../utils/Auth"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import api, { GetPacient } from "../../services/services"
+import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { Text, TouchableOpacity } from "react-native"
+import Cam from "../../components/Cam/Cam"
+import { formatarIdade } from "../../components/Card/Card"
+
 
 export const Profile = ({ navigation }) => {
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [idUser, setIdUSer] = useState("")
+
+    const [getPatient, setGetPatient] = useState([]);
+
+    const [cpf, setCpf] = useState("")
+    const [dataNascimento, setDataNascimento] = useState("")
+    const [endereco, setEndereco] = useState("")
+    const [cep, setCep] = useState("")
+    const [cidade, setCidade] = useState("")
+
+    const [tokenKey, setTokenKey] = useState("")
+    const [showCam, setShowCam] = useState(false)
+    const [date, setDate] = useState("");
+    const [isEditing, setIsEditing] = useState(false);
+    const [uriPhoto, setUriPhoto] = useState(null);
+
+
     async function profileLoad() {
 
         const TokenDecoded = await userDecodeToken()
         setName(TokenDecoded.name);
         setEmail(TokenDecoded.email);
-        console.log(getPatient);
-        
+        setIdUSer(TokenDecoded.jti);
 
     }
 
-    async function PatientData(Token) {
-        await api.get(GetPacient, {
-            headers: {
-                'Authorization': `Bearer ${Token}`
-            }
-        })
+    
+
+    async function getToken() {
+        const token = await AsyncStorage.getItem('token');
+
+
+        if (token != null) {
+            setTokenKey(token.token)
+        }
+    }
+
+    async function PatientData() {
+
+        await api.get(`/Pacientes/BuscarPorId?id=${idUser}`)
             .then(response => {
-                console.log(response.data);
-                setGetPatient(response.data);
+                setCpf(response.data.cpf)
+                setDataNascimento(response.data.dataNascimento)
+                setEndereco(response.data.endereco.logradouro)
+                setCep(response.data.endereco.cep)
+                setCidade(response.data.endereco.cidade)
+                setUriPhoto(response.data.idNavigation.foto)
+                console.log("Buscar Id", response.data.idNavigation.foto);
             })
-            .catch(error => {
-                console.log(error);
+            .catch(err => {
+                console.log("erro Buscar por ids");
+                console.log(err);
             });
+
+        console.log(getPatient);
     }
 
-    useEffect(() => {
-        profileLoad();
-    }, [])
+    async function EditProfile() {
+        try {
+            await api.put(`/Pacientes?id=${idUser}`, {
+              
+                "cep" : cep , 
+                "logradouro" : endereco , 
+                "email" : email, 
+                "cidade" : cidade
+                
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
-    useEffect(() => {
-        const token =  AsyncStorage.getItem('token');
-        PatientData(token);
-    }, [])
+    async function AlterarFotoPerfil() {
+        const formData = new FormData();
+        formData.append("Arquivo", {
+            uri: uriPhoto,
+            //name: `image.${uriPhoto.split(".")[1]}`,
+            name: `image.jpg`,
+            //type: `image/${uriPhoto.split(".")[1]}`
+            type: `image/jpg`
+        })
+        console.log(idUser);
+        await api.put(`/Usuario/AlterarFotoPerfil?id=${idUser}`, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data"
+            }
+        }).then(response => {
+            console.log(response);
+        }).catch(erro => {
+            console.log("Alterar foto");
+            console.log(erro);
+        })
+    }
+
+
     async function profileLogout(token) {
         try {
 
@@ -53,12 +122,6 @@ export const Profile = ({ navigation }) => {
             console.log(error);
         }
     }
-
-    const [name, setName] = useState("");
-    const [date, setDate] = useState("");
-    const [email, setEmail] = useState("");
-    const [getPatient, setGetPatient] = useState(null);
-    const [isEditing, setIsEditing] = useState(false);
 
     const formatarCEP = (cep) => {
         return cep.substring(0, 5) + '-' + cep.substring(5);
@@ -69,11 +132,37 @@ export const Profile = ({ navigation }) => {
         return cpf.substring(0, 3) + '.' + cpf.substring(3, 6) + '.' + cpf.substring(6, 9) + '-' + cpf.substring(9);
     };
 
+
+
+    useEffect(() => {
+        profileLoad();
+        getToken();
+    }, [])
+
+    useEffect(() => {
+        if (idUser != null) {
+            PatientData()
+        }
+    }, [idUser])
+
+    useEffect(() => {
+        console.log(uriPhoto);
+        if (uriPhoto) {
+            AlterarFotoPerfil();
+        }
+    }, [uriPhoto])
+
+
     return (
         <Container>
             <HeaderContainer>
-                <HeaderPhoto source={require("../../assets/PhotoProfile.png")} />
+                <HeaderPhoto source={{ uri: uriPhoto }} />
+                <ButtonCamera onPress={() => setShowCam(true)} >
+                    <MaterialCommunityIcons name="camera-plus" size={20} color={"#fbfbfb"} />
+                </ButtonCamera>
             </HeaderContainer>
+
+            <Cam visible={showCam} getMediaLibrary={true} setUriPhoto={setUriPhoto} setShowCam={setShowCam} />
 
             <ModalTitle>
                 <Title>{name}</Title>
@@ -85,31 +174,56 @@ export const Profile = ({ navigation }) => {
                     <>
                         <BoxInputForm
                             textLabel={"Data de Nascimento"}
-                            // placeholder={getPatient.dataNascimento ? new Date(getPatient.dataNascimento).toLocaleDateString() : ""}
+                            placeholder={dataNascimento}
                             editable={true}
+
+                            value = {dataNascimento}
+                            onChangeText={txt => {
+                                setDataNascimento(txt)
+                            }}
                         />
                         <BoxInputForm
                             textLabel={"CPF"}
-                            // placeholder={formatarCPF(getPatient.cpf) || ""}
+                            placeholder={cpf}
                             editable={true}
+
+                            value = {cpf}
+                            onChangeText={txt => {
+                                setCpf(txt)
+                            }}
                         />
                         <BoxInputForm
                             textLabel={"Endereco"}
-                            // placeholder={getPatient.endereco.logradouro || ""}
+                            placeholder={endereco}
                             editable={true}
+
+                            value = {endereco}
+                            onChangeText={txt => {
+                                setEndereco(txt)
+                            }}
                         />
                         <DoubleView>
                             <BoxInputForm
                                 fieldWidth={40}
                                 textLabel={"CEP"}
-                                // placeholder={formatarCEP(getPatient.endereco.cep) || ""}
+                                placeholder={cep}
                                 editable={true}
+
+                                value = {cep}
+                                onChangeText={txt => {
+                                    setCep(txt)
+                                }}
                             />
                             <BoxInputForm
                                 fieldWidth={40}
                                 textLabel={"Cidade"}
-                                // placeholder={getPatient.endereco.cidade || "
+                                placeholder={cidade}
                                 editable={true}
+
+                                value = {cidade}
+                                onChangeText={txt => {
+                                    setCidade(txt)
+                                }}
                             />
                         </DoubleView>
                     </>
@@ -117,26 +231,26 @@ export const Profile = ({ navigation }) => {
                     <>
                         <BoxInput
                             textLabel={"Data de Nascimento"}
-                        // placeholder={getPatient.dataNascimento ? new Date(getPatient.dataNascimento).toLocaleDateString() : ""}
+                            placeholder={dataNascimento}
                         />
                         <BoxInput
                             textLabel={"CPF"}
-                        // placeholder={formatarCPF(getPatient.cpf) || ""}
+                            placeholder={formatarCPF(cpf)}
                         />
                         <BoxInput
                             textLabel={"Endereco"}
-                        // placeholder={getPatient.endereco.logradouro || ""}
+                            placeholder={endereco}
                         />
                         <DoubleView>
                             <BoxInput
                                 fieldWidth={40}
-                                textLabel={"CEP"}
-                            // placeholder={formatarCEP(getPatient.endereco.cep) || ""}
+                                textLabel={"Cep"}
+                                placeholder={formatarCEP(cep)}
                             />
                             <BoxInput
                                 fieldWidth={40}
                                 textLabel={"Cidade"}
-                            // placeholder={getPatient.endereco.cidade || ""}
+                                placeholder={cidade}
                             />
                         </DoubleView>
                     </>
@@ -145,7 +259,7 @@ export const Profile = ({ navigation }) => {
                 <InputContainer>
                     {isEditing ? (
                         <>
-                            <Button>
+                            <Button onPress = {() => EditProfile()}>
                                 <ButtonTitle>Salvar</ButtonTitle>
                             </Button>
                             <Button onPress={() => setIsEditing(false)}>

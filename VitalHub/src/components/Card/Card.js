@@ -1,9 +1,12 @@
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Container, DoubleView } from "../Container/StyleContainer"
 import { StatusGray, StatusGreen } from "../Status/Status"
 import { TextAbout, TextAccount, TextBlue, TextRed } from "../Text/Text"
 import { CardBox, ImageCard, RowCardBox, TextCardBox } from "./StyleCard"
+
+
+
 
 const Card = ({
     image,
@@ -21,12 +24,41 @@ const Card = ({
     role }) => {
     const [profile, setProfile] = useState("Paciente");
 
+    
+
+    function timeConsulta(time) {
+       return time.slice(14,19)
+    }
+
+    function formatarIdade() {
+        const date = new Date();
+        const anoAtual = date.getFullYear();
+        const diaAtual = date.getDate();
+        const mesAtual = date.getMonth() + 1;
+    
+        const userAno = Age.slice(0, 4)
+        const userDia = Age.slice(8, 10)
+        const userMes = Age.slice(5, 7)
+    
+        const userIdade = anoAtual - userAno
+        if (mesAtual < userMes) {
+            return userIdade - 1;
+        }
+        else {
+            if (diaAtual < userDia) {
+                return `${userIdade - 1}`;
+            }
+        }
+    
+        return `${userDia}`;
+    }
+
     const Check = () => {
         if (status === "agendadas") {
             return (
                 <RowCardBox>
                     <DoubleView style={{ justifyContent: 'space-between' }}>
-                        <StatusGreen time={time} />
+                        <StatusGreen time={timeConsulta(time)} />
                         <TextRed onPress={onPressCard}>Cancelar</TextRed>
                     </DoubleView>
                 </RowCardBox>
@@ -35,7 +67,7 @@ const Card = ({
             return (
                 <RowCardBox>
                     <DoubleView style={{ justifyContent: 'space-between' }}>
-                        <StatusGray time={time} />
+                        <StatusGray time={timeConsulta(time)} />
                         <TextBlue onPress={onPressShow}>Ver Prontuario</TextBlue>
                     </DoubleView>
                 </RowCardBox>
@@ -43,7 +75,7 @@ const Card = ({
         } else if (status === "canceladas") {
             return (
                 <RowCardBox>
-                    <StatusGray time={time} />
+                    <StatusGray time={timeConsulta(time)} />
                 </RowCardBox>
             );
         } else {
@@ -66,7 +98,8 @@ const Card = ({
             <Container>
                 <TextCardBox>
                     <TextAccount>{Name}</TextAccount>
-                    <TextAbout > {role ? `CRM ${Age} ` : `${Age} Anos`}  <TextAbout>{Priority} </TextAbout> </TextAbout>
+                    <TextAbout > {role ? `CRM ${Age} ` : `${formatarIdade()} Anos`}  <TextAbout>{Priority == "0" ? "Rotina"
+                        : Priority == "1" ? "Exame" : "Urgência"} </TextAbout> </TextAbout>
                 </TextCardBox>
                 {Check()}
             </Container>

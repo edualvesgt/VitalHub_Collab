@@ -40,6 +40,8 @@ export const Home = ({ navigation }) => {
             setToken(tokenDecoded)
             setDataConsulta(moment().format('YYYY-MM-DD'))
         }
+
+        console.log(tokenDecoded);
     }
 
     async function getConsultas() {
@@ -57,10 +59,16 @@ export const Home = ({ navigation }) => {
                         especialidade: item.medicoClinica.medico.especialidade.especialidade1,
                         pacienteNome: item.paciente.idNavigation.nome,
                         pacienteIdade: item.paciente.dataNascimento,
-                        pacienteEmail: item.paciente.idNavigation.email
+                        pacienteEmail: item.paciente.idNavigation.email,
+                        pacienteFoto: item.paciente.idNavigation.foto,
+                        consultaPrioridade: item.prioridade.prioridade,
+                        consultaData: item.dataConsulta,
+                        consultaDescricao: item.descricao,
+                        consultaDiagnostico: item.diagnostico,
+                        consultaReceita: item.receita.medicamento
+                    
                     }))
                     setResponseConsulta(novaConsulta)
-                    console.log(response.data);
                 }).catch(error => {
                     console.log(error)
                 })
@@ -114,7 +122,7 @@ export const Home = ({ navigation }) => {
 
     return (
         <>
-            <Header navigation={navigation} />
+            <Header navigation={navigation} foto={require("../../assets/PhotoGirl.png")}/>
             <Container>
 
                 <Calendar setDataConsulta={setDataConsulta} />
@@ -150,13 +158,14 @@ export const Home = ({ navigation }) => {
                         item.consultaSituacao == selected && token.role == "Paciente" ? (
                             <Card
                                 role={isMedic}
-                                time={item.time}
+                                time={item.consultaData}
                                 email={item.pacienteEmail}
                                 image={image}
                                 status={item.consultaSituacao}
                                 Name={item.medicoNome}
-                                Age={item.medicoCrm}
+                                Age={item.pacienteIdade}
                                 clinicaId={item.clinicaId}
+                                Priority={item.consultaPrioridade}
                                 specialty={item.especialidade}
                                 navigation={navigation}
                                 onPressCard={() => openModal()}
@@ -166,13 +175,14 @@ export const Home = ({ navigation }) => {
                             (
                                 <Card
                                     role={isMedic}
-                                    time={item.time}
+                                    time={item.consultaData}
                                     email={item.pacienteEmail}
                                     image={image}
                                     status={item.consultaSituacao}
                                     Name={item.pacienteNome}
                                     Age={item.pacienteIdade}
                                     clinicaId={item.clinicaId}
+                                    Priority={item.consultaPrioridade}
                                     specialty={item.especialidade}
                                     navigation={navigation}
                                     onPressCard={() => openModal()}
@@ -203,6 +213,7 @@ export const Home = ({ navigation }) => {
                 isOpen={isModalOpen}
                 onClose={closeModal}
                 navigation={navigation}
+                consulta={consultaSelecionada}
             />
 
             <ScheduleAppointment

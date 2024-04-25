@@ -20,42 +20,22 @@ export const FormDoctor = ({ navigation, route }) => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [role, setRole] = useState("")
-    const [listAppointment, setListAppointment] = useState(null)
-    const [dados, setDados] = useState([])
+    const [listAppointment, setListAppointment] = useState([])
+
+
+    useEffect(() => {
+        profileLoad()
+        console.log("Route");
+    }, [route.params])
+
 
     async function profileLoad() {
         const token = await userDecodeToken();
         setName(token.name);
         setEmail(token.email);
         setRole(token.role)
-        setListAppointment(route.params.consultaId)
     }
 
-    useEffect(() => {
-        console.log("Rodou");
-        profileLoad()
-    }, [])
-
-    useEffect(() => {
-        if (listAppointment != null) {
-            GetAppointment();
-        }
-    }, [listAppointment]);
-
-
-    async function GetAppointment() {
-        console.log("Inicio da Funcao ");
-        console.log(listAppointment);
-        await api.get(`/Consultas/BuscarPorId?id=${listAppointment}`)
-            .then(response => {
-                console.log(response.data);
-                 setDados(response.data);
-            })
-            .catch(error => {
-                console.log(error);
-            })
-
-    }
 
 
     return (
@@ -76,17 +56,17 @@ export const FormDoctor = ({ navigation, route }) => {
                                 <BoxInputForm
                                     fieldHeigth={120}
                                     textLabel={"Descricao"}
-                                    placeholder={dados.descricao}
+                                    placeholder={""}
                                 />
 
                                 <BoxInputForm
                                     textLabel={"Diagnostico"}
-                                    placeholder={dados.diagnostico}
+                                    placeholder={""}
                                 />
                                 <BoxInputForm
                                     fieldHeigth={120}
                                     textLabel={"Prescricao Medica"}
-                                    placeholder={dados.receita.medicamento}
+                                    placeholder={""}
                                 />
 
                                 <BoxInputForm
@@ -131,17 +111,17 @@ export const FormDoctor = ({ navigation, route }) => {
                                 <BoxInputForm
                                     fieldHeigth={120}
                                     textLabel={"Descricao"}
-                                    placeholder={dados.descricao}
+                                    placeholder={route.params.consultaDescricao}
                                 />
 
                                 <BoxInputForm
                                     textLabel={"Diagnostico"}
-                                    placeholder={dados.diagnostico}
+                                    placeholder={route.params.consultaDiagnostico}
                                 />
                                 <BoxInputForm
                                     fieldHeigth={120}
                                     textLabel={"Prescricao Medica"}
-                                    placeholder={dados.receita.medicamento}
+                                    placeholder={route.params.consultaReceita}
                                 />
                             </>
                         )}
