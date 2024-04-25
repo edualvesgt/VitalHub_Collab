@@ -39,7 +39,7 @@ export default function Cam({ visible, getMediaLibrary = false,setUriPhoto, setS
 
     async function GetLastPhoto() {
         const { assets } = await MediaLibrary.getAssetsAsync({ sortBy: [[MediaLibrary.SortBy.creationTime, false]], first: 1 })
-        console.log(assets);
+        // console.log(assets);
         if (assets.length > 0) {
             setLatestPhoto(assets[0].uri)
         }
@@ -51,6 +51,7 @@ export default function Cam({ visible, getMediaLibrary = false,setUriPhoto, setS
             const photo = await camRef.current.takePictureAsync();
             await setCapturePhoto(photo.uri)
             setPhoto(photo.uri)
+            setUriPhoto(photo.uri)
             console.log(photo);
             setOpenModal(true)
 

@@ -7,6 +7,7 @@ import { CardBox, ImageCard, RowCardBox, TextCardBox } from "./StyleCard"
 
 
 
+
 const Card = ({
     image,
     time,
@@ -23,38 +24,34 @@ const Card = ({
     role }) => {
     const [profile, setProfile] = useState("Paciente");
 
+    
+
+    function timeConsulta(time) {
+       return time.slice(14,19)
+    }
+
     function formatarIdade() {
         const date = new Date();
         const anoAtual = date.getFullYear();
         const diaAtual = date.getDate();
         const mesAtual = date.getMonth() + 1;
-
+    
         const userAno = Age.slice(0, 4)
         const userDia = Age.slice(8, 10)
         const userMes = Age.slice(5, 7)
-
+    
         const userIdade = anoAtual - userAno
         if (mesAtual < userMes) {
             return userIdade - 1;
         }
         else {
             if (diaAtual < userDia) {
-                return userIdade - 1;
+                return `${userIdade - 1}`;
             }
         }
-
-        return userDia;
+    
+        return `${userDia}`;
     }
-
-    function timeConsulta(time) {
-       return time.slice(14,19)
-    }
-
-
-
-    // useEffect(() => {
-    //     formatarIdade()
-    // })
 
     const Check = () => {
         if (status === "agendadas") {

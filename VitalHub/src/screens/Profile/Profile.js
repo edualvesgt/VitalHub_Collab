@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useId, useState } from "react"
 import { BoxInput, BoxInputForm } from "../../components/BoxInput/BoxInput"
 import { Button, ButtonTitle } from "../../components/Button/Button"
 import { Container, DoubleView, InputContainer } from "../../components/Container/StyleContainer"
@@ -13,18 +13,27 @@ import api, { GetPacient } from "../../services/services"
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { Text, TouchableOpacity } from "react-native"
 import Cam from "../../components/Cam/Cam"
+import { formatarIdade } from "../../components/Card/Card"
+
 
 export const Profile = ({ navigation }) => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [idUser, setIdUSer] = useState("")
 
+    const [getPatient, setGetPatient] = useState([]);
+
+    const [cpf, setCpf] = useState("")
+    const [dataNascimento, setDataNascimento] = useState("")
+    const [endereco, setEndereco] = useState("")
+    const [cep, setCep] = useState("")
+    const [cidade, setCidade] = useState("")
+
     const [tokenKey, setTokenKey] = useState("")
     const [showCam, setShowCam] = useState(false)
     const [date, setDate] = useState("");
-    const [getPatient, setGetPatient] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
-    const [uriPhoto, setUriPhoto] = useState(null)
+    const [uriPhoto, setUriPhoto] = useState(null);
 
 
     async function profileLoad() {
@@ -38,7 +47,7 @@ export const Profile = ({ navigation }) => {
 
     async function getToken() {
         const token = await AsyncStorage.getItem('token');
-        
+
 
         if (token != null) {
             setTokenKey(token.token)
@@ -47,31 +56,36 @@ export const Profile = ({ navigation }) => {
 
     async function PatientData() {
 
-        await api.get(GetPacient, {
-            headers: {
-                'accept ': `*/*`,
-                'Authorization': `Bearer ${tokenKey}`
-            }
-        })
+        await api.get(`/Pacientes/BuscarPorId?id=${idUser}`)
             .then(response => {
-                
-                setGetPatient(response.data);
+                setCpf(response.data.cpf)
+                setDataNascimento(response.data.dataNascimento)
+                setEndereco(response.data.endereco.logradouro)
+                setCep(response.data.endereco.cep)
+                setCidade(response.data.endereco.cidade)
+                setUriPhoto(response.data.idNavigation.foto)
+                console.log("Buscar Id", response.data.idNavigation.foto);
             })
-            .catch(error => {
-                console.log(error);
+            .catch(err => {
+                console.log("erro Buscar por ids");
+                console.log(err);
             });
+
+        console.log(getPatient);
     }
 
     async function AlterarFotoPerfil() {
         const formData = new FormData();
         formData.append("Arquivo", {
-            uri : uriPhoto,
-            name: `image.${uriPhoto.split(".")[1]}`,
-            type: `image/${uriPhoto.split(".")[1]}`
+            uri: uriPhoto,
+            //name: `image.${uriPhoto.split(".")[1]}`,
+            name: `image.jpg`,
+            //type: `image/${uriPhoto.split(".")[1]}`
+            type: `image/jpg`
         })
         console.log(idUser);
         await api.put(`/Usuario/AlterarFotoPerfil?id=${idUser}`, formData, {
-            headers:{
+            headers: {
                 "Content-Type": "multipart/form-data"
             }
         }).then(response => {
@@ -82,7 +96,7 @@ export const Profile = ({ navigation }) => {
         })
     }
 
-   
+
     async function profileLogout(token) {
         try {
 
@@ -101,19 +115,22 @@ export const Profile = ({ navigation }) => {
         return cpf.substring(0, 3) + '.' + cpf.substring(3, 6) + '.' + cpf.substring(6, 9) + '-' + cpf.substring(9);
     };
 
+
+
     useEffect(() => {
         profileLoad();
         getToken();
     }, [])
 
     useEffect(() => {
-        
-        PatientData()
-    }, [tokenKey])
+        if (idUser != null) {
+            PatientData()
+        }
+    }, [idUser])
 
     useEffect(() => {
         console.log(uriPhoto);
-        if(uriPhoto){
+        if (uriPhoto) {
             AlterarFotoPerfil();
         }
     }, [uriPhoto])
@@ -122,7 +139,7 @@ export const Profile = ({ navigation }) => {
     return (
         <Container>
             <HeaderContainer>
-                <HeaderPhoto source={{uri: uriPhoto}} />
+                <HeaderPhoto source={{ uri: uriPhoto }} />
                 <ButtonCamera onPress={() => setShowCam(true)} >
                     <MaterialCommunityIcons name="camera-plus" size={20} color={"#fbfbfb"} />
                 </ButtonCamera>
@@ -172,26 +189,26 @@ export const Profile = ({ navigation }) => {
                     <>
                         <BoxInput
                             textLabel={"Data de Nascimento"}
-                        // placeholder={getPatient.dataNascimento ? new Date(getPatient.dataNascimento).toLocaleDateString() : ""}
+                            placeholder={dataNascimento}
                         />
                         <BoxInput
                             textLabel={"CPF"}
-                        // placeholder={formatarCPF(getPatient.cpf) || ""}
+                            placeholder={formatarCPF(cpf)}
                         />
                         <BoxInput
                             textLabel={"Endereco"}
-                        // placeholder={getPatient.endereco.logradouro || ""}
+                            placeholder={endereco}
                         />
                         <DoubleView>
                             <BoxInput
                                 fieldWidth={40}
-                                textLabel={"CEP"}
-                            // placeholder={formatarCEP(getPatient.endereco.cep) || ""}
+                                textLabel={"Cep"}
+                                placeholder={formatarCEP(cep)}
                             />
                             <BoxInput
                                 fieldWidth={40}
                                 textLabel={"Cidade"}
-                            // placeholder={getPatient.endereco.cidade || ""}
+                                placeholder={cidade}
                             />
                         </DoubleView>
                     </>
