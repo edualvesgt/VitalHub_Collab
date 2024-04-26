@@ -94,6 +94,13 @@ namespace WebAPI.Repositories
         {
             try
             {
+
+                // Verifica se o email já está em uso
+                if (ctx.Usuarios.Any(u => u.Email == user.Email))
+                {
+                    throw new Exception("Email já cadastrado.");
+                }
+
                 user.Senha = Criptografia.GerarHash(user.Senha!);
                 ctx.Usuarios.Add(user);
                 ctx.SaveChanges();

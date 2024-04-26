@@ -50,7 +50,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromForm]PacienteViewModel pacienteModel)
+        public async Task<IActionResult> Post([FromForm] PacienteViewModel pacienteModel)
         {
             try
             {
@@ -63,7 +63,7 @@ namespace WebAPI.Controllers
                 var containerName = "containervitalhub";
 
                 var connectionString = "DefaultEndpointsProtocol=https;AccountName=blobvitalhubg4;AccountKey=DgY22ZL6MC7zdILGO0i+i/aAmqGxAbsg0MMcMzxJRLYAeMrr2yFs2Mo8x/0dm1mN6QfVGeRYyHol+AStx4fIaw==;EndpointSuffix=core.windows.net";
-               
+
                 user.Foto = await AzureBlobStorageHelper.UploadImage(pacienteModel.File!, connectionString, containerName);
 
 
@@ -90,7 +90,12 @@ namespace WebAPI.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e.Message);
+                if (e.Message == "Email já cadastrado.")
+                {
+                    return BadRequest("O email informado já está em uso.");
+                }
+
+                return BadRequest("Ocorreu um erro ao processar a sua solicitação.");
             }
         }
 
