@@ -14,6 +14,8 @@ import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { Text, TouchableOpacity } from "react-native"
 import Cam from "../../components/Cam/Cam"
 import { formatarIdade } from "../../components/Card/Card"
+import { Input, InputForm } from "../../components/Input/StyleInput"
+import { set } from "date-fns"
 
 
 export const Profile = ({ navigation }) => {
@@ -28,6 +30,11 @@ export const Profile = ({ navigation }) => {
     const [endereco, setEndereco] = useState("")
     const [cep, setCep] = useState("")
     const [cidade, setCidade] = useState("")
+
+    const [enderecoTemp, setEnderecoTemp] = useState("")
+    const [cepTemp, setCepTemp] = useState("")
+    const [cidadetemp, setCidadeTemp] = useState("")
+    const [emailTemp, setEmailTemp] = useState("")
 
     const [tokenKey, setTokenKey] = useState("")
     const [showCam, setShowCam] = useState(false)
@@ -45,7 +52,7 @@ export const Profile = ({ navigation }) => {
 
     }
 
-    
+
 
     async function getToken() {
         const token = await AsyncStorage.getItem('token');
@@ -78,16 +85,20 @@ export const Profile = ({ navigation }) => {
 
     async function EditProfile() {
         try {
-            await api.put(`/Pacientes?id=${idUser}`, {
-              
-                "cep" : cep , 
-                "logradouro" : endereco , 
-                "email" : email, 
-                "cidade" : cidade
-                
+            const response = await api.put(`/Pacientes?idUsuario=${idUser}`, {
+
+                "cep": cep,
+                "logradouro": endereco,
+                "email": email,
+                "cidade": cidade
+
             })
+            if (response.status == 200) {
+                setIsEditing(false)
+            }
         } catch (error) {
-            console.log(error);
+            console.log(error.response.status);
+            console.log(error.response.data);
         }
     }
 
@@ -101,7 +112,7 @@ export const Profile = ({ navigation }) => {
             type: `image/jpg`
         })
         console.log(idUser);
-        await api.put(`/Usuario/AlterarFotoPerfil?id=${idUser}`, formData, {
+        await api.put(`/Usuario/AlterarFotoPerfil?idUsuario=${idUser}`, formData, {
             headers: {
                 "Content-Type": "multipart/form-data"
             }
@@ -132,16 +143,34 @@ export const Profile = ({ navigation }) => {
         return cpf.substring(0, 3) + '.' + cpf.substring(3, 6) + '.' + cpf.substring(6, 9) + '-' + cpf.substring(9);
     };
 
+    // Função para cancelar a edição e restaurar o valor original do CEP
+    const cancelarEdicao = () => {
+        setCep(cepTemp);
+        setEndereco(enderecoTemp)
+        setCidade(cidadetemp)
+        setEmail(emailTemp)
+        setIsEditing(false);
+    };
 
 
     useEffect(() => {
         profileLoad();
         getToken();
-    }, [])
+
+        if (isEditing) {
+            setCepTemp(cep)
+            setCidadeTemp(cidade)
+            setEnderecoTemp(endereco)
+            setEmailTemp(email)
+        }
+        console.log("OIIIIIIIIIII");
+        console.log(idUser);
+    }, [idUser, isEditing])
 
     useEffect(() => {
         if (idUser != null) {
             PatientData()
+
         }
     }, [idUser])
 
@@ -166,63 +195,61 @@ export const Profile = ({ navigation }) => {
 
             <ModalTitle>
                 <Title>{name}</Title>
-                <TextAccount>{email}</TextAccount>
+                {isEditing ?
+                    <InputForm
+                        value={email}
+                        onChangeText={(txt) => {
+                            setEmail(txt.trim())
+                        }} />
+                    :
+                    <TextAccount>{email}</TextAccount>}
+
             </ModalTitle>
             <ScrollForm>
 
                 {isEditing ? (
                     <>
-                        <BoxInputForm
+                        <BoxInput
                             textLabel={"Data de Nascimento"}
                             placeholder={dataNascimento}
-                            editable={true}
 
-                            value = {dataNascimento}
-                            onChangeText={txt => {
-                                setDataNascimento(txt)
-                            }}
+
                         />
-                        <BoxInputForm
+                        <BoxInput
                             textLabel={"CPF"}
-                            placeholder={cpf}
-                            editable={true}
+                            placeholder={formatarCPF(cpf)}
 
-                            value = {cpf}
-                            onChangeText={txt => {
-                                setCpf(txt)
-                            }}
                         />
                         <BoxInputForm
                             textLabel={"Endereco"}
-                            placeholder={endereco}
+                            // placeholder={endereco}
                             editable={true}
-
-                            value = {endereco}
-                            onChangeText={txt => {
-                                setEndereco(txt)
+                            value={endereco}
+                            onChangeText={(txt) => {
+                                setEndereco(txt.trim())
                             }}
                         />
                         <DoubleView>
                             <BoxInputForm
                                 fieldWidth={40}
                                 textLabel={"CEP"}
-                                placeholder={cep}
+                                // placeholder={formatarCEP(cep)}
+                                maxLength={10}
                                 editable={true}
-
-                                value = {cep}
-                                onChangeText={txt => {
-                                    setCep(txt)
+                                keyboardType='numeric'
+                                value={cep}
+                                onChangeText={(txt) => {
+                                    setCep(txt.trim())
                                 }}
                             />
                             <BoxInputForm
                                 fieldWidth={40}
                                 textLabel={"Cidade"}
-                                placeholder={cidade}
+                                // placeholder={cidade}
                                 editable={true}
-
-                                value = {cidade}
-                                onChangeText={txt => {
-                                    setCidade(txt)
+                                value={cidade}
+                                onChangeText={(txt) => {
+                                    setCidade(txt.trim())
                                 }}
                             />
                         </DoubleView>
@@ -235,7 +262,7 @@ export const Profile = ({ navigation }) => {
                         />
                         <BoxInput
                             textLabel={"CPF"}
-                            placeholder={formatarCPF(cpf)}
+                            placeholder={""}
                         />
                         <BoxInput
                             textLabel={"Endereco"}
@@ -245,7 +272,7 @@ export const Profile = ({ navigation }) => {
                             <BoxInput
                                 fieldWidth={40}
                                 textLabel={"Cep"}
-                                placeholder={formatarCEP(cep)}
+                                placeholder={""}
                             />
                             <BoxInput
                                 fieldWidth={40}
@@ -259,10 +286,10 @@ export const Profile = ({ navigation }) => {
                 <InputContainer>
                     {isEditing ? (
                         <>
-                            <Button onPress = {() => EditProfile()}>
+                            <Button onPress={() => EditProfile()}>
                                 <ButtonTitle>Salvar</ButtonTitle>
                             </Button>
-                            <Button onPress={() => setIsEditing(false)}>
+                            <Button onPress={() => cancelarEdicao()}>
                                 <ButtonTitle>Cancelar</ButtonTitle>
                             </Button>
                         </>
