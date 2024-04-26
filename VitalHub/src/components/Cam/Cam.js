@@ -10,9 +10,17 @@ import { TouchableOpacity } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { LastPhoto } from './StyleCam';
 //para acessar a galeria do celular
-import * as ImagePicker from 'expo-image-picker' 
+import * as ImagePicker from 'expo-image-picker'
 
-export default function Cam({ visible, getMediaLibrary = false,setUriPhoto, setUriPhotoForm, setShowCam, ...rest }) {
+export default function Cam({
+    visible,
+    getMediaLibrary = false,
+    setUriPhoto,
+    setUriPhotoForm,
+    setShowCam,
+    setShowCamForm,
+    showCamForm,
+    ...rest }) {
     const camRef = useRef(null);
     const [typeCam, setTypeCam] = useState(Camera.Constants.Type.front);
     // Estado para armazenar a foto capturada
@@ -49,13 +57,8 @@ export default function Cam({ visible, getMediaLibrary = false,setUriPhoto, setU
     async function CapturePhoto() {
         if (camRef) {
             const photo = await camRef.current.takePictureAsync();
-            await setCapturePhoto(photo.uri)
+            setCapturePhoto(photo.uri)
             setPhoto(photo.uri)
-            setUriPhoto(photo.uri)
-            setUriPhotoForm(photo.uri)
-            console.log(photo);
-            setOpenModal(true)
-
         }
     }
 
@@ -63,8 +66,6 @@ export default function Cam({ visible, getMediaLibrary = false,setUriPhoto, setU
     // Função assíncrona para limpar a foto
     async function ClearPhoto() {
         setPhoto(null)
-        setOpenModal(false)
-
     }
 
     // Função assíncrona para salvar a foto na galeria
@@ -75,15 +76,19 @@ export default function Cam({ visible, getMediaLibrary = false,setUriPhoto, setU
         //         .catch(Error => { Alert.alert('Erro', 'Foto não foi salva') })
         //     setOpenModal(false)
         // }
-
-        setUriPhoto(photo);
-        setPhoto(null)
-
-        setShowCam(false) // Fecha o modal inteiro
-
+        if (showCamForm) {
+            setUriPhotoForm(photo)
+            setPhoto(null)
+            setShowCamForm(false)
+        }
+        else {
+            setUriPhoto(photo);
+            setPhoto(null)
+            setShowCam(false) // Fecha o modal inteiro
+        }
     }
 
-    async function SelectImageGallery(){
+    async function SelectImageGallery() {
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             quality: 1
@@ -93,10 +98,10 @@ export default function Cam({ visible, getMediaLibrary = false,setUriPhoto, setU
             setPhoto(result.assets[0].uri);
         }
 
-        
+
     }
 
-    
+
 
     return (
         <Modal
@@ -137,18 +142,18 @@ export default function Cam({ visible, getMediaLibrary = false,setUriPhoto, setU
             </Camera>
 
             {/* Modal para exibir a foto capturada */}
-            <Modal animationType='slide'  transparent={false} visible={photo !== null} statusBarTranslucent={true}>
+            <Modal animationType='slide' transparent={false} visible={photo !== null} statusBarTranslucent={true}>
                 <Container >
                     {/* Exibir a foto */}
                     <Image style={{ width: '100%', height: 500, borderRadius: 10 }} source={{ uri: photo }} />
 
                     {/* Botões para limpar a foto ou salvar na galeria */}
                     <View style={{ margin: 10, flexDirection: 'row', }}>
-                        <ButtonPhoto onPress={() => { ClearPhoto(); setOpenModal(false) }}>
+                        <ButtonPhoto onPress={() => { ClearPhoto() }}>
                             <FontAwesome name='trash' size={50} color={'black'} />
                         </ButtonPhoto>
 
-                        <ButtonPhoto onPress={() => SavePhoto()}>
+                        <ButtonPhoto onPress={() => { SavePhoto() }}>
                             <FontAwesome name='save' size={50} color={'#121212'} />
                         </ButtonPhoto>
                     </View>

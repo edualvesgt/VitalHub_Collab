@@ -19,7 +19,7 @@ import { formatarIdade } from "../../components/Card/Card"
 export const Profile = ({ navigation }) => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
-    const [idUser, setIdUSer] = useState("")
+    const [idUser, setIdUser] = useState("")
 
     const [getPatient, setGetPatient] = useState([]);
 
@@ -33,7 +33,9 @@ export const Profile = ({ navigation }) => {
     const [showCam, setShowCam] = useState(false)
     const [date, setDate] = useState("");
     const [isEditing, setIsEditing] = useState(false);
+
     const [uriPhoto, setUriPhoto] = useState(null);
+    const [userUriPhoto, setUserUriPhoto] = useState(null)
 
 
     async function profileLoad() {
@@ -41,10 +43,7 @@ export const Profile = ({ navigation }) => {
         const TokenDecoded = await userDecodeToken()
         setName(TokenDecoded.name);
         setEmail(TokenDecoded.email);
-        setIdUSer(TokenDecoded.jti);
-        console.log(getPatient);
-        
-
+        setIdUser(TokenDecoded.jti);
     }
 
     async function getToken() {
@@ -66,21 +65,18 @@ export const Profile = ({ navigation }) => {
                 setCep(response.data.endereco.cep)
                 setCidade(response.data.endereco.cidade)
                 setUriPhoto(response.data.idNavigation.foto)
-                console.log("Buscar Id", response.data.idNavigation.foto);
+               
             })
             .catch(err => {
-                console.log("erro Buscar por ids");
-                console.log(err);
+                console.log("erro /Pacientes/BuscarPorId", err);
             });
-
-        console.log(getPatient);
     }
 
     async function AlterarFotoPerfil() {
         const formData = new FormData();
         formData.append("Arquivo", {
             uri: uriPhoto,
-            //name: `image.${uriPhoto.split(".")[1]}`,
+            //name: `image.${uriPhoto.split(".")[1]}`,w
             name: `image.jpg`,
             //type: `image/${uriPhoto.split(".")[1]}`
             type: `image/jpg`
@@ -91,7 +87,7 @@ export const Profile = ({ navigation }) => {
                 "Content-Type": "multipart/form-data"
             }
         }).then(response => {
-            console.log(response);
+            console.log("Alterar foto perfil");
         }).catch(erro => {
             console.log("Alterar foto");
             console.log(erro);
@@ -131,18 +127,20 @@ export const Profile = ({ navigation }) => {
     }, [idUser])
 
     useEffect(() => {
-        console.log(uriPhoto);
-        if (uriPhoto) {
+        setUserUriPhoto(uriPhoto)
+      
+        if (userUriPhoto ) {
             AlterarFotoPerfil();
         }
+
     }, [uriPhoto])
 
 
     return (
         <Container>
             <HeaderContainer>
-                <HeaderPhoto source={{ uri: uriPhoto }} />
-                <ButtonCamera onPress={() => setShowCam(true)} >
+                <HeaderPhoto source={{ uri: userUriPhoto }} />
+                <ButtonCamera onPress={() => setShowCam(true) } >
                     <MaterialCommunityIcons name="camera-plus" size={20} color={"#fbfbfb"} />
                 </ButtonCamera>
             </HeaderContainer>

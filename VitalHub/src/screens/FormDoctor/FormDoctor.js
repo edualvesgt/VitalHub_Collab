@@ -22,14 +22,24 @@ export const FormDoctor = ({ navigation, route }) => {
     const [role, setRole] = useState("")
     const [uriPhotoForm, setUriPhotoForm] = useState(null)
     const [listAppointment, setListAppointment] = useState([])
-    const [showCam, setShowCam] = useState(false)
+    const [showCamForm, setShowCamForm] = useState(false)
     const [descricaoExame, setDescricaoExame] = useState("")
+    const [descricaoOcr, setDescricaoOcr] = useState("")
 
 
     useEffect(() => {
         profileLoad()
-        console.log("Route");
+        console.log(route.params.consultaId);
     }, [route.params])
+
+
+    useEffect(() => {
+        console.log(uriPhotoForm);
+        if (showCamForm == false && uriPhotoForm != null && route.params != null) {
+            console.log("entrou na ocr");
+            InserirExame();
+        }
+    }, [uriPhotoForm])
 
 
     async function profileLoad() {
@@ -40,24 +50,33 @@ export const FormDoctor = ({ navigation, route }) => {
     }
 
     async function InserirExame() {
-       const formData = new FormData();
-       formData.append("Arquivo", {
-        uri: uriPhotoForm,
-        name: `image.${uriPhotoForm.split('.').pop()}`,
-        type : `image/${uriPhotoForm.split('.').pop()}`
-       });
-
-       await api.post(`/Exame/Cadastrar`, formData, {
-        headers: {
-            "Content-Type" : "multipart/form-data"
+        const formData = new FormData();
+        formData.append("Arquivo", {
+            uri: uriPhotoForm,
+            name: `image.${uriPhotoForm.split('.').pop()}`,
+            type: `image/${uriPhotoForm.split('.').pop()}`
+        })
+        formData.append(
+            "ConsultaId", {
+            ConsultaId: route.params.consultaId
         }
-       }).then(response => {
+        );
 
-       })
+        await api.post(`/Exame/Cadastrar`, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data"
+            }
+        }).then(response => {
+            console.log(response);
+
+        }).catch(err => {
+            
+            console.log("exame", err);
+        })
     }
 
     return (
-        (role != null ? ( 
+        (role != null ? (
             <Container>
                 <HeaderContainer>
                     <HeaderPhoto source={require("../../assets/PhotoProfile.png")} />
@@ -94,11 +113,14 @@ export const FormDoctor = ({ navigation, route }) => {
 
                                 <BoxInputPhoto
                                     fieldHeigth={120}
+                                    uriPhotoForm={uriPhotoForm}
                                     placeholder={"Nenhuma Foto"}
-                                    textLabel={"Exames Medicos"} />
+                                    textLabel={"Exames Medicos"}
+                                    source={{ uri: uriPhotoForm }}
+                                />
 
                                 <ViewRow>
-                                    <ButtonSendPhoto onPress={() => { setShowCam(true); }}>
+                                    <ButtonSendPhoto onPress={() => { setShowCamForm(true); }}>
                                         <ButtonTitle>
                                             <MaterialIcons name="add-a-photo" size={24} color={"white"} />
                                         </ButtonTitle>
@@ -149,8 +171,14 @@ export const FormDoctor = ({ navigation, route }) => {
                     </ScrollForm>
                 </ContainerForm>
 
-                <Modal animationType="slide" transparent={true} visible={showCam} >
-                    <Cam getMediaLibrary={true} visible={showCam} setUriPhotoForm={setUriPhotoForm}/>
+                <Modal animationType="slide" transparent={true} visible={showCamForm} >
+                    <Cam
+                        getMediaLibrary={true}
+                        visible={showCamForm}
+                        setUriPhotoForm={setUriPhotoForm}
+                        setShowCamForm={setShowCamForm}
+                        showCamForm={showCamForm}
+                    />
                 </Modal>
 
             </Container>
