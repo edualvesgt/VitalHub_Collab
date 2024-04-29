@@ -41,7 +41,7 @@ export const BoxInputForm = ({ textLabel, placeholder, fieldWidth = 90, fieldHei
         </FieldContent>
     )
 }
-export const BoxInputCreate = ({ textLabel, placeholder, fieldWidth = 90, fieldHeigth, editable = false }) => {
+export const BoxInputCreate = ({ textLabel, placeholder, fieldWidth = 90, fieldHeigth, editable = false , onChangeText , value }) => {
     return (
         <FieldContent style={{ alignItems: 'flex-start', width: '100%', backgroundColor: 'white' }}>
             <Label 
@@ -53,6 +53,8 @@ export const BoxInputCreate = ({ textLabel, placeholder, fieldWidth = 90, fieldH
                 editable={editable}
                 fieldHeigth={fieldHeigth}
                 placeholder={placeholder}
+                onChangeText = { onChangeText}
+                value = {value}
             />
         </FieldContent>
     )

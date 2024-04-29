@@ -34,9 +34,14 @@ text-transform: uppercase;
 export const BlueTitle = styled.Text`
 font-size: 14px;
 font-family: "MontserratAlternates_700Bold";
-color: #34898F;
 text-align: center;
 text-transform: uppercase;
+
+${props => props.clickButton ? css`
+        color: #fbfbfb;
+    `: css`
+        color: #34898F;
+    `}
 
 `
 
@@ -116,10 +121,18 @@ width: 30%;
 height: 55px;
 padding-top:16px;
 font-family: "MontserratAlternates_600SemiBold";
-border: 2px solid  #60BFC5;
 border-radius: 10px;
 display: flex;
 align-items:center;
+
+${props => props.clickButton ? css`
+        background-color: #496bba;
+        `
+        : css`
+            background-color: transparent;
+            border: 2px solid #60BFC5;
+            
+        `};
 `
 
 export const ButtonSendPhoto = styled.TouchableOpacity`
