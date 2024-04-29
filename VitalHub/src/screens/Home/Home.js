@@ -69,6 +69,7 @@ export const Home = ({ navigation }) => {
                     
                     }))
                     setResponseConsulta(novaConsulta)
+                    
                 }).catch(error => {
                     console.log(error)
                 })
@@ -164,6 +165,7 @@ export const Home = ({ navigation }) => {
                                 status={item.consultaSituacao}
                                 Name={item.medicoNome}
                                 Age={item.pacienteIdade}
+                                medicoCrm={item.medicoCrm}
                                 clinicaId={item.clinicaId}
                                 Priority={item.consultaPrioridade}
                                 specialty={item.especialidade}
@@ -181,6 +183,7 @@ export const Home = ({ navigation }) => {
                                     status={item.consultaSituacao}
                                     Name={item.pacienteNome}
                                     Age={item.pacienteIdade}
+                                    medicoCrm={item.medicoCrm}
                                     clinicaId={item.clinicaId}
                                     Priority={item.consultaPrioridade}
                                     specialty={item.especialidade}

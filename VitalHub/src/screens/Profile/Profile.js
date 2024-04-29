@@ -44,42 +44,31 @@ export const Profile = ({ navigation }) => {
         setName(TokenDecoded.name);
         setEmail(TokenDecoded.email);
         setIdUser(TokenDecoded.jti);
-    }
 
-    async function getToken() {
-        const token = await AsyncStorage.getItem('token');
+        await api.get(`/Pacientes/BuscarPorId?id=${TokenDecoded.jti}`)
+        .then(response => {
+        
+            setCpf(response.data.cpf)
+            setDataNascimento(response.data.dataNascimento)
+            setEndereco(response.data.endereco.logradouro)
+            setCep(response.data.endereco.cep)
+            setCidade(response.data.endereco.cidade)
+            setUriPhoto(response.data.idNavigation.foto)
 
-
-        if (token != null) {
-            setTokenKey(token.token)
-        }
-    }
-
-    async function PatientData() {
-
-        await api.get(`/Pacientes/BuscarPorId?id=${idUser}`)
-            .then(response => {
-                setCpf(response.data.cpf)
-                setDataNascimento(response.data.dataNascimento)
-                setEndereco(response.data.endereco.logradouro)
-                setCep(response.data.endereco.cep)
-                setCidade(response.data.endereco.cidade)
-                setUriPhoto(response.data.idNavigation.foto)
-               
-            })
-            .catch(err => {
-                console.log("erro /Pacientes/BuscarPorId", err);
-            });
+        })
+        .catch(err => {
+            console.log("erro /Pacientes/BuscarPorId", err);
+        });
     }
 
     async function AlterarFotoPerfil() {
         const formData = new FormData();
         formData.append("Arquivo", {
             uri: uriPhoto,
-            //name: `image.${uriPhoto.split(".")[1]}`,w
             name: `image.jpg`,
-            //type: `image/${uriPhoto.split(".")[1]}`
+            // name: `image.jpg`,
             type: `image/jpg`
+            // type: `image/jpg`
         })
         console.log(idUser);
         await api.put(`/Usuario/AlterarFotoPerfil?id=${idUser}`, formData, {
@@ -90,7 +79,7 @@ export const Profile = ({ navigation }) => {
             console.log("Alterar foto perfil");
         }).catch(erro => {
             console.log("Alterar foto");
-            console.log(erro);
+            console.log(erro );
         })
     }
 
@@ -116,20 +105,20 @@ export const Profile = ({ navigation }) => {
 
 
     useEffect(() => {
+        
         profileLoad();
-        getToken();
     }, [])
 
-    useEffect(() => {
-        if (idUser != null) {
-            PatientData()
-        }
-    }, [idUser])
+    // useEffect(() => {
+    //     if (idUser != null) {
+    //         PatientData()
+    //     }
+    // }, [idUser])
 
     useEffect(() => {
         setUserUriPhoto(uriPhoto)
-      
-        if (userUriPhoto ) {
+
+        if (userUriPhoto) {
             AlterarFotoPerfil();
         }
 
@@ -140,7 +129,7 @@ export const Profile = ({ navigation }) => {
         <Container>
             <HeaderContainer>
                 <HeaderPhoto source={{ uri: userUriPhoto }} />
-                <ButtonCamera onPress={() => setShowCam(true) } >
+                <ButtonCamera onPress={() => setShowCam(true)} >
                     <MaterialCommunityIcons name="camera-plus" size={20} color={"#fbfbfb"} />
                 </ButtonCamera>
             </HeaderContainer>

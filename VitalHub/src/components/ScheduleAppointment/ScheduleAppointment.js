@@ -30,12 +30,13 @@ return (
             {/* Input Com select */}
 
             <Label>Qual o nível da consulta</Label>
+            
             <RowContainerButton>
                 <SmallButton><BlueTitle>Rotina</BlueTitle></SmallButton>
                 <SmallButton><BlueTitle>Exames</BlueTitle></SmallButton>
                 <SmallButton><BlueTitle>Urgencia</BlueTitle></SmallButton>
             </RowContainerButton>
-
+            
             <BoxInputCreate
                 textLabel={"Informe a Localizacao Desejada"}
                 placeholder={"Informe a localizacao"}

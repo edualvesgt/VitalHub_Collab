@@ -15,7 +15,6 @@ import api from '../../services/services';
 
 export const FormDoctor = ({ navigation, route }) => {
 
-
     const [openModal, setOpenModal] = useState(false);
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -25,55 +24,52 @@ export const FormDoctor = ({ navigation, route }) => {
     const [showCamForm, setShowCamForm] = useState(false)
     const [descricaoExame, setDescricaoExame] = useState("")
     const [descricaoOcr, setDescricaoOcr] = useState("")
-
-
-    useEffect(() => {
-        profileLoad()
-        console.log(route.params.consultaId);
-    }, [route.params])
-
-
-    useEffect(() => {
-        console.log(uriPhotoForm);
-        if (showCamForm == false && uriPhotoForm != null && route.params != null) {
-            console.log("entrou na ocr");
-            InserirExame();
-        }
-    }, [uriPhotoForm])
-
+    const [consultaId, setConsultaId] = useState(null)
 
     async function profileLoad() {
         const token = await userDecodeToken();
         setName(token.name);
         setEmail(token.email);
         setRole(token.role)
+        setConsultaId(route.params.consultaId)
     }
 
     async function InserirExame() {
+        console.log(consultaId);
+        console.log(uriPhotoForm);
+
         const formData = new FormData();
-        formData.append("Arquivo", {
+        formData.append("ConsultaId", consultaId);
+        formData.append("Imagem", {
             uri: uriPhotoForm,
-            name: `image.${uriPhotoForm.split('.').pop()}`,
-            type: `image/${uriPhotoForm.split('.').pop()}`
+            name: `image.jpg`,
+            type: `image/jpeg`
         })
-        formData.append(
-            "ConsultaId", {
-            ConsultaId: route.params.consultaId
-        }
-        );
+
 
         await api.post(`/Exame/Cadastrar`, formData, {
             headers: {
-                "Content-Type": "multipart/form-data"
+                'Content-Type': 'multipart/form-data'
             }
-        }).then(response => {
-            console.log(response);
+        }).then(async (response) => {
+            console.log("r", response.data);
 
         }).catch(err => {
-            
             console.log("exame", err);
         })
     }
+
+    useEffect(() => {
+        profileLoad()
+    }, [])
+
+
+    useEffect(() => {
+        if (uriPhotoForm != null && consultaId != null) {
+            console.log("entrou na ocr");
+            InserirExame();
+        }       
+    }, [uriPhotoForm])
 
     return (
         (role != null ? (

@@ -21,13 +21,14 @@ const Card = ({
     Age,
     Priority,
     Name,
+    medicoCrm,
     role }) => {
     const [profile, setProfile] = useState("Paciente");
 
-    
+
 
     function timeConsulta(time) {
-       return time.slice(14,19)
+        return time.slice(14, 19)
     }
 
     function formatarIdade() {
@@ -35,11 +36,11 @@ const Card = ({
         const anoAtual = date.getFullYear();
         const diaAtual = date.getDate();
         const mesAtual = date.getMonth() + 1;
-    
+
         const userAno = Age.slice(0, 4)
         const userDia = Age.slice(8, 10)
         const userMes = Age.slice(5, 7)
-    
+
         const userIdade = anoAtual - userAno
         if (mesAtual < userMes) {
             return userIdade - 1;
@@ -49,7 +50,7 @@ const Card = ({
                 return `${userIdade - 1}`;
             }
         }
-    
+
         return `${userDia}`;
     }
 
@@ -98,7 +99,7 @@ const Card = ({
             <Container>
                 <TextCardBox>
                     <TextAccount>{Name}</TextAccount>
-                    <TextAbout > {role ? `CRM ${Age} ` : `${formatarIdade()} Anos`}  <TextAbout>{Priority == "0" ? "Rotina"
+                    <TextAbout > {role={role} ? `CRM ${medicoCrm} ` : `${formatarIdade()} Anos`}  <TextAbout>{Priority == "0" ? "Rotina"
                         : Priority == "1" ? "Exame" : "Urgência"} </TextAbout> </TextAbout>
                 </TextCardBox>
                 {Check()}
