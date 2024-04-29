@@ -65,10 +65,10 @@ namespace WebAPI.Controllers
                 }
 
 
-                var containerName = "containervitalhub";
+                var containerName = "";
 
 
-                var connectionString = "DefaultEndpointsProtocol=https;AccountName=blobvitalhubg4;AccountKey=DgY22ZL6MC7zdILGO0i+i/aAmqGxAbsg0MMcMzxJRLYAeMrr2yFs2Mo8x/0dm1mN6QfVGeRYyHol+AStx4fIaw==;EndpointSuffix=core.windows.net";
+                var connectionString = "";
 
 
                 string fotoUrl = await AzureBlobStorageHelper.UploadImage(form.Arquivo!, connectionString!, containerName!);
