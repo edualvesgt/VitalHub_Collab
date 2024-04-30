@@ -40,7 +40,7 @@ export const FormDoctor = ({ navigation, route }) => {
 
         const formData = new FormData();
         formData.append("ConsultaId", consultaId);
-        formData.append("Imagem", {
+        formData.append("Image", {
             uri: uriPhotoForm,
             name: `image.jpg`,
             type: `image/jpeg`
@@ -53,6 +53,7 @@ export const FormDoctor = ({ navigation, route }) => {
             }
         }).then(async (response) => {
             console.log("r", response.data);
+            setDescricaoExame(response.data.descricao)
 
         }).catch(err => {
             console.log("exame", err);
@@ -89,7 +90,7 @@ export const FormDoctor = ({ navigation, route }) => {
                                 <BoxInputForm
                                     fieldHeigth={120}
                                     textLabel={"Descricao"}
-                                    placeholder={""}
+                                    placeholder={descricaoExame}
                                 />
 
                                 <BoxInputForm

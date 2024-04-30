@@ -4,6 +4,7 @@ import { LinkCancel } from "../Links/StyleLink";
 import { TextAbout } from "../Text/Text";
 import { Title } from "../Title/StyleTitle";
 import { PhotoShow, ShowModalContainer, ShowModalContent } from "./StyleShowFormDoctor";
+import { formatarIdade } from "../Card/Card";
 
 const ShowFormDoctor = ({
     isOpen,
@@ -11,9 +12,8 @@ const ShowFormDoctor = ({
     navigation,
     status,
     role,
+    foto,
     consulta, }) => {
-
-    const image = require("../../assets/PhotoGirl.png");
 
     if (!isOpen) {
         return null;
@@ -30,9 +30,9 @@ const ShowFormDoctor = ({
         role == "Medico" ? (
             <ShowModalContainer>
                 <ShowModalContent>
-                    <PhotoShow source={image} />
+                    <PhotoShow source={{uri: foto}} />
                     <Title>{consulta.pacienteNome}</Title>
-                    <TextAbout>{consulta.pacienteIdade} Anos<TextAbout> {consulta.pacienteEmail}</TextAbout> </TextAbout>
+                    <TextAbout>{formatarIdade(consulta.pacienteIdade)} Anos<TextAbout> {consulta.pacienteEmail}</TextAbout> </TextAbout>
 
                     {status == "agendadas" ? (
                         <Button onPress={() => { navigation.replace('FormDoctor', { clinica: consulta.clinicaId }) }}>
