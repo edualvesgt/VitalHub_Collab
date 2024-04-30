@@ -33,6 +33,7 @@ export const ChooseDoctor = ({ navigation, route  }) => {
         setMedic({
             medicoClinicaId: doctor.id,
             medicoLabel: doctor.idNavigation.nome
+            
         })
     }
 
@@ -59,7 +60,7 @@ export const ChooseDoctor = ({ navigation, route  }) => {
                 renderItem={ ({ item }) => (
                     <CardDoctor
                         select={select}
-                        onPress={() =>  handleSelect()}
+                        onPress={() =>  handleSelect(item)}
                         name={item.idNavigation.nome}
                         field={item.especialidade.especialidade1}
                     />

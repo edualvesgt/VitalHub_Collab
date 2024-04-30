@@ -76,7 +76,7 @@ export const Profile = ({ navigation }) => {
                 console.log("Buscar Id", response.data.idNavigation.foto);
             })
             .catch(err => {
-                console.log("erro Buscar por ids");
+                console.log("erro Buscar por id");
                 console.log(err);
             });
 

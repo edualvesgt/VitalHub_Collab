@@ -35,7 +35,7 @@ const CardClinic = ({ time, name, location, review, select , onPress , number}) 
             <CardBoxClinicSelected>
                 <TextCardBox>
                     <TextAccount>{name}</TextAccount>
-                    <TextAbout>{location} </TextAbout>
+                    <TextAbout>{location} <TextAbout>{number}</TextAbout></TextAbout>
                 </TextCardBox>
 
                 <AllStatusBox>
