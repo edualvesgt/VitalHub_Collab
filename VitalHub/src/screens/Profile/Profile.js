@@ -108,7 +108,7 @@ export const Profile = ({ navigation, route }) => {
 
     async function AlterarFotoPerfil() {
         const formData = new FormData();
-        formData.append("Arquivo", {
+        formData.append("Image", {
             uri: uriPhoto,
             name: `image.jpg`,
             // name: `image.jpg`,
@@ -116,7 +116,7 @@ export const Profile = ({ navigation, route }) => {
             // type: `image/jpg`
         })
         console.log(idUser);
-        await api.put(`/Usuario/AlterarFotoPerfil?idUsuario=${idUser}`, formData, {
+        await api.put(`/Usuario/AlterarFotoPerfil?id=${idUser}`, formData, {
             headers: {
                 "Content-Type": "multipart/form-data"
             }
@@ -176,7 +176,7 @@ export const Profile = ({ navigation, route }) => {
         <Container>
             <HeaderContainer>
                 <HeaderPhoto source={{ uri: userUriPhoto }} />
-                <ButtonCamera onPress={() => {setShowCam(true); navigation.navigate('Home', {foto: uriPhoto})}} >
+                <ButtonCamera onPress={() => setShowCam(true)} >
                     <MaterialCommunityIcons name="camera-plus" size={20} color={"#fbfbfb"} />
                 </ButtonCamera>
             </HeaderContainer>
