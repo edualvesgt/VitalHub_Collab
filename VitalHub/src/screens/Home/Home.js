@@ -22,7 +22,7 @@ import api from "../../services/services";
 import { userDecodeToken } from "../../utils/Auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export const Home = ({ navigation, route }) => {
+export const Home = ({ navigation}) => {
 
     const image = require("../../assets/PhotoProfile.png");
 
@@ -33,6 +33,7 @@ export const Home = ({ navigation, route }) => {
     const [isMedic, setIsMedic] = useState(token.role == 'Medico')
     const [consultaSelecionada, setConsultaSelecionada] = useState(null)
     const [fotoPerfil, setFotoPerfil] = useState(null)
+    const [fotoCard, setFotoCard] = useState(null)
 
     async function profileLoad() {
         const tokenDecoded = await userDecodeToken();
@@ -41,25 +42,36 @@ export const Home = ({ navigation, route }) => {
             setToken(tokenDecoded)
             setDataConsulta(moment().format('YYYY-MM-DD'))
         }
-
-
+        
+        
         const user = tokenDecoded.role == "Medico" ? "Medicos" : "Pacientes"
         await api.get(`/${user}/BuscarPorId?id=${tokenDecoded.jti}`).then(response => {
             setFotoPerfil(response.data.idNavigation.foto)
         }).catch(erro => {
             console.log(erro);
         })
+
+        const photoCard = tokenDecoded.role == "Medico" ? "Pacientes" : "Medicos"
+        await api.get(`/${user}/BuscarPorId?id=${tokenDecoded.jti}`).then(response => {
+            setFotoCard(response.data.idNavigation.foto)
+        }).catch(erro => {
+            console.log(erro);
+        })
+
+
     }
 
     async function getConsultas() {
         try {
             const url = (token.role == 'Medico' ? 'Medicos' : 'Pacientes')
+            
             await api.get(`/${url}/BuscarPorData?data=${dataConsulta}&id=${token.jti}`)
                 .then(response => {
                     const novaConsulta = response.data.map(item => ({
                         consultaId: item.id,
                         medicoNome: item.medicoClinica.medico.idNavigation.nome,
                         medicoCrm: item.medicoClinica.medico.crm,
+                        medicoFoto: item.medicoClinica.medico.idNavigation.foto,
                         consultaSituacao: item.situacao.situacao,
                         clinicaId: item.medicoClinica.clinicaId,
                         id: item.id,
@@ -75,11 +87,14 @@ export const Home = ({ navigation, route }) => {
                         consultaReceita: item.receita.medicamento
 
                     }))
+                    console.log(response.data);
                     setResponseConsulta(novaConsulta)
+                    console.log(responseConsulta);
 
                 }).catch(error => {
                     console.log(error)
                 })
+
         } catch (error) {
             console.log(error)
         }
@@ -87,7 +102,7 @@ export const Home = ({ navigation, route }) => {
 
     useEffect(() => {
         profileLoad();
-    }, [fotoPerfil])
+    }, [])
 
 
     useEffect(() => {
@@ -161,6 +176,7 @@ export const Home = ({ navigation, route }) => {
 
                 <FlatContainer
                     data={responseConsulta}
+                    
                     keyExtractor={item => item.id}
                     renderItem={({ item }) =>
                     (
@@ -169,7 +185,7 @@ export const Home = ({ navigation, route }) => {
                                 role={'Medico'}
                                 time={item.consultaData}
                                 email={item.pacienteEmail}
-                                image={image}
+                                image={ { uri : item.medicoFoto } }
                                 status={item.consultaSituacao}
                                 Name={item.medicoNome}
                                 Age={item.pacienteIdade}
@@ -187,19 +203,21 @@ export const Home = ({ navigation, route }) => {
                                     role={"Paciente"}
                                     time={item.consultaData}
                                     email={item.pacienteEmail}
-                                    image={image}
+                                    image={ { uri : item.pacienteFoto }}
                                     status={item.consultaSituacao}
                                     Name={item.pacienteNome}
                                     Age={item.pacienteIdade}
                                     medicoCrm={item.medicoCrm}
-                                    clinicaId={item.clinicaId}
+                                    clinicaId={item.clinicaId}  
                                     Priority={item.consultaPrioridade}
                                     specialty={item.especialidade}
                                     navigation={navigation}
                                     onPressCard={() => openModal()}
                                     onPressShow={() => showForm(item)}
                                 />
-                            ): null)}
+                            ) : null
+                            
+                            )}
                 />
 
 

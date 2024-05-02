@@ -83,7 +83,7 @@ export const Profile = ({ navigation, route }) => {
 
             })
             .catch(err => {
-
+                
                 console.log("erro Buscar por id", err);
             });
 
@@ -191,7 +191,7 @@ export const Profile = ({ navigation, route }) => {
         <Container>
             <HeaderContainer>
                 <HeaderPhoto source={{ uri: userUriPhoto }} />
-                <ButtonCamera onPress={() => { setShowCam(true); navigation.navigate('Home', { foto: uriPhoto }) }} >
+                <ButtonCamera onPress={() => setShowCam(true)} >
                     <MaterialCommunityIcons name="camera-plus" size={20} color={"#fbfbfb"} />
                 </ButtonCamera>
             </HeaderContainer>

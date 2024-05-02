@@ -25,7 +25,7 @@ function formatarIdade(Idade){
         }
     }
 
-    return `${userDia}`;
+    // return `${userDia}`;
 }
 
 
