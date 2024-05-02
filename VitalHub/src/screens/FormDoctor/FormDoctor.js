@@ -69,7 +69,7 @@ export const FormDoctor = ({ navigation, route }) => {
         if (uriPhotoForm != null && consultaId != null) {
             console.log("entrou na ocr");
             InserirExame();
-        }       
+        }
     }, [uriPhotoForm])
 
     return (
