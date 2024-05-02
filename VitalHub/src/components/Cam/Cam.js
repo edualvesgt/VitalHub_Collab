@@ -56,7 +56,7 @@ export default function Cam({
     // Função assíncrona para capturar a foto
     async function CapturePhoto() {
         if (camRef) {
-            const photo = await camRef.current.takePictureAsync();
+            const photo = await camRef.current.takePictureAsync({quality: 1});
             setCapturePhoto(photo.uri)
             setPhoto(photo.uri)
         }
