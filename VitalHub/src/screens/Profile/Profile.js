@@ -15,6 +15,8 @@ import { Text, TouchableOpacity } from "react-native"
 import Cam from "../../components/Cam/Cam"
 import { formatarIdade } from "../../components/Card/Card"
 import { Home } from "../Home/Home"
+import { Input, InputForm } from "../../components/Input/StyleInput"
+import { set } from "date-fns"
 
 
 export const Profile = ({ navigation, route }) => {
@@ -31,6 +33,11 @@ export const Profile = ({ navigation, route }) => {
     const [cep, setCep] = useState("")
     const [cidade, setCidade] = useState("")
     const [crm, setCrm] = useState("")
+
+    const [enderecoTemp, setEnderecoTemp] = useState("")
+    const [cepTemp, setCepTemp] = useState("")
+    const [cidadetemp, setCidadeTemp] = useState("")
+    const [emailTemp, setEmailTemp] = useState("")
 
     const [tokenKey, setTokenKey] = useState("")
     const [showCam, setShowCam] = useState(false)
@@ -74,9 +81,29 @@ export const Profile = ({ navigation, route }) => {
 
             })
             .catch(err => {
-                console.log("erro /Pacientes/BuscarPorId", err);
+                
+                console.log("erro Buscar por id", err);
             });
 
+    }
+
+    async function EditProfile() {
+        try {
+            const response = await api.put(`/Pacientes?idUsuario=${idUser}`, {
+
+                "cep": cep,
+                "logradouro": endereco,
+                "email": email,
+                "cidade": cidade
+
+            })
+            if (response.status == 200) {
+                setIsEditing(false)
+            }
+        } catch (error) {
+            console.log(error.response.status);
+            console.log(error.response.data);
+        }
     }
 
     async function AlterarFotoPerfil() {
@@ -89,7 +116,7 @@ export const Profile = ({ navigation, route }) => {
             // type: `image/jpg`
         })
         console.log(idUser);
-        await api.put(`/Usuario/AlterarFotoPerfil?id=${idUser}`, formData, {
+        await api.put(`/Usuario/AlterarFotoPerfil?idUsuario=${idUser}`, formData, {
             headers: {
                 "Content-Type": "multipart/form-data"
             }
@@ -120,6 +147,14 @@ export const Profile = ({ navigation, route }) => {
         return cpf.substring(0, 3) + '.' + cpf.substring(3, 6) + '.' + cpf.substring(6, 9) + '-' + cpf.substring(9);
     };
 
+    // Função para cancelar a edição e restaurar o valor original do CEP
+    const cancelarEdicao = () => {
+        setCep(cepTemp);
+        setEndereco(enderecoTemp)
+        setCidade(cidadetemp)
+        setEmail(emailTemp)
+        setIsEditing(false);
+    };
 
 
     useEffect(() => {
@@ -150,7 +185,15 @@ export const Profile = ({ navigation, route }) => {
     
             <ModalTitle>
                 <Title>{name}</Title>
-                <TextAccount>{email}</TextAccount>
+                {isEditing ?
+                    <InputForm
+                        value={email}
+                        onChangeText={(txt) => {
+                            setEmail(txt.trim())
+                        }} />
+                    :
+                    <TextAccount>{email}</TextAccount>}
+
             </ModalTitle>
             <ScrollForm>
 
@@ -162,11 +205,20 @@ export const Profile = ({ navigation, route }) => {
                                 textLabel={"Data de Nascimento"}
                                 // placeholder={getPatient.dataNascimento ? new Date(getPatient.dataNascimento).toLocaleDateString() : ""}
                                 editable={true}
+                                keyboardType='numeric'
+                                value={cep}
+                                onChangeText={(txt) => {
+                                    setCep(txt.trim())
+                                }}
                             />
                             <BoxInputForm
                                 textLabel={"CPF"}
                                 // placeholder={formatarCPF(getPatient.cpf) || ""}
                                 editable={true}
+                                value={cidade}
+                                onChangeText={(txt) => {
+                                    setCidade(txt.trim())
+                                }}
                             />
                             <BoxInputForm
                                 textLabel={"Endereco"}
@@ -280,10 +332,10 @@ export const Profile = ({ navigation, route }) => {
                 <InputContainer>
                     {isEditing ? (
                         <>
-                            <Button>
+                            <Button onPress={() => EditProfile()}>
                                 <ButtonTitle>Salvar</ButtonTitle>
                             </Button>
-                            <Button onPress={() => setIsEditing(false)}>
+                            <Button onPress={() => cancelarEdicao()}>
                                 <ButtonTitle>Cancelar</ButtonTitle>
                             </Button>
                         </>

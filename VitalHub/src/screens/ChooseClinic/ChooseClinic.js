@@ -5,59 +5,53 @@ import { Title } from "../../components/Title/StyleTitle"
 import { Button, ButtonTitle } from "../../components/Button/Button"
 import { LinkCancel } from "../../components/Links/StyleLink"
 import { useEffect, useState } from "react"
-import api, { ListClinicResorce } from "../../services/services"
+import api from "../../services/services"
 
-export const ChooseClinic = ({navigation}) => {
+export const ChooseClinic = ({ navigation, route }) => {
 
 
-    const rawData = [
-        {
-            name: 'Senai Paulo Skaf',
-            location: 'São Caetano do Sul, SP',
-            time: 'Seg-Sab',
-            review: "5.0"
-        },
-        {
-            name: 'Senai Anchieta',
-            location: 'Vila Mariana, SP',
-            time: 'Seg-Sab',
-            review: "4.0"
-        },
-        {
-            name: 'UMC',
-            location: 'Mogi Das Cruzes, SP',
-            time: 'Seg-Sab',
-            review: "4.5"
-        },
-        {
-            name: 'Clinica Hitler',
-            location: 'São Caetano do Sul, SP',
-            time: 'Seg-Dom',
-            review: "5.0"
-        },
-        {
-            name: 'Bola De Neve SCS',
-            location: 'São Caetano do Sul, SP',
-            time: 'Qui-Dom',
-            review: "5.0"
-        }
-    ]
-    const [listClinic , setListClinic] = useState([])
+    const [listClinic, setListClinic] = useState([])
     const [select, setSelected] = useState('')
+    const [clinica, setClinica] = useState(null)
 
+    // Passa a cidade na rota buscar por cidade
+    //FAzer a troca
     async function ListClinic() {
-        await api.get(ListClinicResorce)
-        .then(response => {
-            setListClinic(response.data)
-            console.log("Oiaa a lista das clinicas ");
-            console.log(response.data);
-        }).catch(error => {
-            console.log(error);
+        await api.get(`/Clinica/BuscarPorCidade?cidade=${route.params.agendamento.localizacao}`)
+            .then(response => {
+                setListClinic(response.data)
+                console.log("Oiaa a lista das clinicas ");
+                console.log(response.data);
+            }).catch(error => {
+                console.log(error);
+                console.log(error.response.data);
+            })
+    }
+    const handleSelectClinic = (clinic) => {
+        if (select !== clinic.nomeFantasia) {
+            setSelected(clinic.nomeFantasia);
+            setClinica({
+                clinicaId : clinic.id,
+                clinicaLabel : clinic.nomeFantasia,
+            });
+        } else {
+            setSelected('');
+            setClinica(null);
+        }
+    };
+
+    function handleConfirm() {
+        navigation.navigate('ChooseDoctor', {
+           agendamento : {
+            ...route.params.agendamento,
+            ...clinica
+           }
         })
     }
 
     useEffect(() => {
         ListClinic();
+
     }, [])
     return (
         <ContainerClinic>
@@ -68,9 +62,10 @@ export const ChooseClinic = ({navigation}) => {
                 data={listClinic}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) =>
+
                     <CardClinic
                         select={select}
-                        onPress={() => { setSelected(item.nome) }}
+                        onPress={() => { handleSelectClinic(item) }}
                         // review={item.review}
                         location={item.endereco.logradouro}
                         number={item.endereco.numero}
@@ -78,10 +73,10 @@ export const ChooseClinic = ({navigation}) => {
                         time={item.time}
                     />} />
 
-            <Button  onPress={() => navigation.navigate('ChooseDoctor')}>
+            <Button onPress={() => handleConfirm()}>
                 <ButtonTitle >Continuar</ButtonTitle>
             </Button>
-            <LinkCancel  onPress={() => navigation.navigate('Main')}> Cancelar </LinkCancel>
+            <LinkCancel onPress={() => navigation.navigate('Main')}> Cancelar </LinkCancel>
         </ContainerClinic>
     )
 }

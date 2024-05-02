@@ -15,17 +15,18 @@ LocaleConfig.locales['en'] = {
 };
 
 // Define o idioma padrão como inglês
-LocaleConfig.Locales = 'en';
+LocaleConfig.defaultLocale = 'en';
 
 // Componente funcional ChooseCalendar
-const ChooseCalendar = () => {
+const ChooseCalendar = ({ setDataSelecionada, dataSelecionada }) => {
     // Estado para armazenar a data selecionada
-    const [selected, setSelected] = useState('')
+    const [selected, setSelected] = useState('');
 
     const isFutureDate = (dateString) => {
         const selectedDate = new Date(dateString);
         const currentDate = new Date();
-        return selectedDate > currentDate;
+        // Permitir a seleção da data atual ou futura
+        return selectedDate >= currentDate;
     };
 
     return (
@@ -38,35 +39,27 @@ const ChooseCalendar = () => {
                 marginTop: 35,
             }}
             // Função para atualizar a data selecionada quando um dia é pressionado
-
-            // Função para atualizar a data selecionada quando um dia é pressionado
-            onDayPress={day => {
-                if (isFutureDate(day.dateString)) {
-                    setSelected(day.dateString);
-                } else {
-                    alert('Por favor, selecione uma data futura.');
-                }
+            onDayPress={(date) => {
+                setSelected(date.dateString);
+                setDataSelecionada(date.dateString);
             }}
-
-            // Substituir o componente de texto padrão por um personalizado para o título do mês (Linha feita com auxilio do GPT)
+            // Substituir o componente de texto padrão por um personalizado para o título do mês
             renderHeader={(date) => <Text style={{ fontFamily: 'MontserratAlternates_600SemiBold', fontSize: 18 }}>{date.toString('MMMM yyyy')}</Text>}
             // Oculta as setas de navegação do calendário
             hideArrows={false}
-
             // Personalização do tema do calendário
             theme={{
                 selectedDayBackgroundColor: '#49B3BA',
                 selectedDayTextColor: '#FFFFFF',
                 dayBackgroundColor: 'transparent'
             }}
-
             // Marcadores para a data selecionada
             markedDates={{
                 [selected]: { selected: true, disableTouchEvent: true }
             }}
         />
-    )
-}
+    );
+};
 
 // Exporta o componente ChooseCalendar como padrão
 export default ChooseCalendar;

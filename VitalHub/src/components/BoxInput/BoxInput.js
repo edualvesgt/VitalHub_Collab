@@ -3,7 +3,7 @@ import { InputForm, InputProfile } from "../Input/StyleInput"
 import { Label } from "../Label/Label"
 import { FieldContent } from "./StyleBox"
 
-export const BoxInput = ({ textLabel, placeholder, fieldWidth = 90, editable = false }) => {
+export const BoxInput = ({ textLabel, placeholder, fieldWidth = 90, editable = false ,value,onChangeText , keyboardType , maxLength }) => {
 
     return (
 
@@ -14,6 +14,10 @@ export const BoxInput = ({ textLabel, placeholder, fieldWidth = 90, editable = f
 
                 editable={editable}
                 placeholder={placeholder}
+                value = {value}
+                onChangeText = {onChangeText}
+                maxLength = {maxLength}
+                keyboardType = {keyboardType}
             />
         </FieldContent>
     )
@@ -21,7 +25,7 @@ export const BoxInput = ({ textLabel, placeholder, fieldWidth = 90, editable = f
 
 
 
-export const BoxInputForm = ({ textLabel, placeholder, fieldWidth = 90, fieldHeigth, editable = false }) => {
+export const BoxInputForm = ({ textLabel, placeholder, fieldWidth = 90, fieldHeigth, editable = false , value,onChangeText , keyboardType , maxLength}) => {
     return (
         <FieldContent fieldWidth={fieldWidth}>
             <Label textLabel={textLabel} />
@@ -30,11 +34,15 @@ export const BoxInputForm = ({ textLabel, placeholder, fieldWidth = 90, fieldHei
                 editable={editable}
                 fieldHeigth={fieldHeigth}
                 placeholder={placeholder}
+                value = {value}
+                onChangeText = {onChangeText}
+                maxLength = {maxLength}
+                keyboardType = {keyboardType}
             />
         </FieldContent>
     )
 }
-export const BoxInputCreate = ({ textLabel, placeholder, fieldWidth = 90, fieldHeigth, editable = false }) => {
+export const BoxInputCreate = ({ textLabel, placeholder, fieldWidth = 90, fieldHeigth, editable = false , onChangeText , value }) => {
     return (
         <FieldContent style={{ alignItems: 'flex-start', width: '100%', backgroundColor: 'white' }}>
             <Label
@@ -46,6 +54,8 @@ export const BoxInputCreate = ({ textLabel, placeholder, fieldWidth = 90, fieldH
                 editable={editable}
                 fieldHeigth={fieldHeigth}
                 placeholder={placeholder}
+                onChangeText = { onChangeText}
+                value = {value}
             />
         </FieldContent>
     )
