@@ -1,3 +1,4 @@
+
 import { useEffect, useId, useState } from "react"
 import { BoxInput, BoxInputForm } from "../../components/BoxInput/BoxInput"
 import { Button, ButtonTitle } from "../../components/Button/Button"
@@ -42,6 +43,7 @@ export const Profile = ({ navigation, route }) => {
     const [tokenKey, setTokenKey] = useState("")
     const [showCam, setShowCam] = useState(false)
     const [date, setDate] = useState("");
+    const [isEditingCpf, setIsEditingCpf] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
 
     const [uriPhoto, setUriPhoto] = useState(null);
@@ -81,7 +83,11 @@ export const Profile = ({ navigation, route }) => {
 
             })
             .catch(err => {
+<<<<<<< HEAD
                 
+=======
+
+>>>>>>> eduardo
                 console.log("erro Buscar por id", err);
             });
 
@@ -147,6 +153,19 @@ export const Profile = ({ navigation, route }) => {
         return cpf.substring(0, 3) + '.' + cpf.substring(3, 6) + '.' + cpf.substring(6, 9) + '-' + cpf.substring(9);
     };
 
+    const iniciarEdicao = () => {
+        setEnderecoTemp(endereco);
+        setCepTemp(cep);
+        setCidadeTemp(cidade);
+        setEmailTemp(email);
+        setIsEditing(true);
+        if (cpf) {
+            setIsEditingCpf(false);
+        } else {
+            setIsEditingCpf(true);
+        }
+    };
+
     // Função para cancelar a edição e restaurar o valor original do CEP
     const cancelarEdicao = () => {
         setCep(cepTemp);
@@ -176,13 +195,17 @@ export const Profile = ({ navigation, route }) => {
         <Container>
             <HeaderContainer>
                 <HeaderPhoto source={{ uri: userUriPhoto }} />
+<<<<<<< HEAD
                 <ButtonCamera onPress={() => setShowCam(true)} >
+=======
+                <ButtonCamera onPress={() => { setShowCam(true); navigation.navigate('Home', { foto: uriPhoto }) }} >
+>>>>>>> eduardo
                     <MaterialCommunityIcons name="camera-plus" size={20} color={"#fbfbfb"} />
                 </ButtonCamera>
             </HeaderContainer>
 
             <Cam visible={showCam} getMediaLibrary={true} setUriPhoto={setUriPhoto} setShowCam={setShowCam} />
-    
+
             <ModalTitle>
                 <Title>{name}</Title>
                 {isEditing ?
@@ -203,14 +226,16 @@ export const Profile = ({ navigation, route }) => {
                         <>
                             <BoxInputForm
                                 textLabel={"Data de Nascimento"}
+<<<<<<< HEAD
                                 // placeholder={getPatient.dataNascimento ? new Date(getPatient.dataNascimento).toLocaleDateString() : ""}
                                 editable={true}
+=======
+>>>>>>> eduardo
                                 keyboardType='numeric'
-                                value={cep}
-                                onChangeText={(txt) => {
-                                    setCep(txt.trim())
-                                }}
+                                value={dataNascimento}
+
                             />
+<<<<<<< HEAD
                             <BoxInputForm
                                 textLabel={"CPF"}
                                 // placeholder={formatarCPF(getPatient.cpf) || ""}
@@ -221,22 +246,49 @@ export const Profile = ({ navigation, route }) => {
                                 }}
                             />
                             <BoxInputForm
+=======
+                            {isEditingCpf ? (
+                                <BoxInputForm
+                                    textLabel={"CPF"}
+                                    value={cpf}
+                                    editable={true}
+                                    onChangeText={(txt) => setCpf(txt)}
+                                />
+                            ) : (
+                                <BoxInput
+                                    textLabel={"CPF"}
+                                    placeholder={formatarCPF(cpf)}
+                                />
+                            )}
+                            < BoxInputForm
+>>>>>>> eduardo
                                 textLabel={"Endereco"}
-                                // placeholder={getPatient.endereco.logradouro || ""}
+                                value={endereco}
                                 editable={true}
+                                onChangeText={(txt) => {
+                                    setEndereco(txt)
+                                }}
                             />
                             <DoubleView>
                                 <BoxInputForm
                                     fieldWidth={40}
+                                    keyboardType='numeric'
                                     textLabel={"CEP"}
-                                    // placeholder={formatarCEP(getPatient.endereco.cep) || ""}
+                                    value={cep}
                                     editable={true}
+                                    onChangeText={(txt) => {
+                                        setCep(txt.trim())
+                                    }}
                                 />
                                 <BoxInputForm
                                     fieldWidth={40}
+                                    value={cidade}
                                     textLabel={"Cidade"}
-                                    // placeholder={getPatient.endereco.cidade || "
                                     editable={true}
+
+                                    onChangeText={(txt) => {
+                                        setCidade(txt)
+                                    }}
                                 />
                             </DoubleView>
                         </>
@@ -271,31 +323,39 @@ export const Profile = ({ navigation, route }) => {
                         <>
                             <BoxInputForm
                                 textLabel={"Data de Nascimento"}
-                                // placeholder={getPatient.dataNascimento ? new Date(getPatient.dataNascimento).toLocaleDateString() : ""}
-                                editable={true}
+                                value={dataNascimento}
                             />
                             <BoxInputForm
                                 textLabel={"CRM"}
-                                // placeholder={crm}
-                                editable={true}
+                                value={crm}
+
                             />
                             <BoxInputForm
                                 textLabel={"Endereco"}
-                                // placeholder={getPatient.endereco.logradouro || ""}
                                 editable={true}
+                                value={endereco}
+                                onChangeText={(txt) => {
+                                    setEndereco(txt)
+                                }}
                             />
                             <DoubleView>
                                 <BoxInputForm
                                     fieldWidth={40}
                                     textLabel={"CEP"}
-                                    // placeholder={formatarCEP(getPatient.endereco.cep) || ""}
+                                    value={cep}
                                     editable={true}
+                                    onChangeText={(txt) => {
+                                        setCep(txt.trim())
+                                    }}
                                 />
                                 <BoxInputForm
                                     fieldWidth={40}
                                     textLabel={"Cidade"}
-                                    // placeholder={getPatient.endereco.cidade || "
+                                    value={cidade}
                                     editable={true}
+                                    onChangeText={(txt) => {
+                                        setCidade(txt)
+                                    }}
                                 />
                             </DoubleView>
                         </>
@@ -340,7 +400,7 @@ export const Profile = ({ navigation, route }) => {
                             </Button>
                         </>
                     ) : (
-                        <Button onPress={() => setIsEditing(true)}>
+                        <Button onPress={() => iniciarEdicao()}>
                             <ButtonTitle>Editar</ButtonTitle>
                         </Button>
                     )}

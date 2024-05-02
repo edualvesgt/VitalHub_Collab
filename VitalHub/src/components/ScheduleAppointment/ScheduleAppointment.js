@@ -38,11 +38,7 @@ const ScheduleAppointment = ({ isOpen, onClose, navigation,type }) => {
     return (
         <ModalContainer>
             <ModalContent>
-                {/* Titulo agendar  */}
-                <Title>Agendar Consulta</Title>
-
-                {/* Input Com select */}
-
+          
                 <Label>Qual o nível da consulta</Label>
 
                 <RowContainerButton>
