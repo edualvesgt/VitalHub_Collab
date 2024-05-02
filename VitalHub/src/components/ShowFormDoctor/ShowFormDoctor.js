@@ -4,6 +4,7 @@ import { LinkCancel } from "../Links/StyleLink";
 import { TextAbout } from "../Text/Text";
 import { Title } from "../Title/StyleTitle";
 import { PhotoShow, ShowModalContainer, ShowModalContent } from "./StyleShowFormDoctor";
+import { formatarIdade } from "../Card/Card";
 
 const ShowFormDoctor = ({
     isOpen,
@@ -11,9 +12,8 @@ const ShowFormDoctor = ({
     navigation,
     status,
     role,
+    foto,
     consulta, }) => {
-
-    const image = require("../../assets/PhotoGirl.png");
 
     if (!isOpen) {
         return null;
@@ -30,16 +30,16 @@ const ShowFormDoctor = ({
         role == "Medico" ? (
             <ShowModalContainer>
                 <ShowModalContent>
-                    <PhotoShow source={image} />
+                    <PhotoShow source={{uri: foto}} />
                     <Title>{consulta.pacienteNome}</Title>
-                    <TextAbout>{consulta.pacienteIdade} Anos<TextAbout> {consulta.pacienteEmail}</TextAbout> </TextAbout>
+                    <TextAbout>{formatarIdade(consulta.pacienteIdade)} Anos<TextAbout> {consulta.pacienteEmail}</TextAbout> </TextAbout>
 
                     {status == "agendadas" ? (
                         <Button onPress={() => { navigation.replace('FormDoctor', { clinica: consulta.clinicaId }) }}>
                             <ButtonTitle>{"Inserir Prontuário"}</ButtonTitle>
                         </Button>
                     ) : (
-                        <Button onPress={() => navigation.replace('FormDoctor', {consultaId: consulta.consultaId})}>
+                        <Button onPress={() => navigation.replace('FormDoctor', { consultaId: consulta.consultaId })}>
                             <ButtonTitle>Cadastrar prontuario</ButtonTitle>
                         </Button>
                     )}
@@ -59,7 +59,13 @@ const ShowFormDoctor = ({
                             <ButtonTitle>Ver Local Consulta</ButtonTitle>
                         </Button>
                     ) : (
-                        <Button onPress={() => navigation.replace('FormDoctor', {consultaDescricao: consulta.consultaDescricao, consultaDiagnostico: consulta.consultaDiagnostico, consultaReceita: consulta.consultaReceita })}>
+                        <Button onPress={() => navigation.replace('FormDoctor',
+                            {
+                                consultaDescricao: consulta.consultaDescricao,
+                                consultaDiagnostico: consulta.consultaDiagnostico,
+                                consultaReceita: consulta.consultaReceita,
+                                consultaId: consulta.consultaId
+                            })}>
                             <ButtonTitle>Ver Prontuário</ButtonTitle>
                         </Button>
                     )}

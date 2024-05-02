@@ -15,28 +15,62 @@ import api from '../../services/services';
 
 export const FormDoctor = ({ navigation, route }) => {
 
-
     const [openModal, setOpenModal] = useState(false);
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [role, setRole] = useState("")
+    const [uriPhotoForm, setUriPhotoForm] = useState(null)
     const [listAppointment, setListAppointment] = useState([])
-
-
-    useEffect(() => {
-        profileLoad()
-        console.log("Route");
-    }, [route.params])
-
+    const [showCamForm, setShowCamForm] = useState(false)
+    const [descricaoExame, setDescricaoExame] = useState("")
+    const [descricaoOcr, setDescricaoOcr] = useState("")
+    const [consultaId, setConsultaId] = useState(null)
 
     async function profileLoad() {
         const token = await userDecodeToken();
         setName(token.name);
         setEmail(token.email);
         setRole(token.role)
+        setConsultaId(route.params.consultaId)
     }
 
+    async function InserirExame() {
+        console.log(consultaId);
+        console.log(uriPhotoForm);
 
+        const formData = new FormData();
+        formData.append("ConsultaId", consultaId);
+        formData.append("Image", {
+            uri: uriPhotoForm,
+            name: `image.jpg`,
+            type: `image/jpeg`
+        })
+
+
+        await api.post(`/Exame/Cadastrar`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }).then(async (response) => {
+            console.log("r", response.data);
+            setDescricaoExame(response.data.descricao)
+
+        }).catch(err => {
+            console.log("exame", err);
+        })
+    }
+
+    useEffect(() => {
+        profileLoad()
+    }, [])
+
+
+    useEffect(() => {
+        if (uriPhotoForm != null && consultaId != null) {
+            console.log("entrou na ocr");
+            InserirExame();
+        }       
+    }, [uriPhotoForm])
 
     return (
         (role != null ? (
@@ -51,12 +85,12 @@ export const FormDoctor = ({ navigation, route }) => {
                     <TextAccount>Idade vir da Home <TextAbout>{email}</TextAbout> </TextAccount>
 
                     <ScrollForm>
-                        {role === 'medico' ? (
+                        {role === 'Paciente' ? (
                             <>
                                 <BoxInputForm
                                     fieldHeigth={120}
                                     textLabel={"Descricao"}
-                                    placeholder={""}
+                                    placeholder={descricaoExame}
                                 />
 
                                 <BoxInputForm
@@ -76,11 +110,14 @@ export const FormDoctor = ({ navigation, route }) => {
 
                                 <BoxInputPhoto
                                     fieldHeigth={120}
+                                    uriPhotoForm={uriPhotoForm}
                                     placeholder={"Nenhuma Foto"}
-                                    textLabel={"Exames Medicos"} />
+                                    textLabel={"Exames Medicos"}
+                                    source={{ uri: uriPhotoForm }}
+                                />
 
                                 <ViewRow>
-                                    <ButtonSendPhoto onPress={() => { setOpenModal(true); }}>
+                                    <ButtonSendPhoto onPress={() => { setShowCamForm(true); }}>
                                         <ButtonTitle>
                                             <MaterialIcons name="add-a-photo" size={24} color={"white"} />
                                         </ButtonTitle>
@@ -131,8 +168,14 @@ export const FormDoctor = ({ navigation, route }) => {
                     </ScrollForm>
                 </ContainerForm>
 
-                <Modal animationType="slide" transparent={true} visible={openModal} >
-                    <Cam onPress={() => { setOpenModal(false); }} />
+                <Modal animationType="slide" transparent={true} visible={showCamForm} >
+                    <Cam
+                        getMediaLibrary={true}
+                        visible={showCamForm}
+                        setUriPhotoForm={setUriPhotoForm}
+                        setShowCamForm={setShowCamForm}
+                        showCamForm={showCamForm}
+                    />
                 </Modal>
 
             </Container>

@@ -22,7 +22,7 @@ import api from "../../services/services";
 import { userDecodeToken } from "../../utils/Auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export const Home = ({ navigation }) => {
+export const Home = ({ navigation, route }) => {
 
     const image = require("../../assets/PhotoProfile.png");
 
@@ -32,6 +32,7 @@ export const Home = ({ navigation }) => {
     const [token, setToken] = useState([]);
     const [isMedic, setIsMedic] = useState(token.role == 'Medico')
     const [consultaSelecionada, setConsultaSelecionada] = useState(null)
+    const [fotoPerfil, setFotoPerfil] = useState(null)
 
     async function profileLoad() {
         const tokenDecoded = await userDecodeToken();
@@ -41,7 +42,13 @@ export const Home = ({ navigation }) => {
             setDataConsulta(moment().format('YYYY-MM-DD'))
         }
 
-        console.log(tokenDecoded);
+
+        const user = tokenDecoded.role == "Medico" ? "Medicos" : "Pacientes"
+        await api.get(`/${user}/BuscarPorId?id=${tokenDecoded.jti}`).then(response => {
+            setFotoPerfil(response.data.idNavigation.foto)
+        }).catch(erro => {
+            console.log(erro);
+        })
     }
 
     async function getConsultas() {
@@ -66,9 +73,10 @@ export const Home = ({ navigation }) => {
                         consultaDescricao: item.descricao,
                         consultaDiagnostico: item.diagnostico,
                         consultaReceita: item.receita.medicamento
-                    
+
                     }))
                     setResponseConsulta(novaConsulta)
+
                 }).catch(error => {
                     console.log(error)
                 })
@@ -79,7 +87,8 @@ export const Home = ({ navigation }) => {
 
     useEffect(() => {
         profileLoad();
-    }, [])
+    }, [fotoPerfil])
+
 
     useEffect(() => {
         if (dataConsulta != '') {
@@ -122,7 +131,7 @@ export const Home = ({ navigation }) => {
 
     return (
         <>
-            <Header navigation={navigation} foto={require("../../assets/PhotoGirl.png")}/>
+            <Header navigation={navigation} foto={{ uri: fotoPerfil }} />
             <Container>
 
                 <Calendar setDataConsulta={setDataConsulta} />
@@ -157,13 +166,14 @@ export const Home = ({ navigation }) => {
                     (
                         item.consultaSituacao == selected && token.role == "Paciente" ? (
                             <Card
-                                role={isMedic}
+                                role={'Medico'}
                                 time={item.consultaData}
                                 email={item.pacienteEmail}
                                 image={image}
                                 status={item.consultaSituacao}
                                 Name={item.medicoNome}
                                 Age={item.pacienteIdade}
+                                medicoCrm={item.medicoCrm}
                                 clinicaId={item.clinicaId}
                                 Priority={item.consultaPrioridade}
                                 specialty={item.especialidade}
@@ -174,13 +184,14 @@ export const Home = ({ navigation }) => {
                         ) : item.consultaSituacao == selected && token.role == "Medico" ?
                             (
                                 <Card
-                                    role={isMedic}
+                                    role={"Paciente"}
                                     time={item.consultaData}
                                     email={item.pacienteEmail}
                                     image={image}
                                     status={item.consultaSituacao}
                                     Name={item.pacienteNome}
                                     Age={item.pacienteIdade}
+                                    medicoCrm={item.medicoCrm}
                                     clinicaId={item.clinicaId}
                                     Priority={item.consultaPrioridade}
                                     specialty={item.especialidade}
@@ -188,10 +199,7 @@ export const Home = ({ navigation }) => {
                                     onPressCard={() => openModal()}
                                     onPressShow={() => showForm(item)}
                                 />
-                            ) : null
-
-
-                    )}
+                            ): null)}
                 />
 
 
@@ -232,6 +240,7 @@ export const Home = ({ navigation }) => {
                 onClose={closeForm}
                 navigation={navigation}
                 status={selected}
+                foto={fotoPerfil}
             />
 
 
