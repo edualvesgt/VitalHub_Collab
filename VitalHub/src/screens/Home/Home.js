@@ -21,6 +21,7 @@ import ScheduleAppointment from "../../components/ScheduleAppointment/ScheduleAp
 import api from "../../services/services";
 import { userDecodeToken } from "../../utils/Auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Text } from "react-native";
 
 export const Home = ({ navigation}) => {
 
@@ -173,6 +174,14 @@ export const Home = ({ navigation}) => {
                         buttonTitle={'Canceladas'}
                     />
                 </RowContainer>
+
+                {responseConsulta.length === 0 && token.role === 'Paciente' && (
+    <Text style={{ textAlign: 'center', marginTop: 20 }}>Não há consultas marcadas para o dia selecionado.</Text>
+)}
+{responseConsulta.length === 0 && token.role === 'Medico' && (
+    <Text style={{ textAlign: 'center', marginTop: 20 }}>Você não tem nenhum paciente para atender.</Text>
+)}
+
 
                 <FlatContainer
                     data={responseConsulta}

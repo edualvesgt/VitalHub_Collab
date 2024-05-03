@@ -89,9 +89,13 @@ export const Profile = ({ navigation, route }) => {
 
     }
 
-    async function EditProfile() {
+    async function EditProfile(role) {
+        let url = "/Pacientes";
+        if (role === "Medico") {
+            url = "/Medicos"
+        }
         try {
-            const response = await api.put(`/Pacientes?idUsuario=${idUser}`, {
+            const response = await api.put(`${url}?idUsuario=${idUser}`, {
 
                 "cep": cep,
                 "logradouro": endereco,
@@ -366,7 +370,7 @@ export const Profile = ({ navigation, route }) => {
                 <InputContainer>
                     {isEditing ? (
                         <>
-                            <Button onPress={() => EditProfile()}>
+                            <Button onPress={() => EditProfile(role)}>
                                 <ButtonTitle>Salvar</ButtonTitle>
                             </Button>
                             <Button onPress={() => cancelarEdicao()}>
