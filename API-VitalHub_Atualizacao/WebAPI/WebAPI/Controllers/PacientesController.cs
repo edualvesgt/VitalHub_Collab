@@ -60,9 +60,9 @@ namespace WebAPI.Controllers
                 user.Email = pacienteModel.Email;
                 user.TipoUsuarioId = pacienteModel.IdTipoUsuario;
 
-                var containerName = "";
+                var containerName = "containervitalhub";
 
-                var connectionString = "";
+                var connectionString = "DefaultEndpointsProtocol=https;AccountName=blobvitalhubg4;AccountKey=DgY22ZL6MC7zdILGO0i+i/aAmqGxAbsg0MMcMzxJRLYAeMrr2yFs2Mo8x/0dm1mN6QfVGeRYyHol+AStx4fIaw==;EndpointSuffix=core.windows.net";
 
                 user.Foto = await AzureBlobStorageHelper.UploadImage(pacienteModel.File!, connectionString, containerName);
 
