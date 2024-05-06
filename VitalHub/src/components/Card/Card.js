@@ -49,9 +49,8 @@ const Card = ({
     const [profile, setProfile] = useState("Paciente");
 
     function timeConsulta(time) {
-        return time.slice(14, 19)
+        return time.slice(11, 16); 
     }
-
     
 
     const Check = () => {
