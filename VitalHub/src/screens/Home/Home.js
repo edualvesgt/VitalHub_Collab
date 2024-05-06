@@ -258,7 +258,7 @@ export const Home = ({ navigation}) => {
                 onClose={closeForm}
                 navigation={navigation}
                 status={selected}
-                foto={fotoPerfil}
+                foto={{uri : fotoPerfil }}
             />
 
 

@@ -20,8 +20,7 @@ const ShowFormDoctor = ({
     }
 
     useEffect(() => {
-        console.log("Abaixo consulta");
-        console.log(consulta)
+        
     }, [isOpen])
 
     const [profile, setProfile] = useState("Medico");
@@ -30,7 +29,7 @@ const ShowFormDoctor = ({
         role == "Medico" ? (
             <ShowModalContainer>
                 <ShowModalContent>
-                    <PhotoShow source={{uri: foto}} />
+                    <PhotoShow source={foto} />
                     <Title>{consulta.pacienteNome}</Title>
                     <TextAbout>{formatarIdade(consulta.pacienteIdade)} Anos<TextAbout> {consulta.pacienteEmail}</TextAbout> </TextAbout>
 
@@ -50,7 +49,7 @@ const ShowFormDoctor = ({
         ) : (
             <ShowModalContainer>
                 <ShowModalContent>
-                    <PhotoShow source={image} />
+                    <PhotoShow source={consulta.medicoFoto} />
                     <Title>Dr. {consulta.medicoNome}</Title>
                     <TextAbout>CRM {consulta.medicoCrm} <TextAbout> {consulta.especialidade}</TextAbout> </TextAbout>
 

@@ -47,7 +47,8 @@ export const Profile = ({ navigation, route }) => {
     const [isEditing, setIsEditing] = useState(false);
 
     const [uriPhoto, setUriPhoto] = useState(null);
-    const [userUriPhoto, setUserUriPhoto] = useState(null)
+    const [foto, setFoto] = useState(null)
+
 
 
     async function profileLoad() {
@@ -63,7 +64,7 @@ export const Profile = ({ navigation, route }) => {
         const user = TokenDecoded.role == "Medico" ? "Medicos" : "Pacientes"
         await api.get(`/${user}/BuscarPorId?id=${TokenDecoded.jti}`)
             .then(response => {
-                console.log(response.data);
+                
                 if (user == "Pacientes") {
 
                     setCpf(response.data.cpf)
@@ -71,23 +72,18 @@ export const Profile = ({ navigation, route }) => {
                     setEndereco(response.data.endereco.logradouro)
                     setCep(response.data.endereco.cep)
                     setCidade(response.data.endereco.cidade)
-                    setUriPhoto(response.data.idNavigation.foto)
+                    setFoto(response.data.idNavigation.foto)
                 }
                 else {
 
                     setCrm(response.data.crm)
                     setEndereco(response.data.endereco.logradouro)
                     setCep(response.data.endereco.cep)
-                    setUriPhoto(response.data.idNavigation.foto)
+                    setFoto(response.data.idNavigation.foto)
                 }
-
+                console.log(response.data.idNavigation.foto);
             })
             .catch(err => {
-<<<<<<< HEAD
-                
-=======
-
->>>>>>> eduardo
                 console.log("erro Buscar por id", err);
             });
 
@@ -117,17 +113,15 @@ export const Profile = ({ navigation, route }) => {
         formData.append("Image", {
             uri: uriPhoto,
             name: `image.jpg`,
-            // name: `image.jpg`,
             type: `image/jpg`
-            // type: `image/jpg`
+
         })
-        console.log(idUser);
         await api.put(`/Usuario/AlterarFotoPerfil?id=${idUser}`, formData, {
             headers: {
                 "Content-Type": "multipart/form-data"
             }
         }).then(response => {
-            console.log("Alterar foto perfil");
+            console.log("Alterar foto perfil deu bom");
         }).catch(erro => {
             console.log("Alterar foto");
             console.log(erro);
@@ -177,29 +171,21 @@ export const Profile = ({ navigation, route }) => {
 
 
     useEffect(() => {
-
         profileLoad();
+
     }, [])
 
     useEffect(() => {
-        setUserUriPhoto(uriPhoto)
-
-        if (userUriPhoto) {
-            AlterarFotoPerfil();
-        }
-
+        AlterarFotoPerfil();
+        profileLoad();
     }, [uriPhoto])
 
 
     return (
         <Container>
             <HeaderContainer>
-                <HeaderPhoto source={{ uri: userUriPhoto }} />
-<<<<<<< HEAD
+                <HeaderPhoto source={{ uri: foto }} />
                 <ButtonCamera onPress={() => setShowCam(true)} >
-=======
-                <ButtonCamera onPress={() => { setShowCam(true); navigation.navigate('Home', { foto: uriPhoto }) }} >
->>>>>>> eduardo
                     <MaterialCommunityIcons name="camera-plus" size={20} color={"#fbfbfb"} />
                 </ButtonCamera>
             </HeaderContainer>
@@ -226,27 +212,12 @@ export const Profile = ({ navigation, route }) => {
                         <>
                             <BoxInputForm
                                 textLabel={"Data de Nascimento"}
-<<<<<<< HEAD
                                 // placeholder={getPatient.dataNascimento ? new Date(getPatient.dataNascimento).toLocaleDateString() : ""}
                                 editable={true}
-=======
->>>>>>> eduardo
                                 keyboardType='numeric'
                                 value={dataNascimento}
 
                             />
-<<<<<<< HEAD
-                            <BoxInputForm
-                                textLabel={"CPF"}
-                                // placeholder={formatarCPF(getPatient.cpf) || ""}
-                                editable={true}
-                                value={cidade}
-                                onChangeText={(txt) => {
-                                    setCidade(txt.trim())
-                                }}
-                            />
-                            <BoxInputForm
-=======
                             {isEditingCpf ? (
                                 <BoxInputForm
                                     textLabel={"CPF"}
@@ -261,7 +232,6 @@ export const Profile = ({ navigation, route }) => {
                                 />
                             )}
                             < BoxInputForm
->>>>>>> eduardo
                                 textLabel={"Endereco"}
                                 value={endereco}
                                 editable={true}
