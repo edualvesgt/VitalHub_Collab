@@ -43,7 +43,7 @@ export const Home = ({ navigation}) => {
             setToken(tokenDecoded)
             setDataConsulta(moment().format('YYYY-MM-DD'))
         }
-        
+        console.log("id",token.jti);
         
         const user = tokenDecoded.role == "Medico" ? "Medicos" : "Pacientes"
         await api.get(`/${user}/BuscarPorId?id=${tokenDecoded.jti}`).then(response => {
@@ -88,9 +88,9 @@ export const Home = ({ navigation}) => {
                         consultaReceita: item.receita.medicamento
 
                     }))
-                    console.log(response.data);
+                    
                     setResponseConsulta(novaConsulta)
-                    console.log(responseConsulta);
+                    
 
                 }).catch(error => {
                     console.log(error)
