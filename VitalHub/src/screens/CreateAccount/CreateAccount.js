@@ -1,4 +1,4 @@
-    import React, { useState } from "react";
+import React, { useState } from "react";
 import { ActivityIndicator } from "react-native";
 import { Button, ButtonTitle } from "../../components/Button/Button";
 import { Container, ContainerItens } from "../../components/Container/StyleContainer";
@@ -12,15 +12,33 @@ import { ScrollCreate } from "../Profile/StyleProfile";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Notification } from "../../components/Notification/Notification";
 
-
 export const CreateAccount = ({ navigation }) => {
-    const [email, setEmail] = useState("teste8@teste.com");
-    const [password, setPassword] = useState("teste8@teste.com");
-    const [confirm, setConfirm] = useState("teste8@teste.com");
-    const [name, setName] = useState("teste");
-    const [loading, setLoading] = useState(false); // Estado para controlar o carregamento
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirm, setConfirm] = useState("");
+    const [name, setName] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(""); // Estado para armazenar mensagens de erro
+
+    // Função para validar os campos antes do envio
+    const validateFields = () => {
+        if (!email || !password || !confirm || !name) {
+            setErrorMessage("Por favor, preencha todos os campos.");
+            return false;
+        }
+        if (password !== confirm) {
+            setErrorMessage("As senhas não correspondem.");
+            return false;
+        }
+        return true;
+    };
 
     async function Create() {
+        if (!validateFields()) {
+            return; // Se os campos não forem válidos, interrompe a função
+        }
+
+        setLoading(true);
 
         const formData = new FormData();
         formData.append('Rg', null);
@@ -35,33 +53,30 @@ export const CreateAccount = ({ navigation }) => {
         formData.append('Cidade', null);
         formData.append('IdTipoUsuario', '3D98ECF8-CC99-40E8-BDC4-7F1AF1FDC5EF');
         formData.append('Foto', null);
-        formData.append('File', '');
+        formData.append('File', "");
 
         try {
-            if (password === confirm) {
-                setLoading(true); // Inicia o carregamento
-                const response = await api.post('/Pacientes', formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                });
-                console.log(response.data);
-                if (response.status === 200) {
-                    Notification("Usuario Cadastrado", "Sucesso")
-                    await Login(); // Chama o login após o cadastro
-                    Notification("Usuario Cadastrado")
+            const response = await api.post('/Pacientes', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
                 }
+            });
+            console.log(response.data);
+            if (response.status === 200) {
+                Notification("Usuário Cadastrado", "Sucesso");
+                await Login();
+                Notification("Usuário Cadastrado");
             }
         } catch (error) {
             console.log(error.response.status);
             console.log(error.response.data);
         } finally {
-            setLoading(false); // Finaliza o carregamento
+            setLoading(false);
         }
     }
 
     async function Login() {
-        setLoading(true); // Inicia o carregamento
+        setLoading(true);
 
         try {
             const response = await api.post('/Login', {
@@ -75,10 +90,9 @@ export const CreateAccount = ({ navigation }) => {
             console.log(error.response.status);
             console.log(error.response.data);
         } finally {
-            setLoading(false); // Finaliza o carregamento
+            setLoading(false);
         }
     }
-
 
     return (
         <Container>
@@ -113,7 +127,8 @@ export const CreateAccount = ({ navigation }) => {
                         placeholder={"Confirmar Senha"}
                     />
 
-                    {/* Botão de cadastro com texto dinâmico de acordo com o estado de carregamento */}
+                    {errorMessage && <Text style={{ color: 'red' }}>{errorMessage}</Text>} {/* Exibe a mensagem de erro se houver */}
+
                     <Button onPress={() => Create()}>
                         <ButtonTitle>{loading ? <ActivityIndicator size="small" color="#ffffff" /> : "Cadastrar"}</ButtonTitle>
                     </Button>

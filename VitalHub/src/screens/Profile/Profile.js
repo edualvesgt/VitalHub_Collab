@@ -39,6 +39,8 @@ export const Profile = ({ navigation, route }) => {
     const [cepTemp, setCepTemp] = useState("")
     const [cidadetemp, setCidadeTemp] = useState("")
     const [emailTemp, setEmailTemp] = useState("")
+    const [cpfTemp, setCpftemp] = useState("")
+    const [dataTemp, setDataTem] = useState("")
 
     const [tokenKey, setTokenKey] = useState("")
     const [showCam, setShowCam] = useState(false)
@@ -76,14 +78,16 @@ export const Profile = ({ navigation, route }) => {
                 else {
 
                     setCrm(response.data.crm)
+                    setDataNascimento(response.data.dataNascimento)
                     setEndereco(response.data.endereco.logradouro)
                     setCep(response.data.endereco.cep)
+                    setCidade(response.data.endereco.cidade)
                     setUriPhoto(response.data.idNavigation.foto)
                 }
 
             })
             .catch(err => {
-                
+
                 console.log("erro Buscar por id", err);
             });
 
@@ -97,6 +101,8 @@ export const Profile = ({ navigation, route }) => {
         try {
             const response = await api.put(`${url}?idUsuario=${idUser}`, {
 
+                "dataNascimento": dataNascimento,
+                "cpf": cpf,
                 "cep": cep,
                 "logradouro": endereco,
                 "email": email,
@@ -159,10 +165,12 @@ export const Profile = ({ navigation, route }) => {
         setCidadeTemp(cidade);
         setEmailTemp(email);
         setIsEditing(true);
-        if (cpf) {
-            setIsEditingCpf(false);
-        } else {
+        if (cpf == null || dataNascimento == null) {
             setIsEditingCpf(true);
+            console.log("Entrou True" + cpf);
+        } else {
+            setIsEditingCpf(false);
+            console.log("Entrou false " + cpf);
         }
     };
 
@@ -172,6 +180,8 @@ export const Profile = ({ navigation, route }) => {
         setEndereco(enderecoTemp)
         setCidade(cidadetemp)
         setEmail(emailTemp)
+        setCpftemp(cpfTemp)
+        setDataTem(dataTemp)
         setIsEditing(false);
     };
 
@@ -220,24 +230,38 @@ export const Profile = ({ navigation, route }) => {
                     role == "Paciente" && isEditing ? (
 
                         <>
-                            <BoxInputForm
-                                textLabel={"Data de Nascimento"}
-                                keyboardType='numeric'
-                                value={dataNascimento}
 
-                            />
                             {isEditingCpf ? (
-                                <BoxInputForm
-                                    textLabel={"CPF"}
-                                    value={cpf}
-                                    editable={true}
-                                    onChangeText={(txt) => setCpf(txt)}
-                                />
+                                <>
+                                    <BoxInputForm
+                                        textLabel={"Data de Nascimento"}
+                                        keyboardType='numeric'
+                                        editable={true}
+                                        value={dataNascimento}
+                                        onChangeText={(txt) => setDataNascimento(txt)}
+
+                                    />
+                                    <BoxInputForm
+                                        textLabel={"CPF"}
+                                        value={cpf}
+                                        editable={true}
+                                        onChangeText={(txt) => setCpf(txt)}
+                                    />
+                                </>
                             ) : (
-                                <BoxInput
-                                    textLabel={"CPF"}
-                                    placeholder={formatarCPF(cpf)}
-                                />
+
+                                <>
+                                    <BoxInput
+                                        textLabel={"Data de Nascimento"}
+                                        keyboardType='numeric'
+                                        value={dataNascimento}
+
+                                    />
+                                    <BoxInput
+                                        textLabel={"CPF"}
+                                        placeholder={formatarCPF(cpf)}
+                                    />
+                                </>
                             )}
                             < BoxInputForm
                                 textLabel={"Endereco"}
