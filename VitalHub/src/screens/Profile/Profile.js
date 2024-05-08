@@ -60,34 +60,35 @@ export const Profile = ({ navigation, route }) => {
         setRole(TokenDecoded.role)
 
 
-
-        const user = TokenDecoded.role == "Medico" ? "Medicos" : "Pacientes"
-        await api.get(`/${user}/BuscarPorId?id=${TokenDecoded.jti}`)
-            .then(response => {
-                
-                if (user == "Pacientes") {
-
-                    setCpf(response.data.cpf)
-                    setDataNascimento(response.data.dataNascimento)
-                    setEndereco(response.data.endereco.logradouro)
-                    setCep(response.data.endereco.cep)
-                    setCidade(response.data.endereco.cidade)
-                    setFoto(response.data.idNavigation.foto)
-                }
-                else {
-
-                    setCrm(response.data.crm)
-                    setEndereco(response.data.endereco.logradouro)
-                    setCep(response.data.endereco.cep)
-                    setFoto(response.data.idNavigation.foto)
-                }
-                console.log(response.data.idNavigation.foto);
-            })
-            .catch(err => {
-                
-                console.log("erro Buscar por id", err);
-            });
-
+        if (TokenDecoded.role && TokenDecoded.jti) {
+            
+            const user = TokenDecoded.role == "Medico" ? "Medicos" : "Pacientes"
+            await api.get(`/${user}/BuscarPorId?id=${TokenDecoded.jti}`)
+                .then(response => {
+                    
+                    if (user == "Pacientes") {
+    
+                        setCpf(response.data.cpf)
+                        setDataNascimento(response.data.dataNascimento)
+                        setEndereco(response.data.endereco.logradouro)
+                        setCep(response.data.endereco.cep)
+                        setCidade(response.data.endereco.cidade)
+                        setFoto(response.data.idNavigation.foto)
+                    }
+                    else {
+    
+                        setCrm(response.data.crm)
+                        setEndereco(response.data.endereco.logradouro)
+                        setCep(response.data.endereco.cep)
+                        setFoto(response.data.idNavigation.foto)
+                    }
+                    console.log(response.data.idNavigation.foto);
+                })
+                .catch(err => {
+                    
+                    console.log("erro Buscar por id", err);
+                });
+        }
     }
 
     async function EditProfile(role) {
@@ -126,7 +127,7 @@ export const Profile = ({ navigation, route }) => {
                 "Content-Type": "multipart/form-data"
             }
         }).then(response => {
-            console.log("Alterar foto perfil deu bom");
+            console.log(response.data, "Alterar foto perfil deu bom");
         }).catch(erro => {
             console.log("Alterar foto");
             console.log(erro);
@@ -182,7 +183,7 @@ export const Profile = ({ navigation, route }) => {
 
     useEffect(() => {
         AlterarFotoPerfil();
-        profileLoad();
+        
     }, [uriPhoto])
 
 

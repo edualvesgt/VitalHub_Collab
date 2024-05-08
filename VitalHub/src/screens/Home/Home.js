@@ -42,7 +42,7 @@ export const Home = ({ navigation}) => {
         if (tokenDecoded) {
             setToken(tokenDecoded)
             setDataConsulta(moment().format('YYYY-MM-DD'))
-            console.log(tokenDecoded.jti);
+            
         }
         
         const user = tokenDecoded.role == "Medico" ? "Medicos" : "Pacientes"
@@ -75,7 +75,6 @@ export const Home = ({ navigation}) => {
                         medicoFoto: item.medicoClinica.medico.idNavigation.foto,
                         consultaSituacao: item.situacao.situacao,
                         clinicaId: item.medicoClinica.clinicaId,
-                        id: item.id,
                         especialidade: item.medicoClinica.medico.especialidade.especialidade1,
                         pacienteNome: item.paciente.idNavigation.nome,
                         pacienteIdade: item.paciente.dataNascimento,
@@ -86,10 +85,12 @@ export const Home = ({ navigation}) => {
                         consultaDescricao: item.descricao,
                         consultaDiagnostico: item.diagnostico,
                         consultaReceita: item.receita.medicamento
+                    }));
 
-                    }))
+                    
                     
                     setResponseConsulta(novaConsulta)
+                    console.log(response.data);
                     
 
                 }).catch(error => {
@@ -186,7 +187,7 @@ export const Home = ({ navigation}) => {
                 <FlatContainer
                     data={responseConsulta}
                     
-                    keyExtractor={item => item.id}
+                    keyExtractor={item => item.consultaId}
                     renderItem={({ item }) =>
                     (
                         item.consultaSituacao == selected && token.role == "Paciente" ? (
