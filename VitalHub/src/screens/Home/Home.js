@@ -23,7 +23,7 @@ import { userDecodeToken } from "../../utils/Auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Text } from "react-native";
 
-export const Home = ({ navigation}) => {
+export const Home = ({ navigation }) => {
 
     const image = require("../../assets/PhotoProfile.png");
 
@@ -42,12 +42,13 @@ export const Home = ({ navigation}) => {
         if (tokenDecoded) {
             setToken(tokenDecoded)
             setDataConsulta(moment().format('YYYY-MM-DD'))
-            
+
         }
-        
+
         const user = tokenDecoded.role == "Medico" ? "Medicos" : "Pacientes"
         await api.get(`/${user}/BuscarPorId?id=${tokenDecoded.jti}`).then(response => {
             setFotoPerfil(response.data.idNavigation.foto)
+            
         }).catch(erro => {
             console.log(erro);
         })
@@ -65,7 +66,7 @@ export const Home = ({ navigation}) => {
     async function getConsultas() {
         try {
             const url = (token.role == 'Medico' ? 'Medicos' : 'Pacientes')
-            
+
             await api.get(`/${url}/BuscarPorData?data=${dataConsulta}&id=${token.jti}`)
                 .then(response => {
                     const novaConsulta = response.data.map(item => ({
@@ -87,11 +88,9 @@ export const Home = ({ navigation}) => {
                         consultaReceita: item.receita.medicamento
                     }));
 
-                    
-                    
+
+
                     setResponseConsulta(novaConsulta)
-                    console.log(response.data);
-                    
 
                 }).catch(error => {
                     console.log(error)
@@ -177,16 +176,16 @@ export const Home = ({ navigation}) => {
                 </RowContainer>
 
                 {responseConsulta.length === 0 && token.role === 'Paciente' && (
-    <Text style={{ textAlign: 'center', marginTop: 20 }}>Não há consultas marcadas para o dia selecionado.</Text>
-)}
-{responseConsulta.length === 0 && token.role === 'Medico' && (
-    <Text style={{ textAlign: 'center', marginTop: 20 }}>Você não tem nenhum paciente para atender.</Text>
-)}
+                    <Text style={{ textAlign: 'center', marginTop: 20 }}>Não há consultas marcadas para o dia selecionado.</Text>
+                )}
+                {responseConsulta.length === 0 && token.role === 'Medico' && (
+                    <Text style={{ textAlign: 'center', marginTop: 20 }}>Você não tem nenhum paciente para atender.</Text>
+                )}
 
 
                 <FlatContainer
                     data={responseConsulta}
-                    
+
                     keyExtractor={item => item.consultaId}
                     renderItem={({ item }) =>
                     (
@@ -195,7 +194,7 @@ export const Home = ({ navigation}) => {
                                 role={'Medico'}
                                 time={item.consultaData}
                                 email={item.pacienteEmail}
-                                image={ { uri : item.medicoFoto } }
+                                image={{ uri: item.medicoFoto }}
                                 status={item.consultaSituacao}
                                 Name={item.medicoNome}
                                 Age={item.pacienteIdade}
@@ -213,12 +212,12 @@ export const Home = ({ navigation}) => {
                                     role={"Paciente"}
                                     time={item.consultaData}
                                     email={item.pacienteEmail}
-                                    image={ { uri : item.pacienteFoto }}
+                                    image={{ uri: item.pacienteFoto }}
                                     status={item.consultaSituacao}
                                     Name={item.pacienteNome}
                                     Age={item.pacienteIdade}
                                     medicoCrm={item.medicoCrm}
-                                    clinicaId={item.clinicaId}  
+                                    clinicaId={item.clinicaId}
                                     Priority={item.consultaPrioridade}
                                     specialty={item.especialidade}
                                     navigation={navigation}
@@ -226,8 +225,8 @@ export const Home = ({ navigation}) => {
                                     onPressShow={() => showForm(item)}
                                 />
                             ) : null
-                            
-                            )}
+
+                    )}
                 />
 
 
@@ -268,7 +267,7 @@ export const Home = ({ navigation}) => {
                 onClose={closeForm}
                 navigation={navigation}
                 status={selected}
-                foto={{uri : fotoPerfil }}
+                foto={{ uri: fotoPerfil }}
             />
 
 

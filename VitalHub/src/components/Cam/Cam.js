@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as MediaLibrary from 'expo-media-library';
-import { Camera, CameraType } from 'expo-camera';
+import { CameraView, useCameraPermissions } from 'expo-camera';
 
 import { Container, ContainerButtonCam, } from '../Container/StyleContainer';
 import { Button, ButtonFlip, ButtonPhoto } from '../Button/Button';
@@ -22,17 +22,23 @@ export default function Cam({
     showCamForm,
     ...rest }) {
     const camRef = useRef(null);
-    const [typeCam, setTypeCam] = useState(Camera.Constants.Type.front);
+    const [typeCam, setTypeCam] = useState('back');
     // Estado para armazenar a foto capturada
     const [photo, setPhoto] = useState(null)
     const [capturePhoto, setCapturePhoto] = useState(null)
     const [openModal, setOpenModal] = useState(false)
     const [lastestPhoto, setLatestPhoto] = useState(null)
+    const [permission, requestPermission] = useCameraPermissions();
+
 
 
     useEffect(() => {
         (async () => {
-            const { status: cameraStatus } = await Camera.requestCameraPermissionsAsync();
+            // const { status: cameraStatus } = useCameraPermissions();
+            if (permission && !permission.granted) {
+                await requestPermission();
+            }
+
             const { status: mediaStatus } = await MediaLibrary.requestPermissionsAsync();
         })();
     }, []);
@@ -43,6 +49,7 @@ export default function Cam({
         if (getMediaLibrary) {
             GetLastPhoto();
         }
+
     }, [visible])
 
     async function GetLastPhoto() {
@@ -80,11 +87,13 @@ export default function Cam({
             setUriPhotoForm(photo)
             setPhoto(null)
             setShowCamForm(false)
+            console.log(photo);
         }
         else {
             setUriPhoto(photo);
             setPhoto(null)
             setShowCam(false) // Fecha o modal inteiro
+            console.log(photo);
         }
     }
 
@@ -97,11 +106,7 @@ export default function Cam({
         if (!result.canceled) {
             setPhoto(result.assets[0].uri);
         }
-
-
     }
-
-
 
     return (
         <Modal
@@ -112,10 +117,9 @@ export default function Cam({
             getMediaLibrary={true}
         >
 
-
-            <Camera
+            <CameraView
                 ref={camRef}
-                type={typeCam}
+                facing={typeCam}
                 style={{ flex: 1, justifyContent: 'flex-end', }}
             >
 
@@ -125,7 +129,7 @@ export default function Cam({
                         <FontAwesome name='camera' size={30} color={'#FFF'} />
                     </ButtonFlip>
 
-                    <ButtonFlip onPress={() => setTypeCam(typeCam == CameraType.front ? CameraType.back : CameraType.front)}>
+                    <ButtonFlip onPress={() => setTypeCam(typeCam == 'back' ? 'front' : 'back')}>
                         <MaterialCommunityIcons name='camera-flip' color={'#FFF'} size={40} />
                     </ButtonFlip>
                     <ButtonFlip onPress={() => SelectImageGallery()}>
@@ -139,7 +143,7 @@ export default function Cam({
                         }
                     </ButtonFlip>
                 </ContainerButtonCam>
-            </Camera>
+            </CameraView>
 
             {/* Modal para exibir a foto capturada */}
             <Modal animationType='slide' transparent={false} visible={photo !== null} statusBarTranslucent={true}>
@@ -159,9 +163,6 @@ export default function Cam({
                     </View>
                 </Container>
             </Modal>
-
-
-
         </Modal>
     )
 }

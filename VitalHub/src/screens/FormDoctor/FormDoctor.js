@@ -52,11 +52,11 @@ export const FormDoctor = ({ navigation, route }) => {
                 'Content-Type': 'multipart/form-data'
             }
         }).then(async (response) => {
-            console.log("r", response.data);
+           
             setDescricaoExame(response.data.descricao)
 
         }).catch(err => {
-            console.log("exame", err);
+            console.log( err);
         })
     }
 
