@@ -17,7 +17,7 @@ import { ChooseDoctor } from './src/screens/ChooseDoctor/ChooseDoctor';
 import { ChooseData } from './src/screens/ChooseData/ChooseData';
 import { LocalClinic } from './src/screens/LocalClinic/LocalClinic';
 import { Main } from './src/screens/Main/Main';
-
+import 'react-native-reanimated';
 
 const Stack = createNativeStackNavigator();
 

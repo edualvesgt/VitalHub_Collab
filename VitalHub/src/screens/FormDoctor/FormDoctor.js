@@ -59,9 +59,32 @@ export const FormDoctor = ({ navigation, route }) => {
             console.log( err);
         })
     }
+    function formatarIdade(Idade){
+        const date = new Date();
+        const anoAtual = date.getFullYear();
+        const diaAtual = date.getDate();
+        const mesAtual = date.getMonth() + 1;
+    
+        const userAno = Idade.slice(0, 4)
+        const userDia = Idade.slice(8, 10)
+        const userMes = Idade.slice(5, 7)
+    
+        const userIdade = anoAtual - userAno
+        if (mesAtual < userMes) {
+            return userIdade - 1 ;
+        }
+        else {
+            if (diaAtual < userDia) {
+                return `${userIdade - 1} `;
+            }
+        }
+    
+        // return `${userDia}`;
+    }
 
     useEffect(() => {
         profileLoad()
+        console.log(route.params);
     }, [])
 
 
@@ -82,7 +105,7 @@ export const FormDoctor = ({ navigation, route }) => {
                 <ContainerForm>
 
                     <Title>{name}</Title>
-                    <TextAccount>Idade vir da Home <TextAbout>{email}</TextAbout> </TextAccount>
+                    <TextAccount>{formatarIdade(route.params.pacienteIdade)} Anos <TextAbout>{email}</TextAbout> </TextAccount>
 
                     <ScrollForm>
                         {role === 'Paciente' ? (
@@ -153,7 +176,7 @@ export const FormDoctor = ({ navigation, route }) => {
 
                                 <BoxInputForm
                                     textLabel={"Diagnostico"}
-                                    placeholder={route.params.consultaDiagnostico}
+                                    // placeholder={route.params.consultaDiagnostico}
                                 />
                                 <BoxInputForm
                                     fieldHeigth={120}

@@ -18,6 +18,7 @@ import { formatarIdade } from "../../components/Card/Card"
 import { Home } from "../Home/Home"
 import { Input, InputForm } from "../../components/Input/StyleInput"
 import { set } from "date-fns"
+import { convertDateToISO, formatarDataNascimento } from "../../utils/DateFormatter"
 
 
 export const Profile = ({ navigation, route }) => {
@@ -39,6 +40,8 @@ export const Profile = ({ navigation, route }) => {
     const [cepTemp, setCepTemp] = useState("")
     const [cidadetemp, setCidadeTemp] = useState("")
     const [emailTemp, setEmailTemp] = useState("")
+    const [cpfTemp, setCpftemp] = useState("")
+    const [dataTemp, setDataTem] = useState("")
 
     const [tokenKey, setTokenKey] = useState("")
     const [showCam, setShowCam] = useState(false)
@@ -100,8 +103,11 @@ export const Profile = ({ navigation, route }) => {
             url = "/Medicos"
         }
         try {
+           
             const response = await api.put(`${url}?idUsuario=${idUser}`, {
 
+                "dataNascimento": formattedDataNascimento,
+                "cpf": cpf,
                 "cep": cep,
                 "logradouro": endereco,
                 "email": email,
@@ -111,9 +117,10 @@ export const Profile = ({ navigation, route }) => {
             if (response.status == 200) {
                 setIsEditing(false)
             }
-        } catch (err) {
-            
-            console.log(err);
+        } catch (error) {
+            // console.log(error.response.status);
+            // console.log(error.response.data);
+            console.log(error);
         }
     }
 
@@ -163,10 +170,12 @@ export const Profile = ({ navigation, route }) => {
         setCidadeTemp(cidade);
         setEmailTemp(email);
         setIsEditing(true);
-        if (cpf) {
-            setIsEditingCpf(false);
-        } else {
+        if (cpf == null || dataNascimento == null) {
             setIsEditingCpf(true);
+            console.log("Entrou True" + cpf);
+        } else {
+            setIsEditingCpf(false);
+            console.log("Entrou false " + cpf);
         }
     };
 
@@ -176,6 +185,8 @@ export const Profile = ({ navigation, route }) => {
         setEndereco(enderecoTemp)
         setCidade(cidadetemp)
         setEmail(emailTemp)
+        setCpftemp(cpfTemp)
+        setDataTem(dataTemp)
         setIsEditing(false);
     };
 
@@ -206,14 +217,8 @@ export const Profile = ({ navigation, route }) => {
 
             <ModalTitle>
                 <Title>{name}</Title>
-                {isEditing ?
-                    <InputForm
-                        value={email}
-                        onChangeText={(txt) => {
-                            setEmail(txt.trim())
-                        }} />
-                    :
-                    <TextAccount>{email}</TextAccount>}
+
+                <TextAccount>{email}</TextAccount>
 
             </ModalTitle>
             <ScrollForm>
@@ -222,26 +227,38 @@ export const Profile = ({ navigation, route }) => {
                     role == "Paciente" && isEditing ? (
 
                         <>
-                            <BoxInputForm
-                                textLabel={"Data de Nascimento"}
-                                // placeholder={getPatient.dataNascimento ? new Date(getPatient.dataNascimento).toLocaleDateString() : ""}
-                                editable={true}
-                                keyboardType='numeric'
-                                value={dataNascimento}
 
-                            />
                             {isEditingCpf ? (
-                                <BoxInputForm
-                                    textLabel={"CPF"}
-                                    value={cpf}
-                                    editable={true}
-                                    onChangeText={(txt) => setCpf(txt)}
-                                />
+                                <>
+                                    <BoxInputForm
+                                        textLabel={"Data de Nascimento"}
+                                        keyboardType='numeric'
+                                        editable={true}
+                                        value={dataNascimento}
+                                        onChangeText={(txt) => setDataNascimento(txt)}
+
+                                    />
+                                    <BoxInputForm
+                                        textLabel={"CPF"}
+                                        value={cpf}
+                                        editable={true}
+                                        onChangeText={(txt) => setCpf(txt)}
+                                    />
+                                </>
                             ) : (
-                                <BoxInput
-                                    textLabel={"CPF"}
-                                    placeholder={formatarCPF(cpf)}
-                                />
+
+                                <>
+                                    <BoxInput
+                                        textLabel={"Data de Nascimento"}
+                                        keyboardType='numeric'
+                                        value={dataNascimento}
+
+                                    />
+                                    <BoxInput
+                                        textLabel={"CPF"}
+                                        placeholder={formatarCPF(cpf)}
+                                    />
+                                </>
                             )}
                             < BoxInputForm
                                 textLabel={"Endereco"}
@@ -374,7 +391,7 @@ export const Profile = ({ navigation, route }) => {
                 <InputContainer>
                     {isEditing ? (
                         <>
-                            <Button onPress={() => EditProfile(role)}>
+                            <Button onPress={() => EditProfile(role, formatarDataNascimento(dataNascimento))}>
                                 <ButtonTitle>Salvar</ButtonTitle>
                             </Button>
                             <Button onPress={() => cancelarEdicao()}>

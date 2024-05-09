@@ -84,7 +84,7 @@ export const Home = ({ navigation }) => {
                         consultaPrioridade: item.prioridade.prioridade,
                         consultaData: item.dataConsulta,
                         consultaDescricao: item.descricao,
-                        consultaDiagnostico: item.diagnostico,
+                        // consultaDiagnostico: item.diagnostico,
                         consultaReceita: item.receita.medicamento
                     }));
 

@@ -29,7 +29,11 @@ const ShowFormDoctor = ({
         role == "Medico" ? (
             <ShowModalContainer>
                 <ShowModalContent>
+<<<<<<< HEAD
                     <PhotoShow source={foto} />
+=======
+                    <PhotoShow source={{ uri: foto }} />
+>>>>>>> eduardo
                     <Title>{consulta.pacienteNome}</Title>
                     <TextAbout>{formatarIdade(consulta.pacienteIdade)} Anos<TextAbout> {consulta.pacienteEmail}</TextAbout> </TextAbout>
 
@@ -38,8 +42,15 @@ const ShowFormDoctor = ({
                             <ButtonTitle>{"Inserir Prontuário"}</ButtonTitle>
                         </Button>
                     ) : (
-                        <Button onPress={() => navigation.replace('FormDoctor', { consultaId: consulta.consultaId })}>
-                            <ButtonTitle>Cadastrar prontuario</ButtonTitle>
+                        <Button onPress={() => navigation.replace('FormDoctor',
+                            {
+                                consultaDescricao: consulta.consultaDescricao,
+                                // consultaDiagnostico: consulta.consultaDiagnostico,
+                                consultaReceita: consulta.consultaReceita,
+                                consultaId: consulta.consultaId,
+                                pacienteIdade : consulta.pacienteIdade
+                            })}>
+                            <ButtonTitle>Ver prontuario</ButtonTitle>
                         </Button>
                     )}
 
