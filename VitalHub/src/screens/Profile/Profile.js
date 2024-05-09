@@ -48,12 +48,15 @@ export const Profile = ({ navigation, route }) => {
     const [date, setDate] = useState("");
     const [isEditingCpf, setIsEditingCpf] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
+    const [foto, setFoto] = useState(null)
 
+    
     const [uriPhoto, setUriPhoto] = useState(null);
-    const [userUriPhoto, setUserUriPhoto] = useState(null)
+    const [newUriPhoto, setNewUriPhoto] = useState()
 
 
     async function profileLoad() {
+        
 
         const TokenDecoded = await userDecodeToken()
         setName(TokenDecoded.name);
@@ -61,37 +64,37 @@ export const Profile = ({ navigation, route }) => {
         setIdUser(TokenDecoded.jti);
         setRole(TokenDecoded.role)
 
+        if (TokenDecoded.role && TokenDecoded.jti) {
 
+            const user = TokenDecoded.role == "Medico" ? "Medicos" : "Pacientes"
+            await api.get(`/${user}/BuscarPorId?id=${TokenDecoded.jti}`)
+                .then(response => {
 
-        const user = TokenDecoded.role == "Medico" ? "Medicos" : "Pacientes"
-        await api.get(`/${user}/BuscarPorId?id=${TokenDecoded.jti}`)
-            .then(response => {
-                console.log(response.data);
-                if (user == "Pacientes") {
+                    if (user == "Pacientes") {
 
-                    setCpf(response.data.cpf)
-                    setDataNascimento(response.data.dataNascimento)
-                    setEndereco(response.data.endereco.logradouro)
-                    setCep(response.data.endereco.cep)
-                    setCidade(response.data.endereco.cidade)
-                    setUriPhoto(response.data.idNavigation.foto)
-                }
-                else {
+                        setCpf(response.data.cpf)
+                        setDataNascimento(response.data.dataNascimento)
+                        setEndereco(response.data.endereco.logradouro)
+                        setCep(response.data.endereco.cep)
+                        setCidade(response.data.endereco.cidade)
+                        setFoto(response.data.idNavigation.foto)
+                    }
+                    else {
 
-                    setCrm(response.data.crm)
-                    setDataNascimento(response.data.dataNascimento)
-                    setEndereco(response.data.endereco.logradouro)
-                    setCep(response.data.endereco.cep)
-                    setCidade(response.data.endereco.cidade)
-                    setUriPhoto(response.data.idNavigation.foto)
-                }
+                        setCrm(response.data.crm)
+                        setEndereco(response.data.endereco.logradouro)
+                        setCep(response.data.endereco.cep)
+                        setFoto(response.data.idNavigation.foto)
+                        setUriPhoto(response.data.idNavigation.foto)
+                        setCidade(response.data.endereco.cidade)
+                    }
+                    
+                })
+                .catch(err => {
 
-            })
-            .catch(err => {
-
-                console.log("erro Buscar por id", err);
-            });
-
+                    console.log("erro Buscar por id", err);
+                });
+        }
     }
 
     async function EditProfile(role) {
@@ -114,10 +117,9 @@ export const Profile = ({ navigation, route }) => {
             if (response.status == 200) {
                 setIsEditing(false)
             }
-        } catch (error) {
-            // console.log(error.response.status);
-            // console.log(error.response.data);
-            console.log(error);
+        } catch (err) {
+            
+            console.log(err);
         }
     }
 
@@ -126,17 +128,16 @@ export const Profile = ({ navigation, route }) => {
         formData.append("Image", {
             uri: uriPhoto,
             name: `image.jpg`,
-            // name: `image.jpg`,
             type: `image/jpg`
-            // type: `image/jpg`
+
         })
-        console.log(idUser);
         await api.put(`/Usuario/AlterarFotoPerfil?id=${idUser}`, formData, {
             headers: {
                 "Content-Type": "multipart/form-data"
             }
         }).then(response => {
-            console.log("Alterar foto perfil");
+            console.log(response.data, "Alterar foto perfil deu bom");
+            setFoto(uriPhoto)
         }).catch(erro => {
             console.log("Alterar foto");
             console.log(erro);
@@ -188,26 +189,24 @@ export const Profile = ({ navigation, route }) => {
         setIsEditing(false);
     };
 
-
     useEffect(() => {
-
+        
         profileLoad();
     }, [])
 
     useEffect(() => {
-        setUserUriPhoto(uriPhoto)
-
-        if (userUriPhoto) {
+        
+        if (uriPhoto != foto) {
+            
             AlterarFotoPerfil();
         }
-
     }, [uriPhoto])
 
 
     return (
         <Container>
             <HeaderContainer>
-                <HeaderPhoto source={{ uri: userUriPhoto }} />
+                <HeaderPhoto source={{ uri: foto }} />
                 <ButtonCamera onPress={() => setShowCam(true)} >
                     <MaterialCommunityIcons name="camera-plus" size={20} color={"#fbfbfb"} />
                 </ButtonCamera>

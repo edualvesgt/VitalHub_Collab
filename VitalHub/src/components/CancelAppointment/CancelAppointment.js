@@ -16,8 +16,9 @@ const CancelAppointment = ({ isOpen, onClose, navigation, consulta }) => {
     }
 
     async function atualizarSituacao(){
-        await api.put(`/Consultas/Status`, {id: consulta.consultaId, situacaoId: "canceladas"} )
-        .then(responde => {
+        
+        await api.put(`/Consultas/Status?idConsulta=${consulta.consultaId}&status=canceladas`)
+        .then(response => {
             console.log("Atualizado");
         })
         .catch(error => {
@@ -26,8 +27,8 @@ const CancelAppointment = ({ isOpen, onClose, navigation, consulta }) => {
     }
 
     useEffect(() => {
-
-    }, )
+        console.log("Consulta");
+    },[] )
     
 
     return (
@@ -37,7 +38,7 @@ const CancelAppointment = ({ isOpen, onClose, navigation, consulta }) => {
 
                 <TextForgot>Ao cancelar essa consulta, abrirá uma possível disponibilidade no seu horário, deseja mesmo cancelar essa consulta?</TextForgot>
 
-                <Button onPress = {() => {onClose;  atualizarSituacao(); console.log(consulta.consultaId);}} >
+                <Button onPress = {() => {onClose; atualizarSituacao()}} >
                     <ButtonTitle>Confirmar</ButtonTitle>
                 </Button>
                 <LinkCancel onPress = {onClose}>Cancelar</LinkCancel>

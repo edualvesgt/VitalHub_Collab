@@ -38,7 +38,7 @@ const ScheduleAppointment = ({ isOpen, onClose, navigation,type }) => {
     return (
         <ModalContainer>
             <ModalContent>
-
+          
                 <Label>Qual o nível da consulta</Label>
 
                 <RowContainerButton>

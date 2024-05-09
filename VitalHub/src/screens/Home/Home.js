@@ -42,12 +42,13 @@ export const Home = ({ navigation }) => {
         if (tokenDecoded) {
             setToken(tokenDecoded)
             setDataConsulta(moment().format('YYYY-MM-DD'))
-        }
 
+        }
 
         const user = tokenDecoded.role == "Medico" ? "Medicos" : "Pacientes"
         await api.get(`/${user}/BuscarPorId?id=${tokenDecoded.jti}`).then(response => {
             setFotoPerfil(response.data.idNavigation.foto)
+            
         }).catch(erro => {
             console.log(erro);
         })
@@ -75,7 +76,6 @@ export const Home = ({ navigation }) => {
                         medicoFoto: item.medicoClinica.medico.idNavigation.foto,
                         consultaSituacao: item.situacao.situacao,
                         clinicaId: item.medicoClinica.clinicaId,
-                        id: item.id,
                         especialidade: item.medicoClinica.medico.especialidade.especialidade1,
                         pacienteNome: item.paciente.idNavigation.nome,
                         pacienteIdade: item.paciente.dataNascimento,
@@ -86,11 +86,11 @@ export const Home = ({ navigation }) => {
                         consultaDescricao: item.descricao,
                         // consultaDiagnostico: item.diagnostico,
                         consultaReceita: item.receita.medicamento
+                    }));
 
-                    }))
-                    console.log(response.data);
+
+
                     setResponseConsulta(novaConsulta)
-                    console.log(responseConsulta);
 
                 }).catch(error => {
                     console.log(error)
@@ -186,7 +186,7 @@ export const Home = ({ navigation }) => {
                 <FlatContainer
                     data={responseConsulta}
 
-                    keyExtractor={item => item.id}
+                    keyExtractor={item => item.consultaId}
                     renderItem={({ item }) =>
                     (
                         item.consultaSituacao == selected && token.role == "Paciente" ? (
@@ -267,7 +267,7 @@ export const Home = ({ navigation }) => {
                 onClose={closeForm}
                 navigation={navigation}
                 status={selected}
-                foto={fotoPerfil}
+                foto={{ uri: fotoPerfil }}
             />
 
 
