@@ -85,7 +85,6 @@ export const Profile = ({ navigation, route }) => {
                         setEndereco(response.data.endereco.logradouro)
                         setCep(response.data.endereco.cep)
                         setFoto(response.data.idNavigation.foto)
-                        setUriPhoto(response.data.idNavigation.foto)
                         setCidade(response.data.endereco.cidade)
                     }
                     
@@ -106,7 +105,7 @@ export const Profile = ({ navigation, route }) => {
            
             const response = await api.put(`${url}?idUsuario=${idUser}`, {
 
-                "dataNascimento": formattedDataNascimento,
+                // "dataNascimento": formattedDataNascimento,
                 "cpf": cpf,
                 "cep": cep,
                 "logradouro": endereco,
@@ -126,10 +125,10 @@ export const Profile = ({ navigation, route }) => {
 
     async function AlterarFotoPerfil() {
         const formData = new FormData();
-        formData.append("Image", {
+        formData.append("Arquivo", {
             uri: uriPhoto,
-            name: `image.jpg`,
-            type: `image/jpg`
+            name: `image.${uriPhoto.split('.').pop()}`,
+            type: `image/${uriPhoto.split('.').pop()}`
 
         })
         await api.put(`/Usuario/AlterarFotoPerfil?id=${idUser}`, formData, {
@@ -191,13 +190,12 @@ export const Profile = ({ navigation, route }) => {
     };
 
     useEffect(() => {
-        
         profileLoad();
     }, [])
 
     useEffect(() => {
-        
-        if (uriPhoto != foto) {
+        console.log("fotoo ", uriPhoto);
+        if (uriPhoto != "") {
             
             AlterarFotoPerfil();
         }

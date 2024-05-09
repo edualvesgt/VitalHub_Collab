@@ -38,7 +38,6 @@ export const Login = ({ navigation }) => {
 
         try {
             const response = await api.post('/Login', {
-<<<<<<< HEAD
                 // email: 'eduardo.silva@gmail.com',
                 // senha: 'eduardo.silva@gmail.com'
                 email: 'gabriel.victor@gmail.com',
@@ -49,14 +48,6 @@ export const Login = ({ navigation }) => {
             await AsyncStorage.setItem("token", JSON.stringify(response.data))
             // console.log(response);
             navigation.replace("Main")
-=======
-                email: email,
-                senha: senha
-            });
-
-            await AsyncStorage.setItem("token", JSON.stringify(response.data));
-            navigation.replace("Main");
->>>>>>> eduardo
         } catch (error) {
             console.log(error);
             setDisabled(false);
