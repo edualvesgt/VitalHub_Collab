@@ -18,6 +18,7 @@ import { formatarIdade } from "../../components/Card/Card"
 import { Home } from "../Home/Home"
 import { Input, InputForm } from "../../components/Input/StyleInput"
 import { set } from "date-fns"
+import { convertDateToISO, formatarDataNascimento } from "../../utils/DateFormatter"
 
 
 export const Profile = ({ navigation, route }) => {
@@ -99,9 +100,10 @@ export const Profile = ({ navigation, route }) => {
             url = "/Medicos"
         }
         try {
+           
             const response = await api.put(`${url}?idUsuario=${idUser}`, {
 
-                "dataNascimento": dataNascimento,
+                "dataNascimento": formattedDataNascimento,
                 "cpf": cpf,
                 "cep": cep,
                 "logradouro": endereco,
@@ -113,8 +115,9 @@ export const Profile = ({ navigation, route }) => {
                 setIsEditing(false)
             }
         } catch (error) {
-            console.log(error.response.status);
-            console.log(error.response.data);
+            // console.log(error.response.status);
+            // console.log(error.response.data);
+            console.log(error);
         }
     }
 
@@ -214,14 +217,8 @@ export const Profile = ({ navigation, route }) => {
 
             <ModalTitle>
                 <Title>{name}</Title>
-                {isEditing ?
-                    <InputForm
-                        value={email}
-                        onChangeText={(txt) => {
-                            setEmail(txt.trim())
-                        }} />
-                    :
-                    <TextAccount>{email}</TextAccount>}
+
+                <TextAccount>{email}</TextAccount>
 
             </ModalTitle>
             <ScrollForm>
@@ -394,7 +391,7 @@ export const Profile = ({ navigation, route }) => {
                 <InputContainer>
                     {isEditing ? (
                         <>
-                            <Button onPress={() => EditProfile(role)}>
+                            <Button onPress={() => EditProfile(role, formatarDataNascimento(dataNascimento))}>
                                 <ButtonTitle>Salvar</ButtonTitle>
                             </Button>
                             <Button onPress={() => cancelarEdicao()}>
