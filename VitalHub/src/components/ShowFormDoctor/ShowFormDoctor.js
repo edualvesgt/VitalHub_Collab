@@ -6,6 +6,7 @@ import { Title } from "../Title/StyleTitle";
 import { PhotoShow, ShowModalContainer, ShowModalContent } from "./StyleShowFormDoctor";
 import { formatarIdade } from "../Card/Card";
 
+
 const ShowFormDoctor = ({
     isOpen,
     onClose,
@@ -35,7 +36,7 @@ const ShowFormDoctor = ({
                 <ShowModalContent>
                     <PhotoShow source={{uri : consulta.pacienteFoto}} />
                     <Title>{consulta.pacienteNome}</Title>
-                    <TextAbout>{formatarIdade(consulta.image)} Anos<TextAbout> {consulta.pacienteEmail}</TextAbout> </TextAbout>
+                    <TextAbout>{formatarIdade(consulta.pacienteIdade)} Anos<TextAbout> {consulta.pacienteEmail}</TextAbout> </TextAbout>
 
                     {status == "agendadas" ? (
                         <Button onPress={() => { navigation.replace('FormDoctor', { clinica: consulta.clinicaId }) }}>
@@ -49,7 +50,9 @@ const ShowFormDoctor = ({
                                 consultaReceita: consulta.consultaReceita,
                                 consultaId: consulta.consultaId,
                                 pacienteIdade : consulta.pacienteIdade,
-                                pacienteFoto : consulta.pacienteFoto
+                                pacienteFoto : consulta.pacienteFoto,
+                                nome: consulta.pacienteNome,
+                                email : consulta.pacienteEmail
                             })}>
                             <ButtonTitle>Ver prontuario</ButtonTitle>
                         </Button>

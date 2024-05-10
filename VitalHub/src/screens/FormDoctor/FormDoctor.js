@@ -104,8 +104,8 @@ export const FormDoctor = ({ navigation, route }) => {
 
                 <ContainerForm>
 
-                    <Title>{name}</Title>
-                    <TextAccount>{formatarIdade(route.params.pacienteIdade)} Anos <TextAbout>{email}</TextAbout> </TextAccount>
+                    <Title>{route.params.nome}</Title>
+                    <TextAccount>{formatarIdade(route.params.pacienteIdade)} Anos <TextAbout>{route.params.email}</TextAbout> </TextAccount>
 
                     <ScrollForm>
                         {role === 'Paciente' ? (

@@ -8,8 +8,18 @@ background-color: #FBFBFB;
 export const ContainerClinic = styled.SafeAreaView`
 flex:1;
 align-items:center;
+justify-content: center;
 background-color: white;
 `
+
+export const ContentClinic = styled.View`
+    width: 100%;
+    height: 90%;
+    /* border: 1px solid black; */
+    align-items: center;
+    padding-bottom: 10% ;
+`
+
 export const CheckEmail = styled.View`
 margin-top: 20px;
 flex-direction: row;

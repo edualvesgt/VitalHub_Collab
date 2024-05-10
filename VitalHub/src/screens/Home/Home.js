@@ -190,7 +190,7 @@ export const Home = ({ navigation }) => {
                         <Text style={{ textAlign: 'center', marginTop: 20 }}>Você não tem nenhum paciente para atender.</Text>
 
                     ) : isLoading && token.role === 'Paciente' ?
-                        <ActivityIndicator /> : null
+                        <ActivityIndicator style={{marginTop: 18}}/> : null
                 }
 
                 {
@@ -200,7 +200,7 @@ export const Home = ({ navigation }) => {
                         <Text style={{ textAlign: 'center', marginTop: 20 }}>Você não tem nenhum paciente para atender.</Text>
 
                     ) : isLoading && token.role === 'Medico' ?
-                        <ActivityIndicator /> : null
+                        <ActivityIndicator style={{marginTop: 18}} /> : null
                 }
 
 

@@ -1,6 +1,6 @@
 
 import CardClinic from "../../components/CardClinic/CardClinic"
-import { ContainerClinic, FlatListClinic } from "../../components/Container/StyleContainer"
+import { ContainerClinic, ContentClinic, FlatListClinic } from "../../components/Container/StyleContainer"
 import { Title } from "../../components/Title/StyleTitle"
 import { Button, ButtonTitle } from "../../components/Button/Button"
 import { LinkCancel } from "../../components/Links/StyleLink"
@@ -20,8 +20,7 @@ export const ChooseClinic = ({ navigation, route }) => {
         await api.get(`/Clinica/BuscarPorCidade?cidade=${route.params.agendamento.localizacao}`)
             .then(response => {
                 setListClinic(response.data)
-                console.log("Oiaa a lista das clinicas ");
-                console.log(response.data);
+                
             }).catch(error => {
                 console.log(error);
                 console.log(error.response.data);
@@ -31,8 +30,8 @@ export const ChooseClinic = ({ navigation, route }) => {
         if (select !== clinic.nomeFantasia) {
             setSelected(clinic.nomeFantasia);
             setClinica({
-                clinicaId : clinic.id,
-                clinicaLabel : clinic.nomeFantasia,
+                clinicaId: clinic.id,
+                clinicaLabel: clinic.nomeFantasia,
             });
         } else {
             setSelected('');
@@ -42,10 +41,10 @@ export const ChooseClinic = ({ navigation, route }) => {
 
     function handleConfirm() {
         navigation.navigate('ChooseDoctor', {
-           agendamento : {
-            ...route.params.agendamento,
-            ...clinica
-           }
+            agendamento: {
+                ...route.params.agendamento,
+                ...clinica
+            }
         })
     }
 
@@ -55,28 +54,31 @@ export const ChooseClinic = ({ navigation, route }) => {
     }, [])
     return (
         <ContainerClinic>
-            <Title>Selecionar Clinica </Title>
+            <ContentClinic>
+
+                <Title>Selecionar Clinica </Title>
 
 
-            <FlatListClinic
-                data={listClinic}
-                keyExtractor={(item) => item.id}
-                renderItem={({ item }) =>
+                <FlatListClinic
+                    data={listClinic}
+                    keyExtractor={(item) => item.id}
+                    renderItem={({ item }) =>
 
-                    <CardClinic
-                        select={select}
-                        onPress={() => { handleSelectClinic(item) }}
-                        // review={item.review}
-                        location={item.endereco.logradouro}
-                        number={item.endereco.numero}
-                        name={item.nomeFantasia}
-                        time={item.time}
-                    />} />
+                        <CardClinic
+                            select={select}
+                            onPress={() => { handleSelectClinic(item) }}
+                            // review={item.review}
+                            location={item.endereco.logradouro}
+                            number={item.endereco.numero}
+                            name={item.nomeFantasia}
+                            time={item.time}
+                        />} />
 
-            <Button onPress={() => handleConfirm()}>
-                <ButtonTitle >Continuar</ButtonTitle>
-            </Button>
-            <LinkCancel onPress={() => navigation.navigate('Main')}> Cancelar </LinkCancel>
+                <Button onPress={() => handleConfirm()}>
+                    <ButtonTitle >Continuar</ButtonTitle>
+                </Button>
+                <LinkCancel onPress={() => navigation.navigate('Main')}> Cancelar </LinkCancel>
+            </ContentClinic>
         </ContainerClinic>
     )
 }
