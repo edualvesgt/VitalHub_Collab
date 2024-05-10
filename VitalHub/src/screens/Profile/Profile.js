@@ -50,13 +50,13 @@ export const Profile = ({ navigation, route }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [foto, setFoto] = useState(null)
 
-    
+
     const [uriPhoto, setUriPhoto] = useState(null);
     const [newUriPhoto, setNewUriPhoto] = useState()
 
 
     async function profileLoad() {
-        
+
 
         const TokenDecoded = await userDecodeToken()
         setName(TokenDecoded.name);
@@ -87,7 +87,7 @@ export const Profile = ({ navigation, route }) => {
                         setFoto(response.data.idNavigation.foto)
                         setCidade(response.data.endereco.cidade)
                     }
-                    
+
                 })
                 .catch(err => {
 
@@ -102,7 +102,7 @@ export const Profile = ({ navigation, route }) => {
             url = "/Medicos"
         }
         try {
-           
+
             const response = await api.put(`${url}?idUsuario=${idUser}`, {
 
                 // "dataNascimento": formattedDataNascimento,
@@ -116,14 +116,16 @@ export const Profile = ({ navigation, route }) => {
             if (response.status == 200) {
                 setIsEditing(false)
             }
-        } catch (error) {
-            // console.log(error.response.status);
-            // console.log(error.response.data);
-            console.log(error);
+
+        } catch (err) {
+
+            console.log(err);
         }
     }
 
     async function AlterarFotoPerfil() {
+
+
         const formData = new FormData();
         formData.append("Arquivo", {
             uri: uriPhoto,
@@ -139,9 +141,9 @@ export const Profile = ({ navigation, route }) => {
             console.log(response.data, "Alterar foto perfil deu bom");
             setFoto(uriPhoto)
         }).catch(erro => {
-            console.log("Alterar foto");
-            console.log(erro);
+            console.log("Alteração de foto falhou", erro);
         })
+
     }
 
 
@@ -194,9 +196,9 @@ export const Profile = ({ navigation, route }) => {
     }, [])
 
     useEffect(() => {
-        console.log("fotoo ", uriPhoto);
+
         if (uriPhoto != "") {
-            
+
             AlterarFotoPerfil();
         }
     }, [uriPhoto])

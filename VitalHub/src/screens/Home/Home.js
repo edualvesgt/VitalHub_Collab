@@ -13,6 +13,7 @@ import { Container, FlatContainer, RowContainer } from "../../components/Contain
 import { Header } from "../../components/Header/Header";
 
 import { StethoscopeView } from "./StyleHome"
+
 // Importa o componente Card que será usado para exibir os detalhes de cada consulta
 import Card from "../../components/Card/Card";
 import CancelAppointment from "../../components/CancelAppointment/CancelAppointment";
@@ -21,7 +22,7 @@ import ScheduleAppointment from "../../components/ScheduleAppointment/ScheduleAp
 import api from "../../services/services";
 import { userDecodeToken } from "../../utils/Auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Text } from "react-native";
+import { ActivityIndicator, Text } from "react-native";
 
 export const Home = ({ navigation }) => {
 
@@ -35,6 +36,8 @@ export const Home = ({ navigation }) => {
     const [consultaSelecionada, setConsultaSelecionada] = useState(null)
     const [fotoPerfil, setFotoPerfil] = useState(null)
     const [fotoCard, setFotoCard] = useState(null)
+    const [isLoading, setIsLoading] = useState()
+    const [responseLength, setResponseLength] = useState()
 
     async function profileLoad() {
         const tokenDecoded = await userDecodeToken();
@@ -48,7 +51,7 @@ export const Home = ({ navigation }) => {
         const user = tokenDecoded.role == "Medico" ? "Medicos" : "Pacientes"
         await api.get(`/${user}/BuscarPorId?id=${tokenDecoded.jti}`).then(response => {
             setFotoPerfil(response.data.idNavigation.foto)
-            
+
         }).catch(erro => {
             console.log(erro);
         })
@@ -64,11 +67,12 @@ export const Home = ({ navigation }) => {
     }
 
     async function getConsultas() {
+        setIsLoading(true)
         try {
             const url = (token.role == 'Medico' ? 'Medicos' : 'Pacientes')
-
             await api.get(`/${url}/BuscarPorData?data=${dataConsulta}&id=${token.jti}`)
                 .then(response => {
+
                     const novaConsulta = response.data.map(item => ({
                         consultaId: item.id,
                         medicoNome: item.medicoClinica.medico.idNavigation.nome,
@@ -84,21 +88,26 @@ export const Home = ({ navigation }) => {
                         consultaPrioridade: item.prioridade.prioridade,
                         consultaData: item.dataConsulta,
                         consultaDescricao: item.descricao,
-                        // consultaDiagnostico: item.diagnostico,
+                        consultaDiagnostico: item.diagnostico,
                         consultaReceita: item.receita.medicamento
                     }));
 
 
 
                     setResponseConsulta(novaConsulta)
+                    setIsLoading(false)
+                    setResponseLength(false)
 
                 }).catch(error => {
                     console.log(error)
+                    setIsLoading(false)
+                    setResponseLength(true)
                 })
 
         } catch (error) {
             console.log(error)
         }
+
     }
 
     useEffect(() => {
@@ -175,37 +184,54 @@ export const Home = ({ navigation }) => {
                     />
                 </RowContainer>
 
-                {responseConsulta.length === 0 && token.role === 'Paciente' && (
-                    <Text style={{ textAlign: 'center', marginTop: 20 }}>Não há consultas marcadas para o dia selecionado.</Text>
-                )}
-                {responseConsulta.length === 0 && token.role === 'Medico' && (
-                    <Text style={{ textAlign: 'center', marginTop: 20 }}>Você não tem nenhum paciente para atender.</Text>
-                )}
+                {
+                    responseConsulta.length === 0 && token.role === 'Paciente' && responseLength == false ? (
+
+                        <Text style={{ textAlign: 'center', marginTop: 20 }}>Você não tem nenhum paciente para atender.</Text>
+
+                    ) : isLoading && token.role === 'Paciente' ?
+                        <ActivityIndicator /> : null
+                }
+
+                {
+
+                    responseConsulta.length === 0 && token.role === 'Medico' && responseLength == false ? (
+
+                        <Text style={{ textAlign: 'center', marginTop: 20 }}>Você não tem nenhum paciente para atender.</Text>
+
+                    ) : isLoading && token.role === 'Medico' ?
+                        <ActivityIndicator /> : null
+                }
+
+
 
 
                 <FlatContainer
                     data={responseConsulta}
-
+                    showsVerticalScrollIndicator={false}
                     keyExtractor={item => item.consultaId}
                     renderItem={({ item }) =>
                     (
                         item.consultaSituacao == selected && token.role == "Paciente" ? (
-                            <Card
-                                role={'Medico'}
-                                time={item.consultaData}
-                                email={item.pacienteEmail}
-                                image={{ uri: item.medicoFoto }}
-                                status={item.consultaSituacao}
-                                Name={item.medicoNome}
-                                Age={item.pacienteIdade}
-                                medicoCrm={item.medicoCrm}
-                                clinicaId={item.clinicaId}
-                                Priority={item.consultaPrioridade}
-                                specialty={item.especialidade}
-                                navigation={navigation}
-                                onPressCard={() => openModal()}
-                                onPressShow={() => showForm(item)}
-                            />
+                            <>
+                                <Card
+                                    role={'Medico'}
+                                    time={item.consultaData}
+                                    email={item.pacienteEmail}
+                                    image={{ uri: item.medicoFoto }}
+                                    status={item.consultaSituacao}
+                                    Name={item.medicoNome}
+                                    Age={item.pacienteIdade}
+                                    medicoCrm={item.medicoCrm}
+                                    clinicaId={item.clinicaId}
+                                    Priority={item.consultaPrioridade}
+                                    specialty={item.especialidade}
+                                    navigation={navigation}
+                                    onPressCard={() => openModal()}
+                                    onPressShow={() => showForm(item)}
+                                />
+                            </>
+
                         ) : item.consultaSituacao == selected && token.role == "Medico" ?
                             (
                                 <Card

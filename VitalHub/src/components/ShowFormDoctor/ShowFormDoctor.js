@@ -25,13 +25,17 @@ const ShowFormDoctor = ({
 
     const [profile, setProfile] = useState("Medico");
 
+    useEffect(() => {
+        console.log(consulta.medicoFoto);
+    }, [])
+
     return (
         role == "Medico" ? (
             <ShowModalContainer>
                 <ShowModalContent>
-                    <PhotoShow source={foto} />
+                    <PhotoShow source={{uri : consulta.pacienteFoto}} />
                     <Title>{consulta.pacienteNome}</Title>
-                    <TextAbout>{formatarIdade(consulta.pacienteIdade)} Anos<TextAbout> {consulta.pacienteEmail}</TextAbout> </TextAbout>
+                    <TextAbout>{formatarIdade(consulta.image)} Anos<TextAbout> {consulta.pacienteEmail}</TextAbout> </TextAbout>
 
                     {status == "agendadas" ? (
                         <Button onPress={() => { navigation.replace('FormDoctor', { clinica: consulta.clinicaId }) }}>
@@ -41,7 +45,7 @@ const ShowFormDoctor = ({
                         <Button onPress={() => navigation.replace('FormDoctor',
                             {
                                 consultaDescricao: consulta.consultaDescricao,
-                                // consultaDiagnostico: consulta.consultaDiagnostico,
+                                consultaDiagnostico: consulta.consultaDiagnostico,
                                 consultaReceita: consulta.consultaReceita,
                                 consultaId: consulta.consultaId,
                                 pacienteIdade : consulta.pacienteIdade
@@ -56,7 +60,7 @@ const ShowFormDoctor = ({
         ) : (
             <ShowModalContainer>
                 <ShowModalContent>
-                    <PhotoShow source={consulta.medicoFoto} />
+                    <PhotoShow source={{uri : consulta.medicoFoto}} />
                     <Title>Dr. {consulta.medicoNome}</Title>
                     <TextAbout>CRM {consulta.medicoCrm} <TextAbout> {consulta.especialidade}</TextAbout> </TextAbout>
 

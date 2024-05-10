@@ -176,7 +176,7 @@ export const FormDoctor = ({ navigation, route }) => {
 
                                 <BoxInputForm
                                     textLabel={"Diagnostico"}
-                                    // placeholder={route.params.consultaDiagnostico}
+                                    placeholder={route.params.consultaDiagnostico}
                                 />
                                 <BoxInputForm
                                     fieldHeigth={120}
