@@ -52,34 +52,33 @@ export const FormDoctor = ({ navigation, route }) => {
                 'Content-Type': 'multipart/form-data'
             }
         }).then(async (response) => {
-           
+
             setDescricaoExame(response.data.descricao)
 
         }).catch(err => {
-            console.log( err);
+            console.log(err);
         })
     }
-    function formatarIdade(Idade){
-        
+    function formatarIdade(Idade) {
         const date = new Date();
         const anoAtual = date.getFullYear();
         const diaAtual = date.getDate();
         const mesAtual = date.getMonth() + 1;
-    
+
         const userAno = Idade.slice(0, 4)
         const userDia = Idade.slice(8, 10)
         const userMes = Idade.slice(5, 7)
-    
+
         const userIdade = anoAtual - userAno
         if (mesAtual < userMes) {
-            return userIdade - 1 ;
+            return userIdade - 1;
         }
         else {
             if (diaAtual < userDia) {
                 return `${userIdade - 1} `;
             }
         }
-    
+
         // return `${userDia}`;
     }
 
@@ -100,7 +99,7 @@ export const FormDoctor = ({ navigation, route }) => {
         (role != null ? (
             <Container>
                 <HeaderContainer>
-                    <HeaderPhoto source={require("../../assets/PhotoProfile.png")} />
+                    <HeaderPhoto source={{uri: route.params.pacienteFoto}} />
                 </HeaderContainer>
 
                 <ContainerForm>
@@ -114,23 +113,21 @@ export const FormDoctor = ({ navigation, route }) => {
                                 <BoxInputForm
                                     fieldHeigth={120}
                                     textLabel={"Descricao"}
-                                    placeholder={descricaoExame}
+                                    placeholder={route.params.consultaDescricao}
                                 />
 
                                 <BoxInputForm
                                     textLabel={"Diagnostico"}
-                                    placeholder={""}
+                                    placeholder={route.params.consultaDiagnostico}
                                 />
                                 <BoxInputForm
                                     fieldHeigth={120}
                                     textLabel={"Prescricao Medica"}
-                                    placeholder={""}
+                                    placeholder={route.params.consultaReceita}
+
                                 />
 
-                                <BoxInputForm
-                                    fieldHeigth={120}
-                                    placeholder={"Resultado do Exame "}
-                                />
+                               
 
                                 <BoxInputPhoto
                                     fieldHeigth={120}
@@ -138,6 +135,7 @@ export const FormDoctor = ({ navigation, route }) => {
                                     placeholder={"Nenhuma Foto"}
                                     textLabel={"Exames Medicos"}
                                     source={{ uri: uriPhotoForm }}
+                                    editable={false}
                                 />
 
                                 <ViewRow>
@@ -148,19 +146,15 @@ export const FormDoctor = ({ navigation, route }) => {
                                         <ButtonTitle>ENTRAR</ButtonTitle>
                                     </ButtonSendPhoto>
 
-                                    <TransparentContainer>
+                                    {/* <TransparentContainer>
                                         <TextRed>Cancelar</TextRed>
-                                    </TransparentContainer>
+                                    </TransparentContainer> */}
                                 </ViewRow>
                                 <HR />
 
                                 <InputContainer>
                                     <Button>
                                         <ButtonTitle>Salvar</ButtonTitle>
-                                    </Button>
-
-                                    <Button>
-                                        <ButtonTitle onPress={() => navigation.navigate('EditFormDoctor')}>Editar</ButtonTitle>
                                     </Button>
 
                                     <LinkCancel onPress={() => navigation.replace('Home')}>Cancelar</LinkCancel>
@@ -184,11 +178,25 @@ export const FormDoctor = ({ navigation, route }) => {
                                     textLabel={"Prescricao Medica"}
                                     placeholder={route.params.consultaReceita}
                                 />
+
+                                <ViewRow>
+                                    <Button>
+                                        <ButtonTitle>Salvar</ButtonTitle>
+                                    </Button>
+
+                                    <Button>
+                                        <ButtonTitle onPress={() => navigation.navigate('EditFormDoctor')}>Editar</ButtonTitle>
+                                    </Button>
+
+                                    <LinkCancel onPress={() => navigation.replace('Home')}>Cancelar</LinkCancel>
+
+                                </ViewRow>
+                                <HR />
                             </>
                         )}
 
 
-                        <LinkCancel style={{ textAlign: 'center' }} onPress={() => navigation.replace('Main')}>Voltar</LinkCancel>
+                        {/* <LinkCancel style={{ textAlign: 'center' }} onPress={() => navigation.replace('Main')}>Voltar</LinkCancel> */}
                     </ScrollForm>
                 </ContainerForm>
 

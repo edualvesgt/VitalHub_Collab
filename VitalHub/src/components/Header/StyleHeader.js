@@ -7,6 +7,7 @@ export const HeaderContainer = styled(LinearGradient).attrs({
     end: { x: 1, y: 0 }
 })`
 height:20%;
+width: 100%;
 border-radius:0px 0px 25px 25px;
 flex-direction: row;
 justify-content:space-between;

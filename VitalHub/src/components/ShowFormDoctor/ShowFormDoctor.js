@@ -48,7 +48,8 @@ const ShowFormDoctor = ({
                                 consultaDiagnostico: consulta.consultaDiagnostico,
                                 consultaReceita: consulta.consultaReceita,
                                 consultaId: consulta.consultaId,
-                                pacienteIdade : consulta.pacienteIdade
+                                pacienteIdade : consulta.pacienteIdade,
+                                pacienteFoto : consulta.pacienteFoto
                             })}>
                             <ButtonTitle>Ver prontuario</ButtonTitle>
                         </Button>
@@ -74,7 +75,10 @@ const ShowFormDoctor = ({
                                 consultaDescricao: consulta.consultaDescricao,
                                 consultaDiagnostico: consulta.consultaDiagnostico,
                                 consultaReceita: consulta.consultaReceita,
-                                consultaId: consulta.consultaId
+                                consultaId: consulta.consultaId,
+                                pacienteIdade : consulta.pacienteIdade,
+                                pacienteFoto : consulta.pacienteFoto
+
                             })}>
                             <ButtonTitle>Ver Prontuário</ButtonTitle>
                         </Button>
