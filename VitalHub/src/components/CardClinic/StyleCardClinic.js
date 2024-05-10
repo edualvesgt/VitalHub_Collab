@@ -1,13 +1,12 @@
 import styled from "styled-components"
 
 export const CardBoxClinic = styled.TouchableOpacity`
-box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1); /* Adiciona box-shadow na parte inferior */
+box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);     /* Adiciona box-shadow na parte inferior */
 background-color: #FFFFFF;
 width: 90%;
 height: 84px;
 padding: 15px;
 margin-top: 20px;
-
 flex-direction: row;
 justify-content:space-between;
 align-items:center;

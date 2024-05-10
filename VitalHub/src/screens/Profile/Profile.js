@@ -3,7 +3,7 @@ import { useEffect, useId, useState } from "react"
 import { BoxInput, BoxInputForm } from "../../components/BoxInput/BoxInput"
 import { Button, ButtonTitle } from "../../components/Button/Button"
 import { Container, DoubleView, InputContainer } from "../../components/Container/StyleContainer"
-import { HeaderContainer, HeaderContent, HeaderPhoto } from "../../components/HeaderPhoto/HeaderPhoto"
+import { HeaderContainer, HeaderPhoto } from "../../components/HeaderPhoto/HeaderPhoto"
 import { ModalTitle } from "../../components/Modal/Modal"
 import { TextAccount } from "../../components/Text/Text"
 import { Title } from "../../components/Title/StyleTitle"
@@ -12,13 +12,7 @@ import { userDecodeToken } from "../../utils/Auth"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import api, { GetPacient } from "../../services/services"
 import { MaterialCommunityIcons } from '@expo/vector-icons'
-import { Text, TouchableOpacity } from "react-native"
 import Cam from "../../components/Cam/Cam"
-import { formatarIdade } from "../../components/Card/Card"
-import { Home } from "../Home/Home"
-import { Input, InputForm } from "../../components/Input/StyleInput"
-import { set } from "date-fns"
-import { convertDateToISO, formatarDataNascimento } from "../../utils/DateFormatter"
 
 
 export const Profile = ({ navigation, route }) => {
@@ -55,6 +49,21 @@ export const Profile = ({ navigation, route }) => {
     const [newUriPhoto, setNewUriPhoto] = useState()
 
 
+    const formatarDataNascimento = (dataNascimento) => {
+        // Verifica se a data de nascimento está no formato esperado
+        if (!dataNascimento || !dataNascimento.includes('-')) {
+            return ''; // Retorna uma string vazia se a data for inválida
+        }
+    
+        // Extrai o dia, mês e ano da data
+        const partes = dataNascimento.split('-');
+        const ano = partes[0];
+        const mes = partes[1];
+        const dia = partes[2] ? partes[2].substr(0, 2) : '';
+    
+        // Retorna a data formatada
+        return `${dia}/${mes}/${ano}`;
+    };
     async function profileLoad() {
 
 
@@ -295,7 +304,7 @@ export const Profile = ({ navigation, route }) => {
                         <>
                             <BoxInput
                                 textLabel={"Data de Nascimento"}
-                                placeholder={dataNascimento}
+                                placeholder={formatarDataNascimento(dataNascimento)}
                             />
                             <BoxInput
                                 textLabel={"CPF"}

@@ -60,6 +60,7 @@ export const FormDoctor = ({ navigation, route }) => {
         })
     }
     function formatarIdade(Idade){
+        
         const date = new Date();
         const anoAtual = date.getFullYear();
         const diaAtual = date.getDate();
