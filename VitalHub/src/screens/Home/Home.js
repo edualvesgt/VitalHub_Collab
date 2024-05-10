@@ -13,6 +13,7 @@ import { Container, FlatContainer, RowContainer } from "../../components/Contain
 import { Header } from "../../components/Header/Header";
 
 import { StethoscopeView } from "./StyleHome"
+
 // Importa o componente Card que será usado para exibir os detalhes de cada consulta
 import Card from "../../components/Card/Card";
 import CancelAppointment from "../../components/CancelAppointment/CancelAppointment";
@@ -84,7 +85,7 @@ export const Home = ({ navigation }) => {
                         consultaPrioridade: item.prioridade.prioridade,
                         consultaData: item.dataConsulta,
                         consultaDescricao: item.descricao,
-                        // consultaDiagnostico: item.diagnostico,
+                        consultaDiagnostico: item.diagnostico,
                         consultaReceita: item.receita.medicamento
                     }));
 

@@ -41,7 +41,7 @@ const ShowFormDoctor = ({
                         <Button onPress={() => navigation.replace('FormDoctor',
                             {
                                 consultaDescricao: consulta.consultaDescricao,
-                                // consultaDiagnostico: consulta.consultaDiagnostico,
+                                consultaDiagnostico: consulta.consultaDiagnostico,
                                 consultaReceita: consulta.consultaReceita,
                                 consultaId: consulta.consultaId,
                                 pacienteIdade : consulta.pacienteIdade
