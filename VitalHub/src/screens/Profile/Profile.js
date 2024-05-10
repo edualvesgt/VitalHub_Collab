@@ -125,14 +125,16 @@ export const Profile = ({ navigation, route }) => {
             if (response.status == 200) {
                 setIsEditing(false)
             }
-        } catch (error) {
-            // console.log(error.response.status);
-            // console.log(error.response.data);
-            console.log(error);
+
+        } catch (err) {
+
+            console.log(err);
         }
     }
 
     async function AlterarFotoPerfil() {
+
+
         const formData = new FormData();
         formData.append("Arquivo", {
             uri: uriPhoto,
@@ -148,9 +150,9 @@ export const Profile = ({ navigation, route }) => {
             console.log(response.data, "Alterar foto perfil deu bom");
             setFoto(uriPhoto)
         }).catch(erro => {
-            console.log("Alterar foto");
-            console.log(erro);
+            console.log("Alteração de foto falhou", erro);
         })
+
     }
 
 
@@ -203,7 +205,7 @@ export const Profile = ({ navigation, route }) => {
     }, [])
 
     useEffect(() => {
-        console.log("fotoo ", uriPhoto);
+
         if (uriPhoto != "") {
 
             AlterarFotoPerfil();
