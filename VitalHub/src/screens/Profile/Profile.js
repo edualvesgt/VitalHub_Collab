@@ -3,7 +3,7 @@ import { useEffect, useId, useState } from "react"
 import { BoxInput, BoxInputForm } from "../../components/BoxInput/BoxInput"
 import { Button, ButtonTitle } from "../../components/Button/Button"
 import { Container, DoubleView, InputContainer } from "../../components/Container/StyleContainer"
-import { HeaderContainer, HeaderContent, HeaderPhoto } from "../../components/HeaderPhoto/HeaderPhoto"
+import { HeaderContainer, HeaderPhoto } from "../../components/HeaderPhoto/HeaderPhoto"
 import { ModalTitle } from "../../components/Modal/Modal"
 import { TextAccount } from "../../components/Text/Text"
 import { Title } from "../../components/Title/StyleTitle"
@@ -12,13 +12,7 @@ import { userDecodeToken } from "../../utils/Auth"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import api, { GetPacient } from "../../services/services"
 import { MaterialCommunityIcons } from '@expo/vector-icons'
-import { Text, TouchableOpacity } from "react-native"
 import Cam from "../../components/Cam/Cam"
-import { formatarIdade } from "../../components/Card/Card"
-import { Home } from "../Home/Home"
-import { Input, InputForm } from "../../components/Input/StyleInput"
-import { set } from "date-fns"
-import { convertDateToISO, formatarDataNascimento } from "../../utils/DateFormatter"
 
 
 export const Profile = ({ navigation, route }) => {
@@ -50,13 +44,28 @@ export const Profile = ({ navigation, route }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [foto, setFoto] = useState(null)
 
-    
+
     const [uriPhoto, setUriPhoto] = useState(null);
     const [newUriPhoto, setNewUriPhoto] = useState()
 
 
+    const formatarDataNascimento = (dataNascimento) => {
+        // Verifica se a data de nascimento está no formato esperado
+        if (!dataNascimento || !dataNascimento.includes('-')) {
+            return ''; // Retorna uma string vazia se a data for inválida
+        }
+    
+        // Extrai o dia, mês e ano da data
+        const partes = dataNascimento.split('-');
+        const ano = partes[0];
+        const mes = partes[1];
+        const dia = partes[2] ? partes[2].substr(0, 2) : '';
+    
+        // Retorna a data formatada
+        return `${dia}/${mes}/${ano}`;
+    };
     async function profileLoad() {
-        
+
 
         const TokenDecoded = await userDecodeToken()
         setName(TokenDecoded.name);
@@ -85,10 +94,9 @@ export const Profile = ({ navigation, route }) => {
                         setEndereco(response.data.endereco.logradouro)
                         setCep(response.data.endereco.cep)
                         setFoto(response.data.idNavigation.foto)
-                        setUriPhoto(response.data.idNavigation.foto)
                         setCidade(response.data.endereco.cidade)
                     }
-                    
+
                 })
                 .catch(err => {
 
@@ -103,10 +111,10 @@ export const Profile = ({ navigation, route }) => {
             url = "/Medicos"
         }
         try {
-           
+
             const response = await api.put(`${url}?idUsuario=${idUser}`, {
 
-                "dataNascimento": formattedDataNascimento,
+                // "dataNascimento": formattedDataNascimento,
                 "cpf": cpf,
                 "cep": cep,
                 "logradouro": endereco,
@@ -117,18 +125,19 @@ export const Profile = ({ navigation, route }) => {
             if (response.status == 200) {
                 setIsEditing(false)
             }
-        } catch (err) {
-            
-            console.log(err);
+        } catch (error) {
+            // console.log(error.response.status);
+            // console.log(error.response.data);
+            console.log(error);
         }
     }
 
     async function AlterarFotoPerfil() {
         const formData = new FormData();
-        formData.append("Image", {
+        formData.append("Arquivo", {
             uri: uriPhoto,
-            name: `image.jpg`,
-            type: `image/jpg`
+            name: `image.${uriPhoto.split('.').pop()}`,
+            type: `image/${uriPhoto.split('.').pop()}`
 
         })
         await api.put(`/Usuario/AlterarFotoPerfil?id=${idUser}`, formData, {
@@ -190,14 +199,13 @@ export const Profile = ({ navigation, route }) => {
     };
 
     useEffect(() => {
-        
         profileLoad();
     }, [])
 
     useEffect(() => {
-        
-        if (uriPhoto != foto) {
-            
+        console.log("fotoo ", uriPhoto);
+        if (uriPhoto != "") {
+
             AlterarFotoPerfil();
         }
     }, [uriPhoto])
@@ -294,7 +302,7 @@ export const Profile = ({ navigation, route }) => {
                         <>
                             <BoxInput
                                 textLabel={"Data de Nascimento"}
-                                placeholder={dataNascimento}
+                                placeholder={formatarDataNascimento(dataNascimento)}
                             />
                             <BoxInput
                                 textLabel={"CPF"}

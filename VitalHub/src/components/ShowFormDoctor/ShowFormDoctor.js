@@ -29,7 +29,7 @@ const ShowFormDoctor = ({
         role == "Medico" ? (
             <ShowModalContainer>
                 <ShowModalContent>
-                    <PhotoShow source={{ uri: foto }} />
+                    <PhotoShow source={foto} />
                     <Title>{consulta.pacienteNome}</Title>
                     <TextAbout>{formatarIdade(consulta.pacienteIdade)} Anos<TextAbout> {consulta.pacienteEmail}</TextAbout> </TextAbout>
 

@@ -13,8 +13,8 @@ import { userDecodeToken } from "../../utils/Auth";
 import { ActivityIndicator, Text } from 'react-native';
 
 export const Login = ({ navigation }) => {
-    const [email, setEmail] = useState("gabriel.victor@gmail.com");
-    const [senha, setSenha] = useState("gabriel.victor@gmail.com");
+    const [email, setEmail] = useState("eduardo.silva@gmail.com");
+    const [senha, setSenha] = useState("eduardo.silva@gmail.com");
     const [loading, setLoading] = useState(false);
     const [disabled, setDisabled] = useState(false);
     const [errorMessage, setErrorMessage] = useState(""); // Estado para armazenar mensagens de erro
@@ -80,10 +80,10 @@ export const Login = ({ navigation }) => {
                 <ButtonTitle> {loading ? <ActivityIndicator size="small" color="#ffffff" /> : "Entrar"}</ButtonTitle>
             </Button>
 
-            <ButtonGoogle>
+            {/* <ButtonGoogle>
                 <GoogleLogo source={require('../../assets/GOOGLE.png')} />
                 <ButtonTitleGoogle> Login with Google</ButtonTitleGoogle>
-            </ButtonGoogle>
+            </ButtonGoogle> */}
 
             <ContentAccount>
                 <TextAccount>Não tem conta?

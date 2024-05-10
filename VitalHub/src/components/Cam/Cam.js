@@ -44,8 +44,6 @@ export default function Cam({
     }, []);
 
     useEffect(() => {
-        setCapturePhoto(null)
-
         if (getMediaLibrary) {
             GetLastPhoto();
         }
@@ -157,7 +155,7 @@ export default function Cam({
                             <FontAwesome name='trash' size={50} color={'black'} />
                         </ButtonPhoto>
 
-                        <ButtonPhoto onPress={() => { SavePhoto() }}>
+                        <ButtonPhoto onPress={() => SavePhoto()}>
                             <FontAwesome name='save' size={50} color={'#121212'} />
                         </ButtonPhoto>
                     </View>

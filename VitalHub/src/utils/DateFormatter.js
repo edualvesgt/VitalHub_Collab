@@ -12,23 +12,23 @@ export function convertDateToISO(dateString) {
 
 
 
-// export const formatarDataNascimento = (data) => {
-//     // Remove tudo que não é dígito
-//     data = data.replace(/[^\d]/g, "");
+export const formatarDataNascimento = (data) => {
+    // Remove tudo que não é dígito
+    data = data.replace(/[^\d]/g, "");
 
-//     // Aplica a formatação
-//     if (data.length > 4) {
-//         data = data.substring(0, 2) + "/" + data.substring(2, 4) + "/" + data.substring(4, 8);
-//     } else if (data.length > 2) {
-//         data = data.substring(0, 2) + "/" + data.substring(2, 4);
-//     }
+    // Aplica a formatação
+    if (data.length > 4) {
+        data = data.substring(0, 2) + "/" + data.substring(2, 4) + "/" + data.substring(4, 8);
+    } else if (data.length > 2) {
+        data = data.substring(0, 2) + "/" + data.substring(2, 4);
+    }
 
-//     return data;
-// };
+    return data;
+};
 
-// const handleDataNascimentoChange = (text) => {
-//     setDataNascimento(formatarDataNascimento(text));
-// };
+const handleDataNascimentoChange = (text) => {
+    setDataNascimento(formatarDataNascimento(text));
+};
 
 
 
