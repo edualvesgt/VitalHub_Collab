@@ -197,7 +197,7 @@ export const Home = ({ navigation }) => {
                 {
                     responseConsulta.length === 0 && token.role === 'Paciente' && responseLength == false ? (
 
-                        <Text style={{ textAlign: 'center', marginTop: 20 }}>Você não tem nenhum paciente para atender.</Text>
+                        <Text style={{ textAlign: 'center', marginTop: 20 }}>Você não tem nenhuma consulta agendada.</Text>
 
                     ) : isLoading && token.role === 'Paciente' ?
                         <ActivityIndicator style={{ marginTop: 18 }} /> : null
@@ -217,6 +217,7 @@ export const Home = ({ navigation }) => {
 
 
                 <FlatContainer
+                    
                     data={responseConsulta}
                     showsVerticalScrollIndicator={false}
                     keyExtractor={item => item.consultaId}

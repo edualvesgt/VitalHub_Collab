@@ -63,6 +63,7 @@ export const Login = ({ navigation }) => {
 
     return (
         <Container>
+            
             <Logo source={require("../../assets/VitalHub_LogoAzul.png")} />
             <Title>Entrar ou Criar Conta</Title>
             <Input

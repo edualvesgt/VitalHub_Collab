@@ -5,12 +5,13 @@ import { BlueTitle, Button, ButtonModal, ButtonTitle, SmallButton } from "../But
 import { RowContainerButton } from "../Container/StyleContainer";
 import { BoxInputCreate, } from "../BoxInput/BoxInput";
 import { useState } from "react";
+import { Text } from "react-native";
 
 
 
 
 
-const ScheduleAppointment = ({ isOpen, onClose, navigation,type }) => {
+const ScheduleAppointment = ({ isOpen, onClose, navigation, type }) => {
 
     // Nivel 0
     const Rotina = { id: "D25CAB1E-AC65-4B89-B2E8-31BA08106774", tipo: "Rotina" }
@@ -19,9 +20,10 @@ const ScheduleAppointment = ({ isOpen, onClose, navigation,type }) => {
     // Nivel 2
     const Urgencia = { id: "221794B0-ABA1-43EB-9C79-B8F68A3DF97B", tipo: "Urgencia" }
 
-    const [click, setClick] = useState("rotina")
+    const [click, setClick] = useState("")
     const [clickButton, setClickButton] = useState(click == type)
     const [agendamento, setAgendamento] = useState()
+    const [validationSchedule, setValidationSchedule] = useState(false)
 
     if (!isOpen) {
         return null;
@@ -32,26 +34,23 @@ const ScheduleAppointment = ({ isOpen, onClose, navigation,type }) => {
         onClose();
     };
 
-
-
-
     return (
         <ModalContainer>
             <ModalContent>
-          
+
                 <Label>Qual o nível da consulta</Label>
 
                 <RowContainerButton>
 
-                    <SmallButton onPress={() => {setAgendamento({ ...agendamento, prioridadeId: Rotina.id, tipo: Rotina.tipo }); setClick("rotina")} } clickButton={click == "rotina"}>
+                    <SmallButton onPress={() => { setAgendamento({ ...agendamento, prioridadeId: Rotina.id, tipo: Rotina.tipo }); setClick("rotina") }} clickButton={click == "rotina"}>
                         <BlueTitle clickButton={click == "rotina"}>Rotina</BlueTitle>
                     </SmallButton>
 
-                    <SmallButton onPress={() => {setAgendamento({ ...agendamento, prioridadeId: Exame.id, tipo: Exame.tipo }); setClick("exame")}} clickButton={click == "exame"}  >
+                    <SmallButton onPress={() => { setAgendamento({ ...agendamento, prioridadeId: Exame.id, tipo: Exame.tipo }); setClick("exame") }} clickButton={click == "exame"}  >
                         <BlueTitle clickButton={click == "exame"}>Exames</BlueTitle>
                     </SmallButton>
 
-                    <SmallButton onPress={() => {setAgendamento({ ...agendamento, prioridadeId: Urgencia.id, tipo: Urgencia.tipo }); setClick("urgencia")}} clickButton={click == "urgencia"}  >
+                    <SmallButton onPress={() => { setAgendamento({ ...agendamento, prioridadeId: Urgencia.id, tipo: Urgencia.tipo }); setClick("urgencia") }} clickButton={click == "urgencia"}  >
                         <BlueTitle clickButton={click == "urgencia"}>Urgencia</BlueTitle>
                     </SmallButton>
                 </RowContainerButton>
@@ -59,7 +58,8 @@ const ScheduleAppointment = ({ isOpen, onClose, navigation,type }) => {
                 <BoxInputCreate
                     textLabel={"Informe a Localizacao Desejada"}
                     placeholder={"Informe a Sua Cidade"}
-                    editable = {true}
+                    editable={true}
+                    fieldHeigth={50}
                     value={agendamento ? agendamento.localizacao : null}
 
                     onChangeText={(txt) => setAgendamento({
@@ -69,14 +69,26 @@ const ScheduleAppointment = ({ isOpen, onClose, navigation,type }) => {
 
                 />
 
-                {/* botao  */}
-                <ButtonModal onPress={handleConfirm} >
+                  {
+                    validationSchedule ? 
+                    <Text style={{color: "red"}}>É necessário preencher todos os campos! </Text>
+                    : null
+                  }
+             
+                <ButtonModal onPress={() => 
+                    agendamento != null ? 
+                    agendamento.localizacao && agendamento.prioridadeId && agendamento.tipo != null ?
+                    handleConfirm() :
+                    setValidationSchedule(true):
+                    setValidationSchedule(true)
+                }>
                     <ButtonTitle>Confirmar</ButtonTitle>
                 </ButtonModal>
-                <LinkCancel onPress={onClose} >Cancelar</LinkCancel>
+
+                <LinkCancel onPress={() => {onClose(); setValidationSchedule(false)}} >Cancelar</LinkCancel>
 
             </ModalContent>
-        </ModalContainer>
+        </ModalContainer >
     );
 
 };

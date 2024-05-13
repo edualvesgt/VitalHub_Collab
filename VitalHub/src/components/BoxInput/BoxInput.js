@@ -1,4 +1,4 @@
-import { Image } from "react-native"
+import { Image, Platform } from "react-native"
 import { InputForm, InputProfile } from "../Input/StyleInput"
 import { Label } from "../Label/Label"
 import { FieldContent } from "./StyleBox"
@@ -50,7 +50,7 @@ export const BoxInputCreate = ({ textLabel, placeholder, fieldWidth = 90, fieldH
                 textLabel={textLabel} />
 
             <InputForm
-                style={{ fontSize: 16, marginTop: 10, marginBottom: 200, backgroundColor: 'white' }}
+                style={{ fontSize: 16, marginTop: 10, marginBottom: Platform.OS == "ios" ? 200 : 150  , backgroundColor: 'white' }}
                 editable={editable}
                 fieldHeigth={fieldHeigth}
                 placeholder={placeholder}
