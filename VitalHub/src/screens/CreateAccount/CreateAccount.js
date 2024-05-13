@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ActivityIndicator } from "react-native";
+import { ActivityIndicator, Text } from "react-native";
 import { Button, ButtonTitle } from "../../components/Button/Button";
 import { Container, ContainerItens } from "../../components/Container/StyleContainer";
 import { Input } from "../../components/Input/StyleInput";
@@ -127,7 +127,7 @@ export const CreateAccount = ({ navigation }) => {
                         placeholder={"Confirmar Senha"}
                     />
 
-                    {errorMessage && <Text style={{ color: 'red' }}>{errorMessage}</Text>} {/* Exibe a mensagem de erro se houver */}
+                    {errorMessage && <Text style={{ color: 'red' }}>{errorMessage}</Text>} 
 
                     <Button onPress={() => Create()}>
                         <ButtonTitle>{loading ? <ActivityIndicator size="small" color="#ffffff" /> : "Cadastrar"}</ButtonTitle>

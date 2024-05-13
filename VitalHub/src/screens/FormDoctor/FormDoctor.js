@@ -99,7 +99,7 @@ export const FormDoctor = ({ navigation, route }) => {
         (role != null ? (
             <Container>
                 <HeaderContainer>
-                    <HeaderPhoto source={{uri: route.params.pacienteFoto}} />
+                    <HeaderPhoto source={{ uri: route.params.pacienteFoto }} />
                 </HeaderContainer>
 
                 <ContainerForm>
@@ -127,7 +127,7 @@ export const FormDoctor = ({ navigation, route }) => {
 
                                 />
 
-                               
+
 
                                 <BoxInputPhoto
                                     fieldHeigth={120}
