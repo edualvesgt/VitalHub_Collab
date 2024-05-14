@@ -3,6 +3,10 @@ import { TextAbout, TextAccount, TextYellow } from "../Text/Text"
 import { AllStatusBox, CardBoxClinic, CardBoxClinicSelected, TextCardBox } from "./StyleCardClinic"
 import { View } from 'react-native'
 import { StatusCalendar } from '../Status/Status'
+import { Platform } from "react-native"
+import { useEffect, useState } from "react"
+
+
 
 const CardClinic = ({ time, name, location, review, select , onPress , number}) => {
 

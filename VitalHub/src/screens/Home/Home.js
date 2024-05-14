@@ -22,7 +22,9 @@ import ScheduleAppointment from "../../components/ScheduleAppointment/ScheduleAp
 import api from "../../services/services";
 import { userDecodeToken } from "../../utils/Auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ActivityIndicator, Text } from "react-native";
+import { ActivityIndicator, StatusBar, Text } from "react-native";
+import { transpose } from "date-fns";
+import { Platform } from "react-native";
 
 export const Home = ({ navigation }) => {
 
@@ -40,6 +42,7 @@ export const Home = ({ navigation }) => {
     const [responseLength, setResponseLength] = useState()
 
     async function profileLoad() {
+
         const tokenDecoded = await userDecodeToken();
 
         if (tokenDecoded) {
@@ -155,9 +158,16 @@ export const Home = ({ navigation }) => {
     }
 
     return (
-        <>
-            <Header navigation={navigation} foto={{ uri: fotoPerfil }} />
+        <>  
+        
+            <StatusBar
+             
+             translucent={true}
+             
+            />
             <Container>
+                
+                <Header navigation={navigation} foto={{ uri: fotoPerfil }} />
 
                 <Calendar setDataConsulta={setDataConsulta} />
 
@@ -187,10 +197,10 @@ export const Home = ({ navigation }) => {
                 {
                     responseConsulta.length === 0 && token.role === 'Paciente' && responseLength == false ? (
 
-                        <Text style={{ textAlign: 'center', marginTop: 20 }}>Você não tem nenhum paciente para atender.</Text>
+                        <Text style={{ textAlign: 'center', marginTop: 20 }}>Você não tem nenhuma consulta agendada.</Text>
 
                     ) : isLoading && token.role === 'Paciente' ?
-                        <ActivityIndicator style={{marginTop: 18}}/> : null
+                        <ActivityIndicator style={{ marginTop: 18 }} /> : null
                 }
 
                 {
@@ -200,13 +210,14 @@ export const Home = ({ navigation }) => {
                         <Text style={{ textAlign: 'center', marginTop: 20 }}>Você não tem nenhum paciente para atender.</Text>
 
                     ) : isLoading && token.role === 'Medico' ?
-                        <ActivityIndicator style={{marginTop: 18}} /> : null
+                        <ActivityIndicator style={{ marginTop: 18 }} /> : null
                 }
 
 
 
 
                 <FlatContainer
+                    
                     data={responseConsulta}
                     showsVerticalScrollIndicator={false}
                     keyExtractor={item => item.consultaId}

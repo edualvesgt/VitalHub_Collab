@@ -3,6 +3,7 @@ import styled from "styled-components";
 export const Container = styled.SafeAreaView`
 flex:1;
 align-items:center;
+justify-content: center;
 background-color: #FBFBFB;
 `
 export const ContainerClinic = styled.SafeAreaView`
@@ -45,7 +46,7 @@ background-color:#0003 ;
 margin-top: 40px;
 width: 100%;
 flex-direction: row;
-justify-content: flex-end; 
+justify-content: flex-end;
 gap: 80px;
 
 `
@@ -75,14 +76,15 @@ align-items: center;
 export const RowContainer = styled.View`
 display: flex;
 flex-direction:row;
+align-items: center;
 gap:15px;
-margin-top: 40px;
-
+margin: 40px 20px 0px 20px;
 `
 export const RowContainerButton = styled.View`
 width: 100%;
 display: flex;
 flex-direction:row;
+align-items: center;
 gap:15px;
 margin-top: 10px;
 /* border: 1px; */
@@ -90,12 +92,14 @@ margin-top: 10px;
 
 
 export const FlatContainer = styled.FlatList`
-width: 90%;
+width: 100%;
 `
 export const FlatListClinic = styled.FlatList`
 width: 100%;
 height: 80%;
-margin: 0 0 20px 10%;
+
+margin: 20px 0px 0px 0px;
+
 background-color: white;
 
 `

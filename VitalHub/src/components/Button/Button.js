@@ -1,3 +1,4 @@
+import { Platform } from "react-native";
 import styled, { css } from "styled-components";
 
 export const Button = styled.TouchableOpacity`
@@ -11,6 +12,11 @@ margin-top: 15px;
 
 export const ButtonModal = styled(Button)`
 width: 100%;
+
+${props => Platform.OS == "ios" ? css``
+: css`
+    margin: 0px 0px ; 
+` }
 `
 export const ButtonForm = styled.TouchableOpacity`
 width: 90%;
@@ -90,14 +96,17 @@ align-items:center;
 `
 
 export const BlueButton = styled.TouchableOpacity`
-width: 110px;
-height: 40px;
+
 ${props => props.clickButton ? css`
         background-color: #496bba;
+        width: 30%;
+        height: 35px;
         `
         : css`
             background-color: transparent;
             border: 2px solid #607EC5;
+            width: 32%;
+            height: 40px;
             
         `};
 border-radius: 5px;
@@ -115,23 +124,24 @@ ${props => props.clickButton ? css`
     `}
 font-size: 12px;
 font-family: "MontserratAlternates_600SemiBold";
+
 `
 export const SmallButton = styled.TouchableOpacity`
-width: 30%;
-height: 55px;
-padding-top:16px;
 font-family: "MontserratAlternates_600SemiBold";
-border-radius: 10px;
+border-radius: 7px;
 display: flex;
 align-items:center;
-
+justify-content: center;
 ${props => props.clickButton ? css`
         background-color: #496bba;
+        width: 30%;
+        height: 40px;
         `
         : css`
             background-color: transparent;
             border: 2px solid #60BFC5;
-            
+            width: 30%;
+            height: 45px;
         `};
 `
 

@@ -6,6 +6,7 @@ import { Button, ButtonTitle } from "../../components/Button/Button"
 import { LinkCancel } from "../../components/Links/StyleLink"
 import { useEffect, useState } from "react"
 import api from "../../services/services"
+import { Text } from "react-native"
 
 export const ChooseClinic = ({ navigation, route }) => {
 
@@ -13,6 +14,7 @@ export const ChooseClinic = ({ navigation, route }) => {
     const [listClinic, setListClinic] = useState([])
     const [select, setSelected] = useState('')
     const [clinica, setClinica] = useState(null)
+    const [validationClinic, setValidationClinic] = useState(false)
 
     // Passa a cidade na rota buscar por cidade
     //FAzer a troca
@@ -20,12 +22,13 @@ export const ChooseClinic = ({ navigation, route }) => {
         await api.get(`/Clinica/BuscarPorCidade?cidade=${route.params.agendamento.localizacao}`)
             .then(response => {
                 setListClinic(response.data)
-                
+
             }).catch(error => {
                 console.log(error);
                 console.log(error.response.data);
             })
     }
+
     const handleSelectClinic = (clinic) => {
         if (select !== clinic.nomeFantasia) {
             setSelected(clinic.nomeFantasia);
@@ -56,7 +59,7 @@ export const ChooseClinic = ({ navigation, route }) => {
         <ContainerClinic>
             <ContentClinic>
 
-                <Title>Selecionar Clinica </Title>
+                <Title>Selecionar Clínica </Title>
 
 
                 <FlatListClinic
@@ -72,9 +75,20 @@ export const ChooseClinic = ({ navigation, route }) => {
                             number={item.endereco.numero}
                             name={item.nomeFantasia}
                             time={item.time}
-                        />} />
+                        />}
+                />
 
-                <Button onPress={() => handleConfirm()}>
+                {
+                    validationClinic ?
+                        <Text style={{color: "red"}}>Selecione uma clínica!</Text>
+                        : null
+                }
+
+                <Button onPress={() =>
+                    select != "" ?
+                    handleConfirm() :
+                    setValidationClinic(true)
+                }>
                     <ButtonTitle >Continuar</ButtonTitle>
                 </Button>
                 <LinkCancel onPress={() => navigation.navigate('Main')}> Cancelar </LinkCancel>
