@@ -61,7 +61,7 @@ export const LocalClinic = ({ navigation, route }) => {
 
                         </DoubleView>
 
-                        <LinkCancel style={{ marginTop: 50 }} onPress={() => navigation.replace("Home")}>Voltar</LinkCancel>
+                        <LinkCancel style={{ marginTop: 50 }} onPress={() => navigation.replace("Main")}>Voltar</LinkCancel>
                     </Container>
                 </>
             ) : (<ActivityIndicator />)

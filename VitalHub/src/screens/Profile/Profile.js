@@ -14,6 +14,7 @@ import api from "../../services/services"
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import Cam from "../../components/Cam/Cam"
 import moment from 'moment';
+import { Alert, Text } from "react-native"
 
 
 
@@ -22,7 +23,7 @@ export const Profile = ({ navigation, route }) => {
     const [email, setEmail] = useState("");
     const [idUser, setIdUser] = useState("")
     const [role, setRole] = useState(null)
-
+    const [errorMessage, setErrorMessage] = useState('');
 
     const [cpf, setCpf] = useState("")
     const [dataNascimento, setDataNascimento] = useState("")
@@ -45,11 +46,33 @@ export const Profile = ({ navigation, route }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [foto, setFoto] = useState(null)
 
-    const dataNascimentoFormatada = moment(dataNascimento).format('YYYY-MM-DD');
-
+    const formattedDate = moment(date, 'DD/MM/YYYY').format('YYYY-MM-DD');
     const [uriPhoto, setUriPhoto] = useState(null);
     const [newUriPhoto, setNewUriPhoto] = useState()
 
+
+
+    const handleChange = (inputDate) => {
+        inputDate = inputDate.replace(/\D/g, ''); // Remove qualquer caractere não numérico
+        if (inputDate.length > 8) {
+            inputDate = inputDate.substring(0, 8); // Limita a data a 8 caracteres (DDMMAAAA)
+        }
+        if (inputDate.length > 2 && inputDate.charAt(2) !== '/') {
+            inputDate = inputDate.substring(0, 2) + '/' + inputDate.substring(2); // Adiciona a barra após o segundo dígito do dia
+        }
+        if (inputDate.length > 5 && inputDate.charAt(5) !== '/') {
+            inputDate = inputDate.substring(0, 5) + '/' + inputDate.substring(5); // Adiciona a barra após o segundo dígito do mês
+        }
+        // Verifica se a data está completa e se não possui caracteres não numéricos após o dia/mês/ano
+        if (inputDate.length === 10 && !/[^0-9]/.test(inputDate.substring(6))) {
+            setDate(inputDate);
+            setDataNascimento(inputDate); // Atualiza o estado dataNascimento com a data formatada
+            setErrorMessage(''); // Limpa a mensagem de erro se a data estiver no formato correto
+        } else {
+            setErrorMessage("Digite sua Data de Nascimento somente com números no padrão 'DD/MM/YYYY', por exemplo: 15022002");
+        }
+    };
+    
 
 
     async function profileLoad() {
@@ -92,7 +115,7 @@ export const Profile = ({ navigation, route }) => {
                 });
         }
     }
-   
+
 
     async function EditProfile(role) {
         console.log("Entrou na Funcao");
@@ -101,7 +124,7 @@ export const Profile = ({ navigation, route }) => {
         let url = "/Pacientes";
         const data = {
             // Campos comuns a ambos os perfis
-            "dataNascimento": dataNascimento,
+            "dataNascimento": formattedDate,
             "cep": cep,
             "logradouro": endereco,
             "email": email,
@@ -161,22 +184,6 @@ export const Profile = ({ navigation, route }) => {
 
     }
 
-    const formatarDataVisual = (data) => {
-        // Verifica se a data está no formato esperado
-        if (!data || !data.includes('/')) {
-            return ''; // Retorna uma string vazia se a data for inválida
-        }
-
-        // Extrai o dia, mês e ano da data
-        const partes = data.split('/');
-        const dia = partes[0];
-        const mes = partes[1];
-        const ano = partes[2];
-
-        // Retorna a data formatada com barras (ano-mês-dia)
-        return `${ano}-${mes}-${dia}`;
-    };
-
 
 
     async function profileLogout(token) {
@@ -205,9 +212,10 @@ export const Profile = ({ navigation, route }) => {
         setDataNascimentoTemp(dataNascimento);
         setEmailTemp(email);
         setIsEditing(true);
-        if (cpf == null || dataNascimento == null) {
+        if (cpf == null || date == null) {
             setIsEditingCpf(true);
             console.log("Entrou True" + cpf);
+           
         } else {
             setIsEditingCpf(false);
             console.log("Entrou false " + cpf);
@@ -225,8 +233,7 @@ export const Profile = ({ navigation, route }) => {
         setIsEditing(false);
     };
 
-    
-
+   
     useEffect(() => {
         profileLoad();
     }, [])
@@ -268,12 +275,12 @@ export const Profile = ({ navigation, route }) => {
                                 <>
                                     <BoxInputForm
                                         textLabel={"Data de Nascimento"}
-                                        keyboardType='numeric'
+                                        keyboardType='number-pad'
                                         editable={true}
-                                        type = {"date"}
-                                        value={dataNascimento}
-                                        onChangeText={(txt) => setDataNascimento(txt)}
+                                        onChangeText={handleChange}
                                     />
+                                    {errorMessage !== '' && <Text style={{ color: 'red', margin: 10 }}>{errorMessage}</Text>}
+
                                     <BoxInputForm
                                         textLabel={"CPF"}
                                         value={cpf}
@@ -287,7 +294,7 @@ export const Profile = ({ navigation, route }) => {
                                     <BoxInput
                                         textLabel={"Data de Nascimento"}
                                         keyboardType='numeric'
-                                        value={dataNascimento}
+                                        value={moment(dataNascimento, 'YYYY-MM-DD').format('DD/MM/YYYY')}
 
                                     />
                                     <BoxInput
@@ -331,7 +338,7 @@ export const Profile = ({ navigation, route }) => {
                         <>
                             <BoxInput
                                 textLabel={"Data de Nascimento"}
-                                placeholder={dataNascimento}
+                                placeholder={moment(dataNascimento, 'YYYY-MM-DD').format('DD/MM/YYYY')}
                             />
                             <BoxInput
                                 textLabel={"CPF"}
