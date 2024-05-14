@@ -54,6 +54,8 @@ display: flex;
 flex-direction: row;
 justify-content:space-between;
 align-items:center;
+align-self: center;
+border-radius: 5px;
 gap:10px;
 
 `

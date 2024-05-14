@@ -163,8 +163,11 @@ export const Home = ({ navigation }) => {
             <StatusBar
              
              translucent={true}
-             
+             backgroundColor={"transparent"}
+             networkActivityIndicatorVisible={true}
+            
             />
+            
             <Container>
                 
                 <Header navigation={navigation} foto={{ uri: fotoPerfil }} />

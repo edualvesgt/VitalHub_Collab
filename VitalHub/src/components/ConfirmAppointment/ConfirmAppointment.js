@@ -61,7 +61,7 @@ const ConfirmAppontment = ({ isOpen, onClose, navigation, route }) => {
                     <LabelTextAppointment>Medico(a) da Consulta</LabelTextAppointment>
                     <TextAppointment>{route.medicoLabel}</TextAppointment>
                     {/* <TextAppointment>Pediatra</TextAppointment> */}
-
+                    
                     <LabelTextAppointment>Local da Consulta</LabelTextAppointment>
                     <TextAppointment>{route.localizacao}</TextAppointment>
 

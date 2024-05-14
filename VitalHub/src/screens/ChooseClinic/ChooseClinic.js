@@ -32,6 +32,7 @@ export const ChooseClinic = ({ navigation, route }) => {
     const handleSelectClinic = (clinic) => {
         if (select !== clinic.nomeFantasia) {
             setSelected(clinic.nomeFantasia);
+            
             setClinica({
                 clinicaId: clinic.id,
                 clinicaLabel: clinic.nomeFantasia,

@@ -27,31 +27,35 @@ export const Login = ({ navigation }) => {
         }
         return true;
     };
-
     async function Login() {
         if (!validateFields()) {
             return; // Se os campos não forem válidos, interrompe a função
         }
-
+    
         setLoading(true);
         setDisabled(true);
-
+    
         try {
             const response = await api.post('/Login', {
                 email: email,
                 senha: senha
             });
-
+    
             await AsyncStorage.setItem("token", JSON.stringify(response.data));
             navigation.replace("Main");
         } catch (error) {
             console.log(error);
+            // Verifica se o erro é devido a um status 401
+            if (error.response && error.response.status === 401) {
+                setErrorMessage("Email ou senha incorretos.");
+            } else {
+                setErrorMessage("Erro ao tentar entrar.");
+            }
             setDisabled(false);
         } finally {
             setLoading(false);
         }
     }
-
     useEffect(() => {
         // Limpa a mensagem de erro quando o componente é montado
         setErrorMessage("");

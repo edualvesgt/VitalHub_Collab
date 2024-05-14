@@ -54,6 +54,7 @@ export const ChooseData = ({ navigation, route }) => {
             <ContainerLabel>
                 <Label>Selecione um horário disponível</Label>
             </ContainerLabel>
+
             <InputSelect
                 setHoraSelecionada={setHoraSelecionada}
             />
@@ -63,6 +64,7 @@ export const ChooseData = ({ navigation, route }) => {
             <LinkCancel onPress={() => navigation.navigate("Main")}>Cancelar</LinkCancel>
 
             <ConfirmAppontment isOpen={isModalOpen} onClose={closeModal} navigation={navigation} route={agendamento} />
+            
         </ContainerClinic>
 
     )

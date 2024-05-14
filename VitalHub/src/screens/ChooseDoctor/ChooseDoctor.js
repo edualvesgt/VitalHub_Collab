@@ -47,7 +47,7 @@ export const ChooseDoctor = ({ navigation, route  }) => {
     }
     useEffect(() => {
         ListDoctors()
-     
+     console.log(route.params);
     }, [])
 
     return (
