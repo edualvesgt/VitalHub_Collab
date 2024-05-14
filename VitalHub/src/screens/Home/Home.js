@@ -160,14 +160,12 @@ export const Home = ({ navigation }) => {
     return (
         <>  
         
+            
             <StatusBar
              
              translucent={true}
-             backgroundColor={"transparent"}
-             networkActivityIndicatorVisible={true}
-            
-            />
-            
+             backgroundColor={"transparent"}/>
+             
             <Container>
                 
                 <Header navigation={navigation} foto={{ uri: fotoPerfil }} />
