@@ -85,7 +85,7 @@ const ScheduleAppointment = ({ isOpen, onClose, navigation, type }) => {
                     <ButtonTitle>Confirmar</ButtonTitle>
                 </ButtonModal>
 
-                <LinkCancel onPress={() => {onClose(); setValidationSchedule(false)}} >Cancelar</LinkCancel>
+                <LinkCancel onPress={() => {onClose(); setValidationSchedule(false); setClick("")}} >Cancelar</LinkCancel>
 
             </ModalContent>
         </ModalContainer >

@@ -9,7 +9,7 @@ import api from "../../services/services";
 import { useEffect } from "react";
 
 
-const CancelAppointment = ({ isOpen, onClose, navigation, consulta }) => {
+const CancelAppointment = ({ isOpen, onClose, navigation, consulta, setResponseCancel }) => {
 
     if (!isOpen) {
         return null;
@@ -17,9 +17,10 @@ const CancelAppointment = ({ isOpen, onClose, navigation, consulta }) => {
 
     async function atualizarSituacao(){
         
-        await api.put(`/Consultas/Status?idConsulta=${consulta.consultaId}&status=canceladas`)
+        await api.put(`/Consultas/Status?idConsulta=${consulta[0].consultaId}&status=canceladas`)
         .then(response => {
             console.log("Atualizado");
+            setResponseCancel(consulta[0].consultaId)
         })
         .catch(error => {
             console.log(error)
@@ -27,7 +28,7 @@ const CancelAppointment = ({ isOpen, onClose, navigation, consulta }) => {
     }
 
     useEffect(() => {
-        console.log("Consulta");
+        console.log(consulta[0].consultaId);
     },[] )
     
 
@@ -38,7 +39,7 @@ const CancelAppointment = ({ isOpen, onClose, navigation, consulta }) => {
 
                 <TextForgot>Ao cancelar essa consulta, abrirá uma possível disponibilidade no seu horário, deseja mesmo cancelar essa consulta?</TextForgot>
 
-                <Button onPress = {() => {onClose; atualizarSituacao()}} >
+                <Button onPress = {() => {onClose(); atualizarSituacao()}} >
                     <ButtonTitle>Confirmar</ButtonTitle>
                 </Button>
                 <LinkCancel onPress = {onClose}>Cancelar</LinkCancel>
