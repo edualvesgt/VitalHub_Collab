@@ -88,8 +88,25 @@ export const InputSelect = ({ setHoraSelecionada }) => {
 }
 
 const pickerSelectStyles = StyleSheet.create({
+    
+    inputAndroid: {
+        width: 327,
+        height: 53,
+        borderColor: '#60BFC5',
+        borderWidth: 2,
+        borderRadius: 5,
+        fontFamily: 'MontserratAlternates_600SemiBold',
+        fontSize: 14,
+        padding: 16,
+        display: "flex",
+
+        marginBottom: 42,
+        marginTop: 10,
+
+    },
     inputIOS: {
         height: 53,
+        width: "100%",
         borderColor: '#60BFC5',
         borderWidth: 2,
         borderRadius: 5,
@@ -107,7 +124,6 @@ const pickerSelectStyles = StyleSheet.create({
         position: 'relative'
     },
     icon: {
-        position: 'absolute',
         right: 16,
         top: 22,
     },

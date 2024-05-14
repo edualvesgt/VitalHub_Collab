@@ -14,7 +14,7 @@ background-color: rgba(0, 0, 0, 0.5);
 export const ModalContent = styled.View`
 position: relative;
 
-bottom: 10%;
+top: 0.5%;
 z-index: 50;
 background-color: white;
 padding: 20px;
