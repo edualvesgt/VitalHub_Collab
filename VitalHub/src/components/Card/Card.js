@@ -5,7 +5,7 @@ import { StatusGray, StatusGreen } from "../Status/Status"
 import { TextAbout, TextAccount, TextBlue, TextRed } from "../Text/Text"
 import { CardBox, ImageCard, RowCardBox, TextCardBox } from "./StyleCard"
 
-function formatarIdade(Idade){
+function formatarIdade(Idade) {
     const date = new Date();
     const anoAtual = date.getFullYear();
     const diaAtual = date.getDate();
@@ -29,7 +29,7 @@ function formatarIdade(Idade){
 }
 
 
-export {formatarIdade};
+export { formatarIdade };
 
 const Card = ({
     image,
@@ -49,9 +49,12 @@ const Card = ({
     const [profile, setProfile] = useState("Paciente");
 
     function timeConsulta(time) {
-        return time.slice(11, 16); 
+        return time.slice(11, 16);
     }
-    
+
+    useEffect(() => {
+        console.log(Consulta);
+    }, []);
 
     const Check = () => {
         if (status === "agendadas") {
@@ -87,13 +90,7 @@ const Card = ({
     return (
         <CardBox Consulta={Consulta} role={role} status={status} onPress={() => {
             if (role == "Paciente" && status == "realizadas") {
-                navigation.replace("FormDoctor" ,
-                {
-                    consultaDescricao: Consulta.consultaDescricao,
-                    // consultaDiagnostico: consulta.consultaDiagnostico,
-                    consultaReceita: Consulta.consultaReceita,
-                    consultaId: Consulta.consultaId
-                });
+                navigation.replace("FormDoctor");
             }
             // Verifica se a situação é cancelada e retorna null para esse caso
             else if (status == "agendadas") {

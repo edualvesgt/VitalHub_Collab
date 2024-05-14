@@ -1,5 +1,5 @@
 
-import { useEffect, useId, useState } from "react"
+import { useEffect, useState } from "react"
 import { BoxInput, BoxInputForm } from "../../components/BoxInput/BoxInput"
 import { Button, ButtonTitle } from "../../components/Button/Button"
 import { Container, DoubleView, InputContainer } from "../../components/Container/StyleContainer"
@@ -10,9 +10,11 @@ import { Title } from "../../components/Title/StyleTitle"
 import { ButtonCamera, ButtonLogout, ScrollForm } from "./StyleProfile"
 import { userDecodeToken } from "../../utils/Auth"
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import api, { GetPacient } from "../../services/services"
+import api from "../../services/services"
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import Cam from "../../components/Cam/Cam"
+import moment from 'moment';
+
 
 
 export const Profile = ({ navigation, route }) => {
@@ -21,7 +23,6 @@ export const Profile = ({ navigation, route }) => {
     const [idUser, setIdUser] = useState("")
     const [role, setRole] = useState(null)
 
-    const [getPatient, setGetPatient] = useState([]);
 
     const [cpf, setCpf] = useState("")
     const [dataNascimento, setDataNascimento] = useState("")
@@ -35,7 +36,7 @@ export const Profile = ({ navigation, route }) => {
     const [cidadetemp, setCidadeTemp] = useState("")
     const [emailTemp, setEmailTemp] = useState("")
     const [cpfTemp, setCpftemp] = useState("")
-    const [dataTemp, setDataTem] = useState("")
+    const [dataNascimentoTemp, setDataNascimentoTemp] = useState("");
 
     const [tokenKey, setTokenKey] = useState("")
     const [showCam, setShowCam] = useState(false)
@@ -44,26 +45,13 @@ export const Profile = ({ navigation, route }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [foto, setFoto] = useState(null)
 
+    const dataNascimentoFormatada = moment(dataNascimento).format('YYYY-MM-DD');
 
     const [uriPhoto, setUriPhoto] = useState(null);
     const [newUriPhoto, setNewUriPhoto] = useState()
 
 
-    const formatarDataNascimento = (dataNascimento) => {
-        // Verifica se a data de nascimento está no formato esperado
-        if (!dataNascimento || !dataNascimento.includes('-')) {
-            return ''; // Retorna uma string vazia se a data for inválida
-        }
-    
-        // Extrai o dia, mês e ano da data
-        const partes = dataNascimento.split('-');
-        const ano = partes[0];
-        const mes = partes[1];
-        const dia = partes[2] ? partes[2].substr(0, 2) : '';
-    
-        // Retorna a data formatada
-        return `${dia}/${mes}/${ano}`;
-    };
+
     async function profileLoad() {
 
 
@@ -104,33 +92,51 @@ export const Profile = ({ navigation, route }) => {
                 });
         }
     }
+   
 
     async function EditProfile(role) {
+        console.log("Entrou na Funcao");
+
+        setIsEditing(false);
         let url = "/Pacientes";
+        const data = {
+            // Campos comuns a ambos os perfis
+            "dataNascimento": dataNascimento,
+            "cep": cep,
+            "logradouro": endereco,
+            "email": email,
+            "cidade": cidade
+        };
+
         if (role === "Medico") {
             url = "/Medicos"
+            data.crm = crm; // Adiciona o CRM ao objeto de dados apenas para médicos
+            delete data.cpf; // Remove o CPF do objeto de dados para médicos
+        } else {
+            data.cpf = cpf; // Adiciona o CPF ao objeto de dados apenas para pacientes
+            delete data.crm; // Remove o CRM do objeto de dados para pacientes
         }
+
+        // Adicione alguns console.log para verificar os valores de `url` e `data`
+        console.log("URL:", url);
+        console.log("Data:", data);
+
+        const nameId = role == "Medico" ? "idMedico" : "idUsuario"
         try {
+            console.log("Entrou no Try");
+            const response = await api.put(`${url}?${nameId}=${idUser}`, data);
 
-            const response = await api.put(`${url}?idUsuario=${idUser}`, {
+            console.log("response");
+            console.log(response);
+            console.log("Data");
+            console.log(response.data);
 
-                // "dataNascimento": formattedDataNascimento,
-                "cpf": cpf,
-                "cep": cep,
-                "logradouro": endereco,
-                "email": email,
-                "cidade": cidade
-
-            })
-            if (response.status == 200) {
-                setIsEditing(false)
-            }
-
-        } catch (err) {
-
-            console.log(err);
+        } catch (error) {
+            console.log("Erro");
+            console.log(error);
         }
     }
+
 
     async function AlterarFotoPerfil() {
 
@@ -155,6 +161,23 @@ export const Profile = ({ navigation, route }) => {
 
     }
 
+    const formatarDataVisual = (data) => {
+        // Verifica se a data está no formato esperado
+        if (!data || !data.includes('/')) {
+            return ''; // Retorna uma string vazia se a data for inválida
+        }
+
+        // Extrai o dia, mês e ano da data
+        const partes = data.split('/');
+        const dia = partes[0];
+        const mes = partes[1];
+        const ano = partes[2];
+
+        // Retorna a data formatada com barras (ano-mês-dia)
+        return `${ano}-${mes}-${dia}`;
+    };
+
+
 
     async function profileLogout(token) {
         try {
@@ -177,7 +200,9 @@ export const Profile = ({ navigation, route }) => {
     const iniciarEdicao = () => {
         setEnderecoTemp(endereco);
         setCepTemp(cep);
+        setCpftemp(cpf)
         setCidadeTemp(cidade);
+        setDataNascimentoTemp(dataNascimento);
         setEmailTemp(email);
         setIsEditing(true);
         if (cpf == null || dataNascimento == null) {
@@ -195,10 +220,12 @@ export const Profile = ({ navigation, route }) => {
         setEndereco(enderecoTemp)
         setCidade(cidadetemp)
         setEmail(emailTemp)
-        setCpftemp(cpfTemp)
-        setDataTem(dataTemp)
+        setCpf(cpfTemp)
+        setDataNascimento(dataNascimentoTemp)
         setIsEditing(false);
     };
+
+    
 
     useEffect(() => {
         profileLoad();
@@ -243,9 +270,9 @@ export const Profile = ({ navigation, route }) => {
                                         textLabel={"Data de Nascimento"}
                                         keyboardType='numeric'
                                         editable={true}
+                                        type = {"date"}
                                         value={dataNascimento}
                                         onChangeText={(txt) => setDataNascimento(txt)}
-
                                     />
                                     <BoxInputForm
                                         textLabel={"CPF"}
@@ -304,7 +331,7 @@ export const Profile = ({ navigation, route }) => {
                         <>
                             <BoxInput
                                 textLabel={"Data de Nascimento"}
-                                placeholder={formatarDataNascimento(dataNascimento)}
+                                placeholder={dataNascimento}
                             />
                             <BoxInput
                                 textLabel={"CPF"}
@@ -329,11 +356,8 @@ export const Profile = ({ navigation, route }) => {
                         </>
                     ) : role == 'Medico' && isEditing ? (
                         <>
-                            <BoxInputForm
-                                textLabel={"Data de Nascimento"}
-                                value={dataNascimento}
-                            />
-                            <BoxInputForm
+
+                            <BoxInput
                                 textLabel={"CRM"}
                                 value={crm}
 
@@ -370,10 +394,7 @@ export const Profile = ({ navigation, route }) => {
                     ) :
                         (
                             <>
-                                <BoxInput
-                                    textLabel={"Data de Nascimento"}
-                                    placeholder={dataNascimento}
-                                />
+
                                 <BoxInput
                                     textLabel={"CRM"}
                                     placeholder={crm}
@@ -400,7 +421,7 @@ export const Profile = ({ navigation, route }) => {
                 <InputContainer>
                     {isEditing ? (
                         <>
-                            <Button onPress={() => EditProfile(role, formatarDataNascimento(dataNascimento))}>
+                            <Button onPress={() => EditProfile(role)}>
                                 <ButtonTitle>Salvar</ButtonTitle>
                             </Button>
                             <Button onPress={() => cancelarEdicao()}>

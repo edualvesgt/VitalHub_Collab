@@ -25,7 +25,7 @@ export const BoxInput = ({ textLabel, placeholder, fieldWidth = 90, editable = f
 
 
 
-export const BoxInputForm = ({ textLabel, placeholder, fieldWidth = 90, fieldHeigth, editable = false , value,onChangeText , keyboardType , maxLength}) => {
+export const BoxInputForm = ({ textLabel, placeholder, fieldWidth = 90, fieldHeigth, editable = false , value,onChangeText , keyboardType , maxLength , type }) => {
     return (
         <FieldContent fieldWidth={fieldWidth}>
             <Label textLabel={textLabel} />
@@ -35,6 +35,7 @@ export const BoxInputForm = ({ textLabel, placeholder, fieldWidth = 90, fieldHei
                 fieldHeigth={fieldHeigth}
                 placeholder={placeholder}
                 value = {value}
+                type = {type}
                 onChangeText = {onChangeText}
                 maxLength = {maxLength}
                 keyboardType = {keyboardType}
