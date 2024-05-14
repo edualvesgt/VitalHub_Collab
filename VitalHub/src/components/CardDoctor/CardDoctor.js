@@ -3,8 +3,8 @@ import {  CardBoxSelect, CardBoxSelected, ImageCard, TextCardBox } from "../Card
 import { Container } from "../Container/StyleContainer"
 import { TextAbout, TextAccount } from "../Text/Text"
 
-const CardDoctor = ({  name, field, select, onPress }) => {
-    const imageLink = "https://blog.maxtitanium.com.br/wp-content/uploads/2024/01/ramon-dino-fisiculturista-profissional-atleta-max-titanium-2.jpg"; // URL da imagem
+const CardDoctor = ({  name, field, select, onPress , imageLink }) => {
+   -
 
     useEffect(() => {
         console.log(name)

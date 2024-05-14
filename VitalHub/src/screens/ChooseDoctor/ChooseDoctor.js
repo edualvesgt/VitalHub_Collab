@@ -63,6 +63,7 @@ export const ChooseDoctor = ({ navigation, route  }) => {
                         onPress={() =>  handleSelect(item)}
                         name={item.idNavigation.nome}
                         field={item.especialidade.especialidade1}
+                        imageLink = {item.idNavigation.foto}
                     />
                 )}
             />
