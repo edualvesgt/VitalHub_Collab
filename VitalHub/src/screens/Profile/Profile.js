@@ -270,6 +270,7 @@ export const Profile = ({ navigation, route }) => {
                                         textLabel={"Data de Nascimento"}
                                         keyboardType='numeric'
                                         editable={true}
+                                        type = {"date"}
                                         value={dataNascimento}
                                         onChangeText={(txt) => setDataNascimento(txt)}
                                     />
