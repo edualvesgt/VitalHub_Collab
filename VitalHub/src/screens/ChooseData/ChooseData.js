@@ -6,6 +6,8 @@ import { InputSelect } from "../../components/Input/Input";
 import { Button, ButtonTitle } from "../../components/Button/Button";
 import { LinkCancel } from "../../components/Links/StyleLink";
 import ConfirmAppontment from "../../components/ConfirmAppointment/ConfirmAppointment";
+import { Text } from "react-native";
+import moment from "moment"
 
 export const ChooseData = ({ navigation, route }) => {
 
@@ -20,16 +22,18 @@ export const ChooseData = ({ navigation, route }) => {
     };;
 
     function handleConfirm() {
-        setAgendamento({
-            ...route.params.agendamento,
-            dataConsulta: `${dataSelecionada} ${horaSelecionada}`
-        })
-        openModal()
+        // Verifica se a data selecionada é futura
+        if (!moment(dataSelecionada).isAfter(moment(), 'day')) {
+            setValidationDataAfter(true)
+            return; // Interrompe a execução da função
+        }
     }
 
     const [dataSelecionada, setDataSelecionada] = useState()
     const [horaSelecionada, setHoraSelecionada] = useState()
     const [agendamento, setAgendamento] = useState()
+    const [validationData, setValidationData] = useState(false)
+    const [validationDataAfter, setValidationDataAfter] = useState()
 
     useEffect(() => {
         console.log("route");
@@ -51,6 +55,12 @@ export const ChooseData = ({ navigation, route }) => {
                 setDataSelecionada={setDataSelecionada}
                 dataSelecionada={dataSelecionada}
             />
+
+            {
+                validationDataAfter ?
+                <Text style={{ color: "red" }}>Não é possivel agendar consultas em uma data passada!</Text>
+                : null
+            }
             <ContainerLabel>
                 <Label>Selecione um horário disponível</Label>
             </ContainerLabel>
@@ -58,13 +68,21 @@ export const ChooseData = ({ navigation, route }) => {
             <InputSelect
                 setHoraSelecionada={setHoraSelecionada}
             />
-            <Button onPress={() => handleConfirm()}>
+
+            {
+                validationData ?
+                    <Text style={{ color: "red" }}> É necessário selecionar data e horário!</Text>
+                    : null
+            }
+
+
+            <Button onPress={() => { dataSelecionada && horaSelecionada ? handleConfirm() : setValidationData(true) }}>
                 <ButtonTitle>Confirmar</ButtonTitle>
             </Button>
             <LinkCancel onPress={() => navigation.navigate("Main")}>Cancelar</LinkCancel>
 
             <ConfirmAppontment isOpen={isModalOpen} onClose={closeModal} navigation={navigation} route={agendamento} />
-            
+
         </ContainerClinic>
 
     )

@@ -80,7 +80,8 @@ const ShowFormDoctor = ({
                                 consultaReceita: consulta.consultaReceita,
                                 consultaId: consulta.consultaId,
                                 pacienteIdade : consulta.pacienteIdade,
-                                pacienteFoto : consulta.pacienteFoto
+                                pacienteFoto : consulta.pacienteFoto,
+                                email: consulta.pacienteEmail
 
                             })}>
                             <ButtonTitle>Ver Prontuário</ButtonTitle>

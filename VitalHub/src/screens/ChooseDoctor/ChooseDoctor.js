@@ -5,13 +5,15 @@ import { Title } from "../../components/Title/StyleTitle"
 import { Button, ButtonTitle } from "../../components/Button/Button"
 import { LinkCancel } from "../../components/Links/StyleLink"
 import api from "../../services/services"
+import { Text } from "react-native"
 
-export const ChooseDoctor = ({ navigation, route  }) => {
+export const ChooseDoctor = ({ navigation, route }) => {
 
     const [select, setSelected] = useState('')
     const [medic, setMedic] = useState()
- 
+
     const [listDoctor, setListDoctor] = useState([])
+    const [validationDoctor, setValidationDoctor] = useState(false)
 
     async function ListDoctors() {
         //Instanciar A chamada da Api
@@ -33,21 +35,21 @@ export const ChooseDoctor = ({ navigation, route  }) => {
         setMedic({
             medicoClinicaId: doctor.id,
             medicoLabel: doctor.idNavigation.nome
-            
+
         })
     }
 
     function handleConfirm() {
         navigation.navigate('ChooseData', {
-            agendamento:{
-                ...route.params.agendamento, 
+            agendamento: {
+                ...route.params.agendamento,
                 ...medic
             }
         })
     }
     useEffect(() => {
         ListDoctors()
-     
+        console.log(route.params);
     }, [])
 
     return (
@@ -57,22 +59,31 @@ export const ChooseDoctor = ({ navigation, route  }) => {
             <FlatListClinic
                 data={listDoctor}
                 keyExtractor={(item) => item.id}
-                renderItem={ ({ item }) => (
+                renderItem={({ item }) => (
                     <CardDoctor
                         select={select}
-                        onPress={() =>  handleSelect(item)}
+                        onPress={() => handleSelect(item)}
                         name={item.idNavigation.nome}
                         field={item.especialidade.especialidade1}
-                        imageLink = {item.idNavigation.foto}
+                        imageLink={item.idNavigation.foto}
                     />
                 )}
             />
 
+            {
+                validationDoctor ?
+                    <Text style={{ color: "red" }}>Selecione um médico!</Text>
+                    : null
+            }
 
-            <Button onPress={() => handleConfirm()}>
+
+            <Button onPress={() =>
+                select != "" ?
+                    handleConfirm() :
+                    setValidationDoctor(true)}>
                 <ButtonTitle>Continuar</ButtonTitle>
             </Button>
-            <LinkCancel onPress={() => navigation.navigate('Main')}> Cancelar </LinkCancel>
+            <LinkCancel onPress={() => { navigation.navigate('Main'); setValidationDoctor(false); setSelected("") }}> Cancelar </LinkCancel>
 
         </ContainerClinic>
     )

@@ -13,8 +13,8 @@ import { userDecodeToken } from "../../utils/Auth";
 import { ActivityIndicator, Text } from 'react-native';
 
 export const Login = ({ navigation }) => {
-    const [email, setEmail] = useState("claudinho.mosquito@gmail.com");
-    const [senha, setSenha] = useState("claudinho.mosquito@gmail.com");
+    const [email, setEmail] = useState("eduardo.silva@gmail.com");
+    const [senha, setSenha] = useState("eduardo.silva@gmail.com");
     const [loading, setLoading] = useState(false);
     const [disabled, setDisabled] = useState(false);
     const [errorMessage, setErrorMessage] = useState(""); // Estado para armazenar mensagens de erro
@@ -27,15 +27,14 @@ export const Login = ({ navigation }) => {
         }
         return true;
     };
-
     async function Login() {
         if (!validateFields()) {
             return; // Se os campos não forem válidos, interrompe a função
         }
-
+    
         setLoading(true);
         setDisabled(true);
-
+    
         try {
             const response = await api.post('/Login', {
                 email: 'eduardo.silva@gmail.com',
@@ -50,12 +49,17 @@ export const Login = ({ navigation }) => {
             navigation.replace("Main")
         } catch (error) {
             console.log(error);
+            // Verifica se o erro é devido a um status 401
+            if (error.response && error.response.status === 401) {
+                setErrorMessage("Email ou senha incorretos.");
+            } else {
+                setErrorMessage("Erro ao tentar entrar.");
+            }
             setDisabled(false);
         } finally {
             setLoading(false);
         }
     }
-
     useEffect(() => {
         // Limpa a mensagem de erro quando o componente é montado
         setErrorMessage("");
