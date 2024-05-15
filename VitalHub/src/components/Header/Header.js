@@ -30,12 +30,12 @@ export function Header({ navigation, foto }) {
                     <NameUser>{name}</NameUser>
                 </DataUser>
             </HeaderBox>
-            <MaterialIcons
+            {/* <MaterialIcons
                 name="notifications"
                 size={30}
                 color="#FBFBFB"
                 style={{ marginTop: "22%", marginRight: 20 }}
-            />
+            /> */}
         </HeaderContainer>
     )
 }

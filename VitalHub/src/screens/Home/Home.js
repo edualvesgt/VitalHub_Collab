@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { FontAwesome } from '@expo/vector-icons'
 
@@ -23,12 +23,11 @@ import api from "../../services/services";
 import { userDecodeToken } from "../../utils/Auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ActivityIndicator, StatusBar, Text } from "react-native";
-import { transpose } from "date-fns";
-import { Platform } from "react-native";
+import { useFocusEffect } from '@react-navigation/native';
+
 
 export const Home = ({ navigation }) => {
 
-    const image = require("../../assets/PhotoProfile.png");
 
     const [selected, setSelected] = useState("agendadas");
     const [responseConsulta, setResponseConsulta] = useState([])
@@ -113,6 +112,12 @@ export const Home = ({ navigation }) => {
 
     }
 
+    useFocusEffect(
+        React.useCallback(() => {
+          profileLoad();
+        }, [])
+      );
+      
     useEffect(() => {
         profileLoad();
     }, [])
