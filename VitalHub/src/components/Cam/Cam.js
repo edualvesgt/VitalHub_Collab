@@ -11,9 +11,10 @@ import { AntDesign } from '@expo/vector-icons';
 import { LastPhoto } from './StyleCam';
 //para acessar a galeria do celular
 import * as ImagePicker from 'expo-image-picker'
+import { Ionicons } from '@expo/vector-icons';
 
 export default function Cam({
-    visible,
+    visible ,
     getMediaLibrary = false,
     setUriPhoto,
     setUriPhotoForm,
@@ -29,6 +30,7 @@ export default function Cam({
     const [openModal, setOpenModal] = useState(false)
     const [lastestPhoto, setLatestPhoto] = useState(null)
     const [permission, requestPermission] = useCameraPermissions();
+    const [closeCamTest, setCloseCamTest] = useState(true)
 
 
 
@@ -61,7 +63,7 @@ export default function Cam({
     // Função assíncrona para capturar a foto
     async function CapturePhoto() {
         if (camRef) {
-            const photo = await camRef.current.takePictureAsync({quality: 1});
+            const photo = await camRef.current.takePictureAsync({ quality: 1 });
             setCapturePhoto(photo.uri)
             setPhoto(photo.uri)
         }
@@ -72,6 +74,8 @@ export default function Cam({
     async function ClearPhoto() {
         setPhoto(null)
     }
+
+    
 
     // Função assíncrona para salvar a foto na galeria
     async function SavePhoto() {
@@ -114,22 +118,28 @@ export default function Cam({
             statusBarTranslucent={true}
             getMediaLibrary={true}
         >
+            <TouchableOpacity onPress={() => {showCamForm ? setShowCamForm(false): setShowCam(false)} } style={{top: 80, height: 35, position: "absolute", zIndex: 80, width: 50, marginLeft: 10, alignItems: "center"}}>
+        
+                <Ionicons name="close-circle-outline" size={34} color="white"/>
+            </TouchableOpacity>
 
             <CameraView
                 ref={camRef}
                 facing={typeCam}
-                style={{ flex: 1, justifyContent: 'flex-end', }}
+                style={{ flex: 1, justifyContent: 'flex-end', zIndex: -99 }}
             >
 
                 <ContainerButtonCam>
                     {/* Botão para capturar a foto */}
+
+                    <ButtonFlip onPress={() => setTypeCam(typeCam == 'back' ? 'front' : 'back')}>
+                        <MaterialCommunityIcons name='camera-flip' color={'#FFF'} size={40} style={{ marginLeft: 20 }} />
+                    </ButtonFlip>
+
                     <ButtonFlip onPress={() => CapturePhoto()}>
                         <FontAwesome name='camera' size={30} color={'#FFF'} />
                     </ButtonFlip>
 
-                    <ButtonFlip onPress={() => setTypeCam(typeCam == 'back' ? 'front' : 'back')}>
-                        <MaterialCommunityIcons name='camera-flip' color={'#FFF'} size={40} />
-                    </ButtonFlip>
                     <ButtonFlip onPress={() => SelectImageGallery()}>
                         {
                             lastestPhoto != null
