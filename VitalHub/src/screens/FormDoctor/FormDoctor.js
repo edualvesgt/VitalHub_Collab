@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Modal } from 'react-native';
-import { BoxInputForm, BoxInputPhoto } from "../../components/BoxInput/BoxInput"
+import { BoxInput, BoxInputForm, BoxInputPhoto } from "../../components/BoxInput/BoxInput"
 import { Button, ButtonSendPhoto, ButtonTitle } from "../../components/Button/Button"
 import { Container, ContainerForm, HR, InputContainer, TransparentContainer, ViewRow } from "../../components/Container/StyleContainer"
 import { HeaderContainer, HeaderPhoto } from "../../components/HeaderPhoto/HeaderPhoto"
@@ -35,9 +35,7 @@ export const FormDoctor = ({ navigation, route }) => {
     }
 
     async function InserirExame() {
-        console.log(consultaId);
-        console.log(uriPhotoForm);
-
+        
         const formData = new FormData();
         formData.append("ConsultaId", consultaId);
         formData.append("Image", {
@@ -46,7 +44,6 @@ export const FormDoctor = ({ navigation, route }) => {
             type: `image/jpeg`
         })
 
-
         await api.post(`/Exame/Cadastrar`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
@@ -54,6 +51,7 @@ export const FormDoctor = ({ navigation, route }) => {
         }).then(async (response) => {
 
             setDescricaoExame(response.data.descricao)
+            console.log(descricaoExame);
 
         }).catch(err => {
             console.log(err);
@@ -152,7 +150,15 @@ export const FormDoctor = ({ navigation, route }) => {
                                 </ViewRow>
                                 <HR />
 
+                                <BoxInputPhoto
+                                    placeholder={descricaoExame}
+                                    fieldHeigth={"max-content"}
+                                    multiline={true}
+                                    scrollEnabled={true}
+                                />
+                                
                                 <InputContainer>
+
                                     <Button>
                                         <ButtonTitle>Salvar</ButtonTitle>
                                     </Button>

@@ -7,7 +7,7 @@ export const BoxInput = ({ textLabel, placeholder, fieldWidth = 90, editable = f
 
     return (
 
-        <FieldContent fieldWidth={fieldWidth} >
+        <FieldContent fieldWidth={fieldWidth}>
             <Label textLabel={textLabel} />
 
             <InputProfile
@@ -75,6 +75,7 @@ export const BoxInputPhoto = ({ textLabel, placeholder, fieldWidth = 90, fieldHe
                     :
                     (
                         <InputForm
+                            
                             editable={editable}
                             fieldHeigth={fieldHeigth}
                             placeholder={placeholder}

@@ -39,6 +39,7 @@ export const Home = ({ navigation }) => {
     const [fotoCard, setFotoCard] = useState(null)
     const [isLoading, setIsLoading] = useState()
     const [responseLength, setResponseLength] = useState()
+    const [responseCancel, setResponseCancel] = useState()
 
     async function profileLoad() {
 
@@ -122,12 +123,17 @@ export const Home = ({ navigation }) => {
         profileLoad();
     }, [])
 
+    useEffect(() => {
+        getConsultas()
+    }, [responseCancel])
 
     useEffect(() => {
         if (dataConsulta != '') {
             getConsultas();
         }
     }, [dataConsulta])
+
+
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -163,18 +169,16 @@ export const Home = ({ navigation }) => {
     }
 
     return (
-        <>  
-        
+        <>
+
+
             <StatusBar
-             
-             translucent={true}
-             backgroundColor={"transparent"}
-             networkActivityIndicatorVisible={true}
-            
-            />
-            
+
+                translucent={true}
+                backgroundColor={"transparent"} />
+
             <Container>
-                
+
                 <Header navigation={navigation} foto={{ uri: fotoPerfil }} />
 
                 <Calendar setDataConsulta={setDataConsulta} />
@@ -225,7 +229,7 @@ export const Home = ({ navigation }) => {
 
 
                 <FlatContainer
-                    
+
                     data={responseConsulta}
                     showsVerticalScrollIndicator={false}
                     keyExtractor={item => item.consultaId}
@@ -293,7 +297,8 @@ export const Home = ({ navigation }) => {
                 isOpen={isModalOpen}
                 onClose={closeModal}
                 navigation={navigation}
-                consulta={consultaSelecionada}
+                consulta={responseConsulta}
+                setResponseCancel={setResponseCancel}
             />
 
             <ScheduleAppointment

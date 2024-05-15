@@ -52,6 +52,7 @@ border: 2px solid #49B3BA;
 padding: 16px;
 color: #34898F;
 background-color: #F5F3F3;
+text-align:justify;
 `
 
 
