@@ -254,20 +254,23 @@ export const Profile = ({ navigation, route }) => {
     return (
         <Container>
             <HeaderContainer>
+
                 <HeaderPhoto source={{ uri: foto }} />
-                <ButtonCamera onPress={() => setShowCam(true)} >
-                    <MaterialCommunityIcons name="camera-plus" size={20} color={"#fbfbfb"} />
-                </ButtonCamera>
             </HeaderContainer>
 
             <Cam visible={showCam} getMediaLibrary={true} setUriPhoto={setUriPhoto} setShowCam={setShowCam} />
 
             <ModalTitle>
+                <ButtonCamera onPress={() => setShowCam(true)} >
+                    <MaterialCommunityIcons name="camera-plus" size={20} color={"#fbfbfb"} />
+                </ButtonCamera>
+                
                 <Title>{name}</Title>
 
                 <TextAccount>{email}</TextAccount>
 
             </ModalTitle>
+
             <ScrollForm>
 
                 {
@@ -289,10 +292,11 @@ export const Profile = ({ navigation, route }) => {
 
                                     <BoxInputForm
                                         textLabel={"CPF"}
+                                        keyboardType={"number"}
                                         placeholder={cpf == "null" ? "000.000.000-00" : cpf}
                                         editable={true}
                                         onChangeText={(txt) => setCpf(txt)}
-                                        
+
                                     />
                                 </>
                             ) : (

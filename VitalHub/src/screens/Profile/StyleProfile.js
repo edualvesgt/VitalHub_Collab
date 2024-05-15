@@ -33,8 +33,8 @@ export const ButtonCamera = styled.TouchableOpacity.attrs({activeOpacity: 0.8})`
     border: 1px solid #fbfbfb;
 
     position: absolute;
-    bottom: -20px;
-    right: 15px;
+    bottom: -10px;
+    right: -15px;
     z-index: 99;
 
 `

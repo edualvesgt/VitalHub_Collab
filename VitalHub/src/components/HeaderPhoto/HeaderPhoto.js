@@ -1,11 +1,11 @@
 import styled from "styled-components";
 
-export const  HeaderContainer = styled.SafeAreaView`
+export const  HeaderContainer = styled.View`
 width: 100%;
 height: 350px;
-
 position: absolute;
 top: 0px;
+
 `
 
 export const HeaderPhoto = styled.Image`

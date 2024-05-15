@@ -6,7 +6,7 @@ width: 75%;
 height:140px;
 border-radius: 5px;
 position: relative;
-z-index: 1;
+z-index: 2;
 
 margin-top: 240px;
 

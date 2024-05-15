@@ -13,8 +13,8 @@ import { userDecodeToken } from "../../utils/Auth";
 import { ActivityIndicator, Text } from 'react-native';
 
 export const Login = ({ navigation }) => {
-    const [email, setEmail] = useState("victorgabriel@gmail.com");
-    const [senha, setSenha] = useState("victorgabriel");
+    const [email, setEmail] = useState("eduardo.silva@gmail.com");
+    const [senha, setSenha] = useState("eduardo.silva@gmail.com");
     const [loading, setLoading] = useState(false);
     const [disabled, setDisabled] = useState(false);
     const [errorMessage, setErrorMessage] = useState(""); // Estado para armazenar mensagens de erro
