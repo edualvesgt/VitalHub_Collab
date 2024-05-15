@@ -163,24 +163,26 @@ export const Profile = ({ navigation, route }) => {
 
     async function AlterarFotoPerfil() {
 
-
-        const formData = new FormData();
-        formData.append("Arquivo", {
-            uri: uriPhoto,
-            name: `image.${uriPhoto.split('.').pop()}`,
-            type: `image/${uriPhoto.split('.').pop()}`
-
-        })
-        await api.put(`/Usuario/AlterarFotoPerfil?id=${idUser}`, formData, {
-            headers: {
-                "Content-Type": "multipart/form-data"
-            }
-        }).then(response => {
-            console.log(response.data, "Alterar foto perfil deu bom");
-            setFoto(uriPhoto)
-        }).catch(erro => {
-            console.log("Alteração de foto falhou", erro);
-        })
+        if (uriPhoto != null) {
+            
+            const formData = new FormData();
+            formData.append("Arquivo", {
+                uri: uriPhoto,
+                name: `image.${uriPhoto.split('.').pop()}`,
+                type: `image/${uriPhoto.split('.').pop()}`
+    
+            })
+            await api.put(`/Usuario/AlterarFotoPerfil?id=${idUser}`, formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                }
+            }).then(response => {
+                console.log(response.data, "Alterar foto perfil deu bom");
+                setFoto(uriPhoto)
+            }).catch(erro => {
+                console.log("Alteração de foto falhou", erro);
+            })
+        }
 
     }
 
