@@ -22,12 +22,22 @@ export const ChooseData = ({ navigation, route }) => {
     };;
 
     function handleConfirm() {
-        // Verifica se a data selecionada é futura
-        if (!moment(dataSelecionada).isAfter(moment(), 'day')) {
-            setValidationDataAfter(true)
+        // Obtém a data atual
+        const today = moment();
+
+        // Verifica se a data selecionada é futura ou igual ao dia de hoje
+        if (!moment(dataSelecionada).isAfter(today, 'day') || moment(dataSelecionada).isSame(today, 'day')) {
+            setValidationDataAfter(true);
             return; // Interrompe a execução da função
         }
+
+        setAgendamento({
+            ...route.params.agendamento,
+            dataConsulta: `${dataSelecionada} ${horaSelecionada}`
+        })
+        openModal()
     }
+
 
     const [dataSelecionada, setDataSelecionada] = useState()
     const [horaSelecionada, setHoraSelecionada] = useState()
@@ -47,6 +57,22 @@ export const ChooseData = ({ navigation, route }) => {
 
     }, [horaSelecionada])
 
+    useEffect(() => {
+        // Verifica se a data selecionada é futura
+        if (!moment(dataSelecionada).isAfter(moment(), 'day')) {
+            setValidationDataAfter(true);
+        } else {
+            setValidationDataAfter(false); // Limpa a flag caso a data seja válida
+        }
+    }, [dataSelecionada]); // Dependência do useEffect
+
+    useEffect(() => {
+        return () => {
+            setValidationDataAfter(false); // Limpa a flag quando o componente é desmontado
+        };
+    }, []);
+
+
     return (
         <ContainerClinic>
 
@@ -58,8 +84,8 @@ export const ChooseData = ({ navigation, route }) => {
 
             {
                 validationDataAfter ?
-                <Text style={{ color: "red" }}>Não é possivel agendar consultas em uma data passada!</Text>
-                : null
+                    <Text style={{ color: "red" }}>Não é possivel agendar consultas em uma data passada, Somente datas Futuras!</Text>
+                    : null
             }
             <ContainerLabel>
                 <Label>Selecione um horário disponível</Label>
@@ -68,12 +94,12 @@ export const ChooseData = ({ navigation, route }) => {
             <InputSelect
                 setHoraSelecionada={setHoraSelecionada}
             />
-
             {
-                validationData ?
-                    <Text style={{ color: "red" }}> É necessário selecionar data e horário!</Text>
+                !dataSelecionada || !horaSelecionada ?
+                    <Text style={{ color: "red" }}>É necessário selecionar data e horário!</Text>
                     : null
             }
+
 
 
             <Button onPress={() => { dataSelecionada && horaSelecionada ? handleConfirm() : setValidationData(true) }}>

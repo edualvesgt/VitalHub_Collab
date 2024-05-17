@@ -10,7 +10,7 @@ import api from "../../services/services"
 
 export const ForgotPassword = ({ navigation }) => {
 
-    const [email, setEmail] = useState('dudualvesgt27@gmail.com')
+    const [email, setEmail] = useState('')
 
     async function SendEmail() {
         await api.post(`/RecuperarSenha?email=${email}`)

@@ -121,6 +121,7 @@ export const Home = ({ navigation }) => {
       
     useEffect(() => {
         profileLoad();
+        
     }, [])
 
     useEffect(() => {

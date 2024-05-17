@@ -90,7 +90,7 @@ const Card = ({
     return (
         <CardBox Consulta={Consulta} role={role} status={status} onPress={() => {
             if (role == "Paciente" && status == "realizadas") {
-                navigation.replace("FormDoctor");
+                
             }
             // Verifica se a situação é cancelada e retorna null para esse caso
             else if (status == "agendadas") {

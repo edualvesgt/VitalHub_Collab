@@ -72,7 +72,7 @@ export const Profile = ({ navigation, route }) => {
             setErrorMessage("Digite sua Data de Nascimento somente com números no padrão 'DD/MM/YYYY', por exemplo: 15022002");
         }
     };
-    
+
 
 
     async function profileLoad() {
@@ -164,13 +164,13 @@ export const Profile = ({ navigation, route }) => {
     async function AlterarFotoPerfil() {
 
         if (uriPhoto != null) {
-            
+
             const formData = new FormData();
             formData.append("Arquivo", {
                 uri: uriPhoto,
                 name: `image.${uriPhoto.split('.').pop()}`,
                 type: `image/${uriPhoto.split('.').pop()}`
-    
+
             })
             await api.put(`/Usuario/AlterarFotoPerfil?id=${idUser}`, formData, {
                 headers: {
@@ -203,8 +203,9 @@ export const Profile = ({ navigation, route }) => {
 
     // Função para formatar CPF com pontos
     const formatarCPF = (cpf) => {
+
         return cpf.substring(0, 3) + '.' + cpf.substring(3, 6) + '.' + cpf.substring(6, 9) + '-' + cpf.substring(9);
-    };
+    }
 
     const iniciarEdicao = () => {
         setEnderecoTemp(endereco);
@@ -214,10 +215,10 @@ export const Profile = ({ navigation, route }) => {
         setDataNascimentoTemp(dataNascimento);
         setEmailTemp(email);
         setIsEditing(true);
-        if (cpf == null || date == null) {
+        if (cpf == "null" || date == "null") {
             setIsEditingCpf(true);
             console.log("Entrou True" + cpf);
-           
+
         } else {
             setIsEditingCpf(false);
             console.log("Entrou false " + cpf);
@@ -235,9 +236,10 @@ export const Profile = ({ navigation, route }) => {
         setIsEditing(false);
     };
 
-   
+
     useEffect(() => {
         profileLoad();
+        console.log(cpf);
     }, [])
 
     useEffect(() => {
@@ -252,20 +254,23 @@ export const Profile = ({ navigation, route }) => {
     return (
         <Container>
             <HeaderContainer>
+
                 <HeaderPhoto source={{ uri: foto }} />
-                <ButtonCamera onPress={() => setShowCam(true)} >
-                    <MaterialCommunityIcons name="camera-plus" size={20} color={"#fbfbfb"} />
-                </ButtonCamera>
             </HeaderContainer>
 
             <Cam visible={showCam} getMediaLibrary={true} setUriPhoto={setUriPhoto} setShowCam={setShowCam} />
 
             <ModalTitle>
+                <ButtonCamera onPress={() => setShowCam(true)} >
+                    <MaterialCommunityIcons name="camera-plus" size={20} color={"#fbfbfb"} />
+                </ButtonCamera>
+                
                 <Title>{name}</Title>
 
                 <TextAccount>{email}</TextAccount>
 
             </ModalTitle>
+
             <ScrollForm>
 
                 {
@@ -280,14 +285,18 @@ export const Profile = ({ navigation, route }) => {
                                         keyboardType='number-pad'
                                         editable={true}
                                         onChangeText={handleChange}
+                                        placeholder={"dd/mm/aaaa"}
+
                                     />
                                     {errorMessage !== '' && <Text style={{ color: 'red', margin: 10 }}>{errorMessage}</Text>}
 
                                     <BoxInputForm
                                         textLabel={"CPF"}
-                                        value={cpf}
+                                        keyboardType={"number"}
+                                        placeholder={cpf == "null" ? "000.000.000-00" : cpf}
                                         editable={true}
                                         onChangeText={(txt) => setCpf(txt)}
+
                                     />
                                 </>
                             ) : (
@@ -298,6 +307,7 @@ export const Profile = ({ navigation, route }) => {
                                         keyboardType='numeric'
                                         value={moment(dataNascimento, 'YYYY-MM-DD').format('DD/MM/YYYY')}
 
+
                                     />
                                     <BoxInput
                                         textLabel={"CPF"}
@@ -307,7 +317,7 @@ export const Profile = ({ navigation, route }) => {
                             )}
                             < BoxInputForm
                                 textLabel={"Endereco"}
-                                value={endereco}
+                                placeholder={"Endereco"}
                                 editable={true}
                                 onChangeText={(txt) => {
                                     setEndereco(txt)
@@ -318,7 +328,7 @@ export const Profile = ({ navigation, route }) => {
                                     fieldWidth={40}
                                     keyboardType='numeric'
                                     textLabel={"CEP"}
-                                    value={cep}
+                                    placeholder={"CEP"}
                                     editable={true}
                                     onChangeText={(txt) => {
                                         setCep(txt.trim())
@@ -326,10 +336,9 @@ export const Profile = ({ navigation, route }) => {
                                 />
                                 <BoxInputForm
                                     fieldWidth={40}
-                                    value={cidade}
                                     textLabel={"Cidade"}
                                     editable={true}
-
+                                    placeholder={"Cidade"}
                                     onChangeText={(txt) => {
                                         setCidade(txt)
                                     }}
@@ -340,26 +349,26 @@ export const Profile = ({ navigation, route }) => {
                         <>
                             <BoxInput
                                 textLabel={"Data de Nascimento"}
-                                placeholder={moment(dataNascimento, 'YYYY-MM-DD').format('DD/MM/YYYY')}
+                                placeholder={dataNascimento != null ? moment(dataNascimento, 'YYYY-MM-DD').format('DD/MM/YYYY') : "Data nascimento"}
                             />
                             <BoxInput
                                 textLabel={"CPF"}
-                                placeholder={formatarCPF(cpf)}
+                                placeholder={cpf === "null" ? "CPF" : formatarCPF(cpf)}
                             />
                             <BoxInput
-                                textLabel={"Endereco"}
-                                placeholder={endereco}
+                                textLabel={"Endereço"}
+                                placeholder={endereco === "null" ? "Endereço" : endereco}
                             />
                             <DoubleView>
                                 <BoxInput
                                     fieldWidth={40}
                                     textLabel={"Cep"}
-                                    placeholder={formatarCEP(cep)}
+                                    placeholder={cep === "null" ? "CEP" : formatarCEP(cep)}
                                 />
                                 <BoxInput
                                     fieldWidth={40}
                                     textLabel={"Cidade"}
-                                    placeholder={cidade}
+                                    placeholder={cidade === "null" ? "Cidade" : cidade}
                                 />
                             </DoubleView>
                         </>

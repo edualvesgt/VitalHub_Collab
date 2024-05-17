@@ -21,7 +21,7 @@ const ShowFormDoctor = ({
     }
 
     useEffect(() => {
-        
+
     }, [isOpen])
 
     const [profile, setProfile] = useState("Medico");
@@ -34,12 +34,24 @@ const ShowFormDoctor = ({
         role == "Medico" ? (
             <ShowModalContainer>
                 <ShowModalContent>
-                    <PhotoShow source={{uri : consulta.pacienteFoto}} />
+                    <PhotoShow source={{ uri: consulta.pacienteFoto }} />
                     <Title>{consulta.pacienteNome}</Title>
                     <TextAbout>{formatarIdade(consulta.pacienteIdade)} Anos<TextAbout> {consulta.pacienteEmail}</TextAbout> </TextAbout>
 
                     {status == "agendadas" ? (
-                        <Button onPress={() => { navigation.replace('FormDoctor', { clinica: consulta.clinicaId }) }}>
+                        <Button onPress={() => {
+                            navigation.replace('FormDoctor',
+                                {
+                                    consultaDescricao: consulta.consultaDescricao,
+                                    consultaDiagnostico: consulta.consultaDiagnostico,
+                                    consultaReceita: consulta.consultaReceita,
+                                    consultaId: consulta.consultaId,
+                                    pacienteIdade: consulta.pacienteIdade,
+                                    pacienteFoto: consulta.pacienteFoto,
+                                    nome: consulta.pacienteNome,
+                                    email: consulta.pacienteEmail
+                                })
+                        }}>
                             <ButtonTitle>{"Inserir Prontuário"}</ButtonTitle>
                         </Button>
                     ) : (
@@ -49,10 +61,10 @@ const ShowFormDoctor = ({
                                 consultaDiagnostico: consulta.consultaDiagnostico,
                                 consultaReceita: consulta.consultaReceita,
                                 consultaId: consulta.consultaId,
-                                pacienteIdade : consulta.pacienteIdade,
-                                pacienteFoto : consulta.pacienteFoto,
+                                pacienteIdade: consulta.pacienteIdade,
+                                pacienteFoto: consulta.pacienteFoto,
                                 nome: consulta.pacienteNome,
-                                email : consulta.pacienteEmail
+                                email: consulta.pacienteEmail
                             })}>
                             <ButtonTitle>Ver prontuario</ButtonTitle>
                         </Button>
@@ -64,7 +76,7 @@ const ShowFormDoctor = ({
         ) : (
             <ShowModalContainer>
                 <ShowModalContent>
-                    <PhotoShow source={{uri : consulta.medicoFoto}} />
+                    <PhotoShow source={{ uri: consulta.medicoFoto }} />
                     <Title>Dr. {consulta.medicoNome}</Title>
                     <TextAbout>CRM {consulta.medicoCrm} <TextAbout> {consulta.especialidade}</TextAbout> </TextAbout>
 
@@ -79,8 +91,8 @@ const ShowFormDoctor = ({
                                 consultaDiagnostico: consulta.consultaDiagnostico,
                                 consultaReceita: consulta.consultaReceita,
                                 consultaId: consulta.consultaId,
-                                pacienteIdade : consulta.pacienteIdade,
-                                pacienteFoto : consulta.pacienteFoto,
+                                pacienteIdade: consulta.pacienteIdade,
+                                pacienteFoto: consulta.pacienteFoto,
                                 email: consulta.pacienteEmail
 
                             })}>

@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 export const Input = styled.TextInput.attrs({placeholderTextColor :"#34898F", })`
 width:90%;
@@ -48,7 +48,7 @@ margin-top: 10px;
 font-size: 16px;
 font-family: "MontserratAlternates_600SemiBold";
 border-radius: 5px;
-border: 2px solid #49B3BA;
+${props => props.editable ? css`border: 2px solid gray; ` : css`border: 2px solid #49B3BA; ` }
 padding: 16px;
 color: #34898F;
 background-color: #F5F3F3;
