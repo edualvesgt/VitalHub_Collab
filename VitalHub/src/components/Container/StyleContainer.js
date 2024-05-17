@@ -55,6 +55,7 @@ export const ViewRow = styled(DoubleView)`
 width: 90%;
 /* border: black; */
 align-self: center;
+flex-direction: column;
 justify-self: center;
 justify-content: space-between;
 `
@@ -66,6 +67,10 @@ align-self: center;
 align-items: center;
 
 `
+export const InputContainerFormDoctor = styled(InputContainer)`
+    margin-bottom: 30px;
+`
+
 export const ContainerForm = styled.View`
 width: 100%;
 margin-top: 320px;

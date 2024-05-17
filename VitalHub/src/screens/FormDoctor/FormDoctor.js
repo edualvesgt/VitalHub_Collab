@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Modal, ScrollView, Text } from 'react-native';
 import { BoxInput, BoxInputForm, BoxInputPhoto } from "../../components/BoxInput/BoxInput"
 import { Button, ButtonSendPhoto, ButtonTitle } from "../../components/Button/Button"
-import { Container, ContainerForm, HR, InputContainer, TransparentContainer, ViewRow } from "../../components/Container/StyleContainer"
+import { Container, ContainerForm, HR, InputContainer, InputContainerFormDoctor, TransparentContainer, ViewRow } from "../../components/Container/StyleContainer"
 import { HeaderContainer, HeaderPhoto } from "../../components/HeaderPhoto/HeaderPhoto"
 import { LinkCancel } from "../../components/Links/StyleLink"
 import { TextAbout, TextAccount, TextRed } from "../../components/Text/Text"
@@ -26,14 +26,22 @@ export const FormDoctor = ({ navigation, route }) => {
     const [descricaoOcr, setDescricaoOcr] = useState("")
     const [consultaId, setConsultaId] = useState(null)
     const [consultaExame, setConsultaExame] = useState("")
+    const [isEditing, setIsEditing] = useState(false)
+    const [medicamento, setMedicamento] = useState("")
+    const [descricao, setDescricao] = useState("")
+    const [diagnostico, setDiagnostico] = useState("")
 
     async function profileLoad() {
         const token = await userDecodeToken();
         setName(token.name);
         setEmail(token.email);
         setRole(token.role);
+
         setConsultaId(route.params.consultaId);
         setConsultaExame(route.params.consultaExame);
+        setDescricao(route.params.consultaDescricao)
+        setDiagnostico(route.params.consultaDiagnostico)
+        setMedicamento(route.params.consultaReceita)
     }
 
     async function InserirExame() {
@@ -76,23 +84,44 @@ export const FormDoctor = ({ navigation, route }) => {
             })
     }
 
+    async function AtualizarProntuario() {
+        await api.put(`/Consultas/Prontuario`,
+            {
+                consultaId: consultaId,
+                medicamento: medicamento,
+                descricao: descricao,
+                diagnostico: diagnostico
+            })
+            .then(response => {
+                setIsEditing(false);
+
+                api.put(`Consultas/Status?idConsulta=${consultaId}&status=realizadas`)
+            })
+            .catch(e => {
+                console.log(e.data);
+            })
+    }
+
     function formatarIdade(Idade) {
-        const date = new Date();
-        const anoAtual = date.getFullYear();
-        const diaAtual = date.getDate();
-        const mesAtual = date.getMonth() + 1;
+        if (Idade != null) {
 
-        const userAno = Idade.slice(0, 4)
-        const userDia = Idade.slice(8, 10)
-        const userMes = Idade.slice(5, 7)
+            const date = new Date();
+            const anoAtual = date.getFullYear();
+            const diaAtual = date.getDate();
+            const mesAtual = date.getMonth() + 1;
 
-        const userIdade = anoAtual - userAno
-        if (mesAtual < userMes) {
-            return userIdade - 1;
-        }
-        else {
-            if (diaAtual < userDia) {
-                return `${userIdade - 1} `;
+            const userAno = Idade.slice(0, 4)
+            const userDia = Idade.slice(8, 10)
+            const userMes = Idade.slice(5, 7)
+
+            const userIdade = anoAtual - userAno
+            if (mesAtual < userMes) {
+                return userIdade - 1;
+            }
+            else {
+                if (diaAtual < userDia) {
+                    return `${userIdade - 1} `;
+                }
             }
         }
 
@@ -101,6 +130,7 @@ export const FormDoctor = ({ navigation, route }) => {
 
     useEffect(() => {
         profileLoad()
+        console.log(route.params);
     }, [])
 
     useEffect(() => {
@@ -224,12 +254,7 @@ export const FormDoctor = ({ navigation, route }) => {
                                     />
 
                                     <ViewRow>
-                                        <ButtonSendPhoto onPress={() => { setShowCamForm(true); }}>
-                                            <ButtonTitle>
-                                                <MaterialIcons name="add-a-photo" size={24} color={"white"} />
-                                            </ButtonTitle>
-                                            <ButtonTitle>ENTRAR</ButtonTitle>
-                                        </ButtonSendPhoto>
+                                       
 
                                         {/* <TransparentContainer>
                                 <TextRed>Cancelar</TextRed>
@@ -237,8 +262,8 @@ export const FormDoctor = ({ navigation, route }) => {
                                     </ViewRow>
                                     <HR />
 
-                                    <ScrollView nestedScrollEnabled style={{borderWidth: 2, borderColor: "#49B3BA", borderRadius: 5, width: "90%", alignSelf: "center", padding: 10}}>
-                                        <Text style={{textAlign: "justify"}}>{descricaoExame ? descricaoExame : ''}</Text>
+                                    <ScrollView nestedScrollEnabled style={{ borderWidth: 2, borderColor: "#49B3BA", borderRadius: 5, width: "90%", alignSelf: "center", padding: 10, marginTop: 20 }}>
+                                        <Text style={{ textAlign: "justify" }}>{descricaoExame ? descricaoExame : ''}</Text>
                                     </ScrollView>
                                     {/* <BoxInputPhoto
                                         placeholder={descricaoExame}
@@ -247,13 +272,13 @@ export const FormDoctor = ({ navigation, route }) => {
                                         scrollEnabled={true}
                                     /> */}
 
-                                    <InputContainer>
+                                    <InputContainerFormDoctor>
 
                                         <Button onPress={() => navigation.replace("Main")}>
                                             <ButtonTitle>Voltar</ButtonTitle>
                                         </Button>
 
-                                    </InputContainer>
+                                    </InputContainerFormDoctor>
                                 </>
                         )
 
@@ -262,29 +287,51 @@ export const FormDoctor = ({ navigation, route }) => {
                                     <BoxInputForm
                                         fieldHeigth={120}
                                         textLabel={"Descricao"}
-                                        placeholder={route.params.consultaDescricao}
+                                        placeholder={"Descricao"}
+                                        value={descricao}
+                                        editable={isEditing}
+                                        onChangeText={(txt) => {
+                                            setDescricao(txt)
+                                        }}
                                     />
 
                                     <BoxInputForm
                                         textLabel={"Diagnostico"}
-                                        placeholder={route.params.consultaDiagnostico}
+                                        placeholder={"Diagnostico"}
+                                        value={diagnostico}
+                                        editable={isEditing}
+                                        onChangeText={(txt) => {
+                                            setDiagnostico(txt.trim())
+                                        }}
                                     />
                                     <BoxInputForm
                                         fieldHeigth={120}
                                         textLabel={"Prescricao Medica"}
-                                        placeholder={route.params.consultaReceita}
+                                        placeholder={"Prescricao Medica"}
+                                        value={medicamento}
+                                        editable={isEditing}
+                                        onChangeText={(txt) => {
+                                            setMedicamento(txt)
+                                        }}
                                     />
 
                                     <ViewRow>
-                                        <Button>
-                                            <ButtonTitle>Salvar</ButtonTitle>
-                                        </Button>
+                                        {
+                                            isEditing ?
+                                                <Button onPress={() => { AtualizarProntuario() }}>
+                                                    <ButtonTitle>Salvar</ButtonTitle>
+                                                </Button>
 
-                                        <Button>
-                                            <ButtonTitle onPress={() => navigation.navigate('EditFormDoctor')}>Editar</ButtonTitle>
-                                        </Button>
+                                                :
+                                                <Button onPress={() => { setIsEditing(true); }}>
+                                                    <ButtonTitle >Editar</ButtonTitle>
+                                                </Button>
 
-                                        <LinkCancel onPress={() => navigation.replace('Home')}>Cancelar</LinkCancel>
+                                        }
+
+
+
+                                        <LinkCancel onPress={() => { navigation.replace('Main'); setIsEditing(false) } }>Cancelar</LinkCancel>
 
                                     </ViewRow>
                                     <HR />
