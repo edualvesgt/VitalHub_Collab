@@ -6,6 +6,7 @@ import { TextAbout, TextAccount, TextBlue, TextRed } from "../Text/Text"
 import { CardBox, ImageCard, RowCardBox, TextCardBox } from "./StyleCard"
 
 function formatarIdade(Idade) {
+    
     const date = new Date();
     const anoAtual = date.getFullYear();
     const diaAtual = date.getDate();
@@ -16,16 +17,19 @@ function formatarIdade(Idade) {
     const userMes = Idade.slice(5, 7)
 
     const userIdade = anoAtual - userAno
+
     if (mesAtual < userMes) {
+        console.log(userIdade - 1);
         return userIdade - 1;
     }
     else {
         if (diaAtual < userDia) {
+            console.log(userIdade - 1);
             return `${userIdade - 1}`;
         }
     }
 
-    // return `${userDia}`;
+    return userIdade;
 }
 
 
@@ -53,7 +57,7 @@ const Card = ({
     }
 
     useEffect(() => {
-        console.log(Consulta);
+        formatarIdade(Age)
     }, []);
 
     const Check = () => {

@@ -100,6 +100,7 @@ export const Home = ({ navigation }) => {
                     setResponseConsulta(novaConsulta)
                     setIsLoading(false)
                     setResponseLength(false)
+                    
 
                 }).catch(error => {
                     console.log(error)

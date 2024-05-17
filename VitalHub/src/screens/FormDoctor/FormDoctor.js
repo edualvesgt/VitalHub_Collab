@@ -301,7 +301,7 @@ export const FormDoctor = ({ navigation, route }) => {
                                         value={diagnostico}
                                         editable={isEditing}
                                         onChangeText={(txt) => {
-                                            setDiagnostico(txt.trim())
+                                            setDiagnostico(txt)
                                         }}
                                     />
                                     <BoxInputForm
