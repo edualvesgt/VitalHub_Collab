@@ -116,12 +116,13 @@ export const Home = ({ navigation }) => {
 
     useFocusEffect(
         React.useCallback(() => {
-            profileLoad();
+          profileLoad();
         }, [])
-    );
-
+      );
+      
     useEffect(() => {
         profileLoad();
+        
     }, [])
 
     useEffect(() => {
@@ -140,7 +141,6 @@ export const Home = ({ navigation }) => {
 
     const openModal = () => {
         setIsModalOpen(true);
-
     };
 
     const closeModal = () => {
@@ -152,6 +152,7 @@ export const Home = ({ navigation }) => {
 
     const showForm = (consulta) => {
         setConsultaSelecionada(consulta)
+
         setIsShow(true)
     }
 

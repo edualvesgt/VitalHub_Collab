@@ -13,8 +13,8 @@ import { userDecodeToken } from "../../utils/Auth";
 import { ActivityIndicator, Text } from 'react-native';
 
 export const Login = ({ navigation }) => {
-    const [email, setEmail] = useState("eduardo.silva@gmail.com");
-    const [senha, setSenha] = useState("eduardo.silva@gmail.com");
+    const [email, setEmail] = useState("");
+    const [senha, setSenha] = useState("");
     const [loading, setLoading] = useState(false);
     const [disabled, setDisabled] = useState(false);
     const [errorMessage, setErrorMessage] = useState(""); // Estado para armazenar mensagens de erro
@@ -39,14 +39,10 @@ export const Login = ({ navigation }) => {
             const response = await api.post('/Login', {
                 email: email,
                 senha: senha
-                // email: 'gabriel.victor@gmail.com',
-                // senha: 'gabriel.victor@gmail.com'
-            })
-
-
-            await AsyncStorage.setItem("token", JSON.stringify(response.data))
-            // console.log(response);
-            navigation.replace("Main")
+            });
+    
+            await AsyncStorage.setItem("token", JSON.stringify(response.data));
+            navigation.replace("Main");
         } catch (error) {
             console.log(error);
             // Verifica se o erro é devido a um status 401
